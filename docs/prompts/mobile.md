@@ -124,8 +124,11 @@ MOCK DATA FIRST (voir le socle commun) :
   permissions réelles, compression réelle sur l'appareil. Seuls l'envoi de la photo et la réponse de
   l'analyse IA viennent du mock : la photo prise s'affiche, et une analyse d'exemple est renvoyée,
   ce qui donne des ingrédients présélectionnés plausibles.
+- Health Connect et HealthKit ne sont JAMAIS simulés non plus : demande d'autorisation réelle, lecture
+  réelle des pas, séances et poids de l'appareil. Seul l'envoi à POST /me/health/sync est simulé :
+  le mock reçoit les vrais totaux lus sur l'appareil et renvoie des jours recalculés d'exemple
+  (balance, points). Si aucune donnée n'existe sur l'appareil, on affiche l'état vide réel.
 - Le mock simule en revanche les autres services qui dépendent du téléphone :
-  - Health Connect et HealthKit : pas, séances et poids simulés ;
   - achats sur les stores : achat et restauration simulés ;
   - push : remplacées par des notifications locales ;
   - réseau coupé : pour tester la file d'attente hors connexion.

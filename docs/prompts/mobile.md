@@ -3,7 +3,7 @@
 > Coller d'abord le [socle commun](README.md#socle-commun-à-coller-en-tête-de-chaque-prompt).
 
 ```text
-LIVRABLE : l'application mobile Nyam, dans mobile/. Flutter, version fixée par FVM, pour Android et iOS.
+LIVRABLE : l'application mobile Omeo, dans mobile/. Flutter, version fixée par FVM, pour Android et iOS.
 C'est le produit principal.
 
 RÉFÉRENCE VISUELLE : previews/mobile/ (127 écrans, avec thème sombre et arabe).
@@ -23,8 +23,8 @@ arrondi métier côté client. Seules exceptions :
 
 STACK :
 - État et injection de dépendances : flutter_riverpod (avec riverpod_generator).
-- Navigation : go_router, avec liens profonds nyam:// et App Links / Universal Links pour /i/{code}.
-- Client HTTP : généré depuis contracts/openapi.yaml (openapi-generator, dart-dio) dans packages/nyam_api,
+- Navigation : go_router, avec liens profonds omeo:// et App Links / Universal Links pour /i/{code}.
+- Client HTTP : généré depuis contracts/openapi.yaml (openapi-generator, dart-dio) dans packages/omeo_api,
   jamais modifié à la main. Script tool/gen_api.sh.
 - Modèles UI : freezed. Stockage local : drift (SQLite), pour le cache et la file d'attente hors connexion.
 - Jetons : flutter_secure_storage.
@@ -119,7 +119,7 @@ MOCK DATA FIRST (voir le socle commun) :
   <Module>ApiRepository. Le choix se fait dans un provider Riverpod, selon la configuration
   DATA_SOURCE=mock|api passée par --dart-define. Les écrans ne dépendent que de l'interface abstraite.
 - Les fixtures sont dans lib/mock/ (données JSON désérialisées avec les modèles du client généré
-  nyam_api), plus un MockBackend en mémoire qui conserve l'état de la session. On développe en
+  omeo_api), plus un MockBackend en mémoire qui conserve l'état de la session. On développe en
   partant du flavor mock.
 - La caméra et la galerie ne sont JAMAIS simulées, même en flavor mock : prise de vue réelle,
   permissions réelles, compression réelle sur l'appareil. Seuls l'envoi de la photo et la réponse de

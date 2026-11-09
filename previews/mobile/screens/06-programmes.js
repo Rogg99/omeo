@@ -62,7 +62,7 @@
 
   S("challenges", "CHA-05", "Limite Free atteinte", "Tentative de lancer un 2e challenge en Free : choix clair entre remplacer ou passer à Plus.",
     '<div class="scroll"></div>' + sheet("Un challenge à la fois", '<p class="small muted" style="margin-top:-8px">En Free, tu peux suivre un challenge à la fois. Tu as déjà « 2 L d\'eau par jour » en cours (jour 5/14).</p>' +
-      '<div class="card black mt-16 row"><span class="badge-ico glass">' + I("crown") + '</span><div class="grow"><b class="small">Nyam Plus</b><div class="xs" style="opacity:.7">Challenges illimités en parallèle</div></div><button class="btn white sm">Essayer</button></div>' +
+      '<div class="card black mt-16 row"><span class="badge-ico glass">' + I("crown") + '</span><div class="grow"><b class="small">Omeo Plus</b><div class="xs" style="opacity:.7">Challenges illimités en parallèle</div></div><button class="btn white sm">Essayer</button></div>' +
       '<button class="btn outline mt-12">Remplacer mon challenge actuel</button><button class="btn ghost mt-4">Annuler</button>'), { nav: "home" });
 
   // ---------- Récompenses ----------

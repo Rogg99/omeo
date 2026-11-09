@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nyam — Mange mieux. À ton rythme.</title>
-  <meta name="description" content="Photographie ton assiette : Nyam reconnaît le plat, estime les portions et calcule tes apports. Pensé pour les plats africains.">
-  <meta property="og:title" content="Nyam — Mange mieux. À ton rythme.">
+  <title>Omeo — Mange mieux. À ton rythme.</title>
+  <meta name="description" content="Photographie ton assiette : Omeo reconnaît le plat, estime les portions et calcule tes apports. Pensé pour les plats africains.">
+  <meta property="og:title" content="Omeo — Mange mieux. À ton rythme.">
   <link rel="alternate" hreflang="en" href="/en/">
   <link rel="stylesheet" href="../shared/tokens.css">
   <link rel="stylesheet" href="web.css">
@@ -19,7 +19,7 @@
       <div class="copy">
         <span class="tag" style="background:rgba(255,255,255,.12);color:#e2e8da" data-i="sparkles"> Nouveau · analyse photo des plats africains</span>
         <h1 class="h1 mt24">Mange mieux.<br><span class="serif" style="color:#f2a26b">À ton rythme.</span></h1>
-        <p class="lead mt24" style="max-width:520px">Photographie ton assiette : Nyam reconnaît le plat, estime les portions et te dit où tu en es. Ndolé, thiéboudienne, attiéké… on les connaît.</p>
+        <p class="lead mt24" style="max-width:520px">Photographie ton assiette : Omeo reconnaît le plat, estime les portions et te dit où tu en es. Ndolé, thiéboudienne, attiéké… on les connaît.</p>
         <div class="row wrapf mt32" id="telecharger">
           <a class="store" href="#" id="s1"></a>
           <a class="store" href="#" id="s2"></a>
@@ -39,7 +39,7 @@
 
   <section class="section tight" style="padding-top:150px">
     <div class="wrap">
-      <p class="center small faint">Ils mangent mieux avec Nyam à</p>
+      <p class="center small faint">Ils mangent mieux avec Omeo à</p>
       <div class="proof mt16"><span>Dakar</span><span>Abidjan</span><span>Yaoundé</span><span>Douala</span><span>Lomé</span><span>Cotonou</span><span>Paris</span></div>
     </div>
   </section>
@@ -59,7 +59,7 @@
       <div>
         <span class="eyebrow">Sport & santé</span>
         <h2 class="h2 mt16">Ce que tu manges,<br>face à ce que tu <span class="serif">dépenses.</span></h2>
-        <p class="lead mt24">Tes pas, tes séances et tes calories dépensées arrivent seuls depuis Health Connect ou Apple Health. Nyam calcule ta balance et ajuste ton objectif les jours actifs.</p>
+        <p class="lead mt24">Tes pas, tes séances et tes calories dépensées arrivent seuls depuis Health Connect ou Apple Health. Omeo calcule ta balance et ajuste ton objectif les jours actifs.</p>
         <div class="grid mt32" style="gap:14px" id="sport-list"></div>
       </div>
       <div class="card black" style="padding:36px">
@@ -70,7 +70,7 @@
           <div><div class="xs" style="opacity:.6">ÉCART</div><div style="font:600 34px var(--font-display);color:#b3c7a6">−1 160</div></div>
         </div>
         <div class="row mt32" style="align-items:flex-end;gap:10px;height:140px" id="bars"></div>
-        <p class="xs mt24" style="opacity:.6">Nyam lit tes données, n'écrit jamais rien. Seuls des totaux par jour quittent ton téléphone.</p>
+        <p class="xs mt24" style="opacity:.6">Omeo lit tes données, n'écrit jamais rien. Seuls des totaux par jour quittent ton téléphone.</p>
       </div>
     </div>
   </section>
@@ -148,11 +148,11 @@
 
   contents.innerHTML = [["ph-ndole", "Ndolé allégé", "Cameroun · 430 kcal"], ["ph-yassa", "Poulet yassa", "Sénégal · 520 kcal"], ["ph-baobab", "Baobab", "Fibres, vitamine C"], ["ph-moringa", "Moringa", "Fer, protéines"]].map((x) => '<div class="card" style="padding:0;overflow:hidden"><div class="photo ' + x[0] + '" style="height:200px"></div><div style="padding:18px"><b style="font:600 18px var(--font-display)">' + x[1] + '</b><div class="small faint">' + x[2] + "</div></div></div>").join("");
 
-  document.getElementById("plans-mini").innerHTML = [["Free", "0 $", "3 analyses photo par jour, suivi complet, 1 challenge", 0], ["Plus annuel", "46,99 $ / an", "Soit 3,92 $ / mois. Tout Nyam, sans limite pratique.", 1], ["Plus mensuel", "4,49 $ / mois", "Sans engagement, résiliable à tout moment.", 0]].map((p) => '<div class="card" style="' + (p[3] ? "background:#f4efe6;color:#151411" : "background:rgba(255,255,255,.07);color:#f4efe6;border:0") + '">' + (p[3] ? '<span class="tag orange">Meilleure offre</span>' : '<span class="tag" style="background:rgba(255,255,255,.1);color:inherit">' + p[0] + "</span>") + '<div style="font:600 32px var(--font-display);margin-top:16px">' + p[1] + '</div><p class="small mt8" style="opacity:.75">' + (p[3] ? "<b>" + p[0] + "</b> · " : "") + p[2] + "</p></div>").join("");
+  document.getElementById("plans-mini").innerHTML = [["Free", "0 $", "3 analyses photo par jour, suivi complet, 1 challenge", 0], ["Plus annuel", "46,99 $ / an", "Soit 3,92 $ / mois. Tout Omeo, sans limite pratique.", 1], ["Plus mensuel", "4,49 $ / mois", "Sans engagement, résiliable à tout moment.", 0]].map((p) => '<div class="card" style="' + (p[3] ? "background:#f4efe6;color:#151411" : "background:rgba(255,255,255,.07);color:#f4efe6;border:0") + '">' + (p[3] ? '<span class="tag orange">Meilleure offre</span>' : '<span class="tag" style="background:rgba(255,255,255,.1);color:inherit">' + p[0] + "</span>") + '<div style="font:600 32px var(--font-display);margin-top:16px">' + p[1] + '</div><p class="small mt8" style="opacity:.75">' + (p[3] ? "<b>" + p[0] + "</b> · " : "") + p[2] + "</p></div>").join("");
 
-  quotes.innerHTML = [["« Je pensais que les applis ne connaissaient pas le ndolé. Nyam, si. Et je ne saisis presque plus rien. »", "Mireille, 34 ans", "Douala", "MN"], ["« En 2 mois j'ai réduit le sel de moitié. Les conseils sont simples et parlent de ce que je cuisine vraiment. »", "Ousmane, 51 ans", "Dakar", "OS"], ["« Le challenge 8 000 pas m'a remis en mouvement. Le téléphone compte tout seul. »", "Aya, 27 ans", "Abidjan", "AK"]].map((q) => '<figure class="card" style="margin:0"><div style="color:var(--orange-500);letter-spacing:2px">★★★★★</div><blockquote style="margin:16px 0 0;font:500 19px/1.45 var(--font-display);letter-spacing:-.01em">' + q[0] + '</blockquote><figcaption class="row mt24"><span class="ib" style="border-radius:50%;font:700 15px var(--font-display)">' + q[3] + '</span><div><b>' + q[1] + '</b><div class="small faint">' + q[2] + "</div></div></figcaption></figure>").join("");
+  quotes.innerHTML = [["« Je pensais que les applis ne connaissaient pas le ndolé. Omeo, si. Et je ne saisis presque plus rien. »", "Mireille, 34 ans", "Douala", "MN"], ["« En 2 mois j'ai réduit le sel de moitié. Les conseils sont simples et parlent de ce que je cuisine vraiment. »", "Ousmane, 51 ans", "Dakar", "OS"], ["« Le challenge 8 000 pas m'a remis en mouvement. Le téléphone compte tout seul. »", "Aya, 27 ans", "Abidjan", "AK"]].map((q) => '<figure class="card" style="margin:0"><div style="color:var(--orange-500);letter-spacing:2px">★★★★★</div><blockquote style="margin:16px 0 0;font:500 19px/1.45 var(--font-display);letter-spacing:-.01em">' + q[0] + '</blockquote><figcaption class="row mt24"><span class="ib" style="border-radius:50%;font:700 15px var(--font-display)">' + q[3] + '</span><div><b>' + q[1] + '</b><div class="small faint">' + q[2] + "</div></div></figcaption></figure>").join("");
 
-  faq.innerHTML = [["Nyam reconnaît-il vraiment les plats africains ?", "Oui : notre base contient des centaines de plats d'Afrique de l'Ouest et centrale, avec leurs noms locaux. Tu peux toujours corriger les ingrédients et les quantités, et ton avis nous aide à progresser."], ["Est-ce que c'est gratuit ?", "Oui. Free inclut 3 analyses photo par jour et tout le suivi. Plus débloque les analyses illimitées en pratique (140 / mois), la saisie vocale, les programmes et la progression longue durée."], ["Mes données de santé sont-elles partagées ?", "Non. Nyam lit tes données d'activité sans jamais rien écrire, et seuls des totaux par jour sont envoyés à nos serveurs. Tu peux exporter ou supprimer tes données à tout moment."]].map((f, i) => "<details" + (i === 0 ? " open" : "") + "><summary>" + f[0] + I("plus") + "</summary><p>" + f[1] + "</p></details>").join("");
+  faq.innerHTML = [["Omeo reconnaît-il vraiment les plats africains ?", "Oui : notre base contient des centaines de plats d'Afrique de l'Ouest et centrale, avec leurs noms locaux. Tu peux toujours corriger les ingrédients et les quantités, et ton avis nous aide à progresser."], ["Est-ce que c'est gratuit ?", "Oui. Free inclut 3 analyses photo par jour et tout le suivi. Plus débloque les analyses illimitées en pratique (140 / mois), la saisie vocale, les programmes et la progression longue durée."], ["Mes données de santé sont-elles partagées ?", "Non. Omeo lit tes données d'activité sans jamais rien écrire, et seuls des totaux par jour sont envoyés à nos serveurs. Tu peux exporter ou supprimer tes données à tout moment."]].map((f, i) => "<details" + (i === 0 ? " open" : "") + "><summary>" + f[0] + I("plus") + "</summary><p>" + f[1] + "</p></details>").join("");
 </script>
 </body>
 </html>

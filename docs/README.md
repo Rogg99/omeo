@@ -1,4 +1,4 @@
-# Nyam — Documentation projet
+# Omeo — Documentation projet
 
 > « Scanne. Comprends. Mange mieux. »
 > Application de suivi nutritionnel et sportif, pensée d'abord pour l'Afrique francophone, puis pour l'international.

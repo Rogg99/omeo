@@ -14,13 +14,13 @@
     '<div class="scroll">' + topbar("Programmes", "", "") + '<div class="pad center" style="padding-top:140px"><span class="badge-ico round warn" style="margin:auto;width:88px;height:88px">' + I("alert").replace('class="ico ', 'style="width:36px;height:36px" class="ico ') + '</span><h2 class="h-md mt-20">Impossible de charger les programmes</h2><p class="small muted mt-8">Le réseau semble lent. Réessaie dans un instant.</p><button class="btn black md mt-20" style="width:auto">' + I("refresh") + " Réessayer</button></div></div>", { nav: "home" });
 
   S("systeme", "SYS-04", "Mise à jour exigée", "Version minimale fixée dans l'admin : écran bloquant, une seule action.",
-    '<div class="scroll no-nav"><div class="pad center" style="padding-top:170px">' + window.logo(56, false) + '<h1 class="h-lg mt-24">Une mise à jour est nécessaire</h1><p class="muted mt-8">Cette version de Nyam n\'est plus prise en charge. Mets à jour pour continuer ; tes données sont conservées.</p></div></div><div class="bottom-cta"><button class="btn black">' + window.brandIcons.play + " Mettre à jour</button></div>");
+    '<div class="scroll no-nav"><div class="pad center" style="padding-top:170px">' + window.logo(56, false) + '<h1 class="h-lg mt-24">Une mise à jour est nécessaire</h1><p class="muted mt-8">Cette version de Omeo n\'est plus prise en charge. Mets à jour pour continuer ; tes données sont conservées.</p></div></div><div class="bottom-cta"><button class="btn black">' + window.brandIcons.play + " Mettre à jour</button></div>");
 
   S("systeme", "SYS-05", "Nouvelles CGU à accepter", "Un document a changé : résumé des changements, lecture complète, acceptation obligatoire pour continuer.",
     '<div class="scroll">' + appbar() + '</div><div class="scrim"></div>' + sheet("", '<h2 class="h-md">Nos conditions évoluent</h2><p class="small muted mt-8">Version 4 de la politique de confidentialité, en vigueur le 1er décembre 2026.</p><div class="card sunk mt-16 stack small" style="--gap:8px">' + ["Nouvel hébergeur des photos de repas (UE)", "Durée de conservation des photos : 24 mois", "Précisions sur l'export de tes données"].map((t) => '<div class="row" style="align-items:flex-start;gap:8px">' + I("check") + t + "</div>").join("") + '</div><a class="link small mt-12" style="display:inline-block">Lire le document complet</a><button class="btn black mt-20">J\'accepte</button><p class="xs faint center mt-12">Obligatoire pour continuer.</p>', { noHead: true }), { nav: "home" });
 
   S("systeme", "SYS-06", "Caméra refusée", "Permission refusée : explication et lien vers les réglages, alternative sans caméra.",
-    '<div class="scroll no-nav">' + topbar("", "", "", { close: true }) + '<div class="pad center" style="padding-top:100px"><span class="badge-ico round neutral" style="margin:auto;width:96px;height:96px">' + I("camera").replace('class="ico ', 'style="width:40px;height:40px" class="ico ') + '</span><h1 class="h-lg mt-20">Nyam a besoin de ta caméra</h1><p class="muted mt-8">Pour analyser tes plats. Les photos ne servent qu\'à ton suivi et tu peux les supprimer.</p></div></div>' +
+    '<div class="scroll no-nav">' + topbar("", "", "", { close: true }) + '<div class="pad center" style="padding-top:100px"><span class="badge-ico round neutral" style="margin:auto;width:96px;height:96px">' + I("camera").replace('class="ico ', 'style="width:40px;height:40px" class="ico ') + '</span><h1 class="h-lg mt-20">Omeo a besoin de ta caméra</h1><p class="muted mt-8">Pour analyser tes plats. Les photos ne servent qu\'à ton suivi et tu peux les supprimer.</p></div></div>' +
     '<div class="bottom-cta"><button class="btn black">Ouvrir les réglages</button><button class="btn ghost mt-4">Choisir dans la galerie</button></div>');
 
   S("systeme", "SYS-07", "Annuler une action", "Snackbar d'annulation après une suppression (5 s).",
@@ -34,5 +34,5 @@
       Object.assign({}, home.opts, { dir: "rtl" }));
   }
   const pls = screens.find((s) => s.id === "PLS-01");
-  if (pls) S("systeme", "SYS-10", "Nyam Plus · thème sombre", "Vérification du thème sombre sur un écran à fort enjeu.", pls.html, Object.assign({}, pls.opts, { theme: "dark", dark: true }));
+  if (pls) S("systeme", "SYS-10", "Omeo Plus · thème sombre", "Vérification du thème sombre sur un écran à fort enjeu.", pls.html, Object.assign({}, pls.opts, { theme: "dark", dark: true }));
 })();

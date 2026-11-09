@@ -11,7 +11,7 @@ Principe : **automatique d'abord**. Les données viennent de Health Connect (And
 | Séances (type, durée, calories, fréquence cardiaque) | Journal d'activité, points |
 | Poids | Suivi du poids ([03](03-suivi-nutrition.md#poids)) |
 
-- Nyam **lit** ces données et n'écrit jamais rien. L'app l'indique clairement (« Données lues : … / Données écrites : aucune »).
+- Omeo **lit** ces données et n'écrit jamais rien. L'app l'indique clairement (« Données lues : … / Données écrites : aucune »).
 - Le mobile récupère les données à l'ouverture de l'app et en arrière-plan, puis les envoie à l'API sous forme de **totaux par jour** et de résumés de séances. **C'est l'API qui en tire la balance, les objectifs, les points et la validation des challenges.**
 - L'autorisation est demandée au moment où elle sert (écran Progression ou Sport), pas pendant l'onboarding. Un refus ne bloque rien.
 

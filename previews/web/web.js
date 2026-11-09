@@ -4,7 +4,7 @@
   const here = location.pathname.split("/").pop() || "index.html";
   const link = (href, t) => '<a href="' + href + '" class="' + (here === href ? "on" : "") + '">' + t + "</a>";
 
-  const header = '<header class="nav" id="nav"><div class="wrap"><a href="index.html" aria-label="Nyam, accueil">' + window.logo(34) + '</a><nav class="links hide-m" aria-label="Navigation principale">' +
+  const header = '<header class="nav" id="nav"><div class="wrap"><a href="index.html" aria-label="Omeo, accueil">' + window.logo(34) + '</a><nav class="links hide-m" aria-label="Navigation principale">' +
     link("fonctionnalites.html", "Fonctionnalités") + link("tarifs.html", "Tarifs") + link("faq.html", "FAQ") + link("contact.html", "Contact") + '</nav><span class="grow"></span>' +
     '<button class="lang" aria-label="Langue : français">' + I("globe") + ' FR</button><a class="btn sm hide-m" href="abonnement.html">Mon abonnement</a><a class="btn sm green" href="index.html#telecharger">Télécharger</a></div></header>';
 
@@ -14,8 +14,8 @@
     '<div><h4>Produit</h4><ul><li><a href="fonctionnalites.html">Fonctionnalités</a></li><li><a href="tarifs.html">Tarifs</a></li><li><a href="abonnement.html">Mon abonnement</a></li><li><a href="faq.html">FAQ</a></li></ul></div>' +
     '<div><h4>Aide</h4><ul><li><a href="contact.html">Contact</a></li><li><a href="suppression-compte.html">Supprimer mon compte</a></li><li><a href="invitation.html">Invitation</a></li></ul></div>' +
     '<div><h4>Légal</h4><ul><li><a href="legal.html">CGU</a></li><li><a href="legal.html#confidentialite">Confidentialité</a></li><li><a href="legal.html#cookies">Cookies</a></li><li><a href="legal.html#mentions">Mentions légales</a></li></ul></div></div>' +
-    '<div class="bottom"><span>© 2026 Nyam</span><span class="grow"></span><span>Français · English · Español · Português · العربية · 简体中文 · 日本語 · Deutsch</span></div>' +
-    '<p class="xs mt16" style="opacity:.6">Nyam fournit des repères nutritionnels informatifs. L\'application ne remplace pas un avis médical.</p></div></footer>';
+    '<div class="bottom"><span>© 2026 Omeo</span><span class="grow"></span><span>Français · English · Español · Português · العربية · 简体中文 · 日本語 · Deutsch</span></div>' +
+    '<p class="xs mt16" style="opacity:.6">Omeo fournit des repères nutritionnels informatifs. L\'application ne remplace pas un avis médical.</p></div></footer>';
 
   const cookie = '<div class="cookie" role="dialog" aria-label="Cookies"><b style="font:600 17px var(--font-display)">Un cookie ?</b><p class="small muted mt8">On mesure l\'audience de façon anonyme et respectueuse de la vie privée. Rien n\'est déposé sans ton accord.</p><div class="row mt16"><button class="btn sm ghost">Refuser</button><button class="btn sm">Accepter</button></div><a class="xs faint" href="legal.html#cookies" style="display:inline-block;margin-top:10px">Personnaliser</a></div>';
 

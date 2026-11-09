@@ -2,9 +2,9 @@
 
 ## Profil
 - Photo (l'initiale par défaut), nom, email.
-- **Carte Nyam Plus** : offre actuelle, quotas restants, bouton pour découvrir ou gérer Plus.
+- **Carte Omeo Plus** : offre actuelle, quotas restants, bouton pour découvrir ou gérer Plus.
 - **Mon corps et mon objectif** : ville, âge, objectifs, taille, poids, poids souhaité. Chaque modification fait recalculer les objectifs par l'API.
-- **Parrainage** : « Offrez 7 jours de Nyam Plus ».
+- **Parrainage** : « Offrez 7 jours de Omeo Plus ».
 - **Mon compte** : email, mot de passe, modes de connexion, appareils connectés.
 - **Santé & activité** : connexion à Health Connect / Apple Health, autorisations, ajustement automatique de l'objectif.
 - **Mes récompenses** : niveau et badges.
@@ -15,7 +15,7 @@
 - Unités : kg ou lb, cm ou ft, cl ou oz.
 - Notifications par catégorie, heures calmes.
 - Confidentialité, CGU et consentements : les consulter, retirer un consentement, **exporter ses données**.
-- Noter Nyam.
+- Noter Omeo.
 - Déconnexion, suppression du compte.
 
 ## Langues

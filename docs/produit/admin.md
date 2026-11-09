@@ -1,6 +1,6 @@
 # Admin
 
-Application web réservée à l'équipe Nyam. Connexion par email et mot de passe, avec double authentification obligatoire.
+Application web réservée à l'équipe Omeo. Connexion par email et mot de passe, avec double authentification obligatoire.
 
 ## Rôles
 | Rôle | Ce qu'il gère |

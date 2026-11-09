@@ -42,7 +42,7 @@
 
   S("accueil", "HOM-02", "Accueil · premier jour", "Nouveau compte : aucune donnée. On guide vers la première photo, sans tableau vide décourageant.",
     '<div class="scroll">' + appbar({ count: 1 }) + hello("", "Jour 1 de ton essai") + '<div class="pad mt-16"><div class="card black" style="padding:22px;position:relative;overflow:hidden"><span class="glow" style="width:200px;height:200px;right:-60px;top:-60px"></span>' +
-    '<span class="tag glass">' + I("sparkles") + ' Première étape</span><h2 class="h-lg mt-16">Photographie ton<br>prochain repas</h2><p class="small mt-8" style="opacity:.7">Nyam reconnaît le plat, estime les portions et calcule tes apports.</p>' +
+    '<span class="tag glass">' + I("sparkles") + ' Première étape</span><h2 class="h-lg mt-16">Photographie ton<br>prochain repas</h2><p class="small mt-8" style="opacity:.7">Omeo reconnaît le plat, estime les portions et calcule tes apports.</p>' +
     '<button class="btn white md mt-20">' + I("camera") + " Prendre une photo</button></div></div>" +
     '<div class="pad mt-16">' + nutritionCard({ rest: 2340, pct: 0, p: 0, c: 0, f: 0, cons: "0" }) + "</div>" +
     '<div class="sec-title"><h3>Pour bien démarrer</h3><span class="xs faint">1/4</span></div><div class="pad"><div class="list">' +

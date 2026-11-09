@@ -1,5 +1,5 @@
 /**
- * Client de l'API Nyam.
+ * Client de l'API Omeo.
  *
  * - Côté serveur (Server Components, Server Actions) : appel direct à l'API sur le réseau interne.
  * - Côté navigateur : appel à /api/... sur ce domaine, relayé par app/api/[...path]/route.ts.

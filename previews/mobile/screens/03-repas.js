@@ -1,7 +1,7 @@
 (function () {
   const { G, S, I, topbar, iconBtn, sheet, input, bar, photo, ring, appbar, days } = window.M;
 
-  G("repas", "Ajouter un repas", "Bouton central « + » → photo (principal), vocal/texte (Plus) ou catalogue. Les valeurs nutritionnelles viennent de la base Nyam, jamais de l'IA. L'utilisateur corrige, choisit le type de repas, valide, puis peut donner son avis sur l'analyse.");
+  G("repas", "Ajouter un repas", "Bouton central « + » → photo (principal), vocal/texte (Plus) ou catalogue. Les valeurs nutritionnelles viennent de la base Omeo, jamais de l'IA. L'utilisateur corrige, choisit le type de repas, valide, puis peut donner son avis sur l'analyse.");
 
   const homeBehind = '<div class="scroll">' + appbar() + '<div class="pad"><p class="eyebrow">Lundi 9 novembre</p><h1 class="h-lg mt-4">Bonjour, Franck</h1></div><div class="mt-16">' + days(0, { nums: [9, 10, 11, 12, 13, 14, 15] }) + '</div><div class="pad mt-16"><div class="card" style="height:260px"></div></div></div>';
 

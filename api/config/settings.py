@@ -1,5 +1,5 @@
 """
-Réglages Django de l'API Nyam.
+Réglages Django de l'API Omeo.
 
 Règle d'architecture : l'API est la SEULE à faire les calculs
 (objectifs, apports, quotas, points, challenges…). Les clients
@@ -116,8 +116,8 @@ S3_PUBLIC_ENDPOINT_URL = env("S3_PUBLIC_ENDPOINT_URL", default=S3_ENDPOINT_URL)
 S3_REGION = env("S3_REGION", default="us-east-1")
 S3_ACCESS_KEY_ID = env("S3_ACCESS_KEY_ID")
 S3_SECRET_ACCESS_KEY = env("S3_SECRET_ACCESS_KEY")
-S3_PRIVATE_BUCKET = env("S3_PRIVATE_BUCKET", default="nyam-private")
-S3_PUBLIC_BUCKET = env("S3_PUBLIC_BUCKET", default="nyam-public")
+S3_PRIVATE_BUCKET = env("S3_PRIVATE_BUCKET", default="omeo-private")
+S3_PUBLIC_BUCKET = env("S3_PUBLIC_BUCKET", default="omeo-public")
 S3_PUBLIC_BASE_URL = env("S3_PUBLIC_BASE_URL", default=f"{S3_PUBLIC_ENDPOINT_URL}/{S3_PUBLIC_BUCKET}")
 UPLOAD_URL_TTL_SECONDS = 15 * 60
 DOWNLOAD_URL_TTL_SECONDS = 60 * 60
@@ -167,8 +167,8 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
 }
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Nyam API",
-    "DESCRIPTION": "API unique de Nyam (mobile, admin, site). Tous les calculs sont faits ici.",
+    "TITLE": "Omeo API",
+    "DESCRIPTION": "API unique de Omeo (mobile, admin, site). Tous les calculs sont faits ici.",
     "VERSION": "0.1.0",
 }
 

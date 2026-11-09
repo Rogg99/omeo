@@ -1,4 +1,4 @@
-/* Nyam — site vitrine (Next.js, pages pré-rendues). Mobile d'abord, léger sur réseau lent. */
+/* Omeo — site vitrine (Next.js, pages pré-rendues). Mobile d'abord, léger sur réseau lent. */
 body { font-size: 17px; background: var(--cream-50); }
 .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
 .narrow { width: min(760px, 100% - 40px); margin-inline: auto; }

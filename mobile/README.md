@@ -1,6 +1,6 @@
-# nyam
+# omeo
 
-Nyam - Scanne. Comprends. Mange mieux.
+Omeo - Scanne. Comprends. Mange mieux.
 
 ## Getting Started
 

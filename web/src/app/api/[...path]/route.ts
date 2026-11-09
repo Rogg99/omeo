@@ -1,5 +1,5 @@
 /**
- * Proxy vers l'API Nyam.
+ * Proxy vers l'API Omeo.
  *
  * Le navigateur n'appelle jamais l'API directement : il appelle /api/... sur ce
  * domaine, et le serveur Next relaie vers API_URL_INTERNAL (réseau Docker).

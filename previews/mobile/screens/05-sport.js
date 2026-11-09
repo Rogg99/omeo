@@ -36,7 +36,7 @@
     '<div class="list mt-12">' + window.M.li("footprints", "Pas moyens", "", '<b class="num">7 180</b>') + window.M.li("flame", "Dépense moyenne", "", '<b class="num">2 580 kcal</b>') + window.M.li("pulse", "Séances", "", '<b class="num">4</b>') + "</div></div></div>", { nav: "prog" });
 
   S("sport", "SPO-05", "Analyses croisées", "Plus : constats hebdomadaires nutrition × activité calculés par l'API, avec une action concrète à chaque fois.",
-    '<div class="scroll">' + topbar("Analyses de la semaine", "Nyam Plus", "") + '<div class="pad stack" style="--gap:12px">' +
+    '<div class="scroll">' + topbar("Analyses de la semaine", "Omeo Plus", "") + '<div class="pad stack" style="--gap:12px">' +
     [["calendar", "accent", "Tu bouges plus le week-end, mais tu manges plus aussi.", "+420 kcal le samedi en moyenne, pour +1 800 pas.", "Voir mes samedis"], ["footprints", "info", "3 jours sous les 4 000 pas cette semaine.", "Mardi, mercredi et jeudi : jours de bureau ?", "Une marche de 15 min après le déjeuner"], ["beef", "", "Tes protéines suivent ton sport.", "Les jours de séance, tu atteins 95 % de ton objectif protéines.", "Continuer comme ça"]]
       .map((x) => '<div class="card"><span class="badge-ico ' + x[1] + '">' + I(x[0]) + '</span><h3 class="h-sm mt-12" style="line-height:1.3">' + x[2] + '</h3><p class="small muted mt-4">' + x[3] + '</p><a class="link small mt-12 row" style="gap:4px">' + x[4] + I("arrowR", "flip") + "</a></div>").join("") + "</div></div>", { nav: "prog" });
 

@@ -1,4 +1,4 @@
-# Image de l'API Nyam (utilisée aussi par le worker et le beat Celery)
+# Image de l'API Omeo (utilisée aussi par le worker et le beat Celery)
 FROM python:3.13-slim AS base
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -14,8 +14,8 @@ CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py runserv
 
 # --- Prod ---
 FROM base AS prod
-RUN useradd --create-home nyam
+RUN useradd --create-home omeo
 COPY . .
 RUN SECRET_KEY=build DATABASE_URL=sqlite:///tmp/build.db python manage.py collectstatic --noinput
-USER nyam
+USER omeo
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]

@@ -19,14 +19,14 @@
   // ---------- Démarrage ----------
   S("onboarding", "ONB-01", "Écran de démarrage", "Logo sur fond vert profond pendant le chargement (< 1,5 s). Pas d'interaction.",
     '<div style="position:absolute;inset:0;display:grid;place-items:center;--logo-color: #e2e8da;--logo-text:#f4efe6">' +
-    '<div class="center">' + window.logo(64, false) + '<div style="font:700 44px/1 var(--font-display);letter-spacing:-.04em;margin-top:14px">Nyam</div>' +
+    '<div class="center">' + window.logo(64, false) + '<div style="font:700 44px/1 var(--font-display);letter-spacing:-.04em;margin-top:14px">Omeo</div>' +
     '<p style="margin-top:10px;opacity:.75;font-size:15px">Scanne. <span style="color:#f2a26b">Comprends.</span> Mange mieux.</p></div></div>' +
     '<div style="position:absolute;bottom:60px;left:0;right:0;display:grid;place-items:center"><div class="spinner" style="width:26px;height:26px;border-width:3px;border-color:rgba(255,255,255,.18);border-top-color:#fff"></div></div>',
     { bg: "full-green", dark: true });
 
   S("onboarding", "ONB-02", "Choix de la langue", "Langue détectée sur le téléphone et présélectionnée. 8 langues ; l'arabe bascule l'interface de droite à gauche.",
     '<div class="scroll no-nav"><div class="pad" style="padding-top:36px">' + window.logo(36) +
-    '<h1 class="h-xl mt-32">Dans quelle langue<br>veux-tu utiliser Nyam ?</h1><p class="muted mt-8">Tu pourras la changer à tout moment dans les paramètres.</p>' +
+    '<h1 class="h-xl mt-32">Dans quelle langue<br>veux-tu utiliser Omeo ?</h1><p class="muted mt-8">Tu pourras la changer à tout moment dans les paramètres.</p>' +
     '<div class="list mt-24">' +
     [["Français", "Détectée sur ton téléphone", 1], ["English"], ["Español"], ["Português"], ["العربية", "De droite à gauche"], ["简体中文"], ["日本語"], ["Deutsch"]]
       .map((l) => '<div class="li"><div class="grow"><b>' + l[0] + "</b>" + (l[1] ? "<small>" + l[1] + "</small>" : "") + '</div><span class="radio' + (l[2] ? " on" : "") + '">' + (l[2] ? I("check") : "") + "</span></div>").join("") +
@@ -40,7 +40,7 @@
     '<span class="tag glass" style="position:absolute;right:24px;top:250px;backdrop-filter:blur(8px)">' + I("beef") + " 32 g protéines</span>" +
     '<span class="tag" style="position:absolute;left:44px;bottom:38px;background:#fffdf9;color:#151411">' + I("sparkles") + " Thiéboudienne reconnu</span></div>" +
     '<div class="pad" style="padding-top:30px"><h1 class="h-xl">Mange mieux.<br><span class="serif" style="font-size:40px;color:var(--primary-text)">À ton rythme.</span></h1>' +
-    '<p class="muted mt-12">Photographie ton assiette : Nyam reconnaît le plat, estime les portions et te dit où tu en es.</p></div></div>' +
+    '<p class="muted mt-12">Photographie ton assiette : Omeo reconnaît le plat, estime les portions et te dit où tu en es.</p></div></div>' +
     '<div class="bottom-cta"><button class="btn black">Commencer · 2 min</button><button class="btn ghost mt-8">J\'ai déjà un compte</button></div>');
 
   // ---------- Questionnaire ----------
@@ -92,7 +92,7 @@
       '<div class="banner warn">' + I("alert") + "<span><b>+9,5 kg</b> par rapport à aujourd'hui. Si ton objectif est de perdre du poids, vérifie ce chiffre. Tu pourras préciser ton objectif à l'étape suivante.</span></div>"));
 
   S("onboarding", "ONB-12", "Étape 8 · Objectifs", "Choix multiple. Les objectifs incompatibles (perdre / prendre) s'excluent avec une explication.",
-    step(8, "target", "Quels sont tes objectifs ?", "Choisis-en un ou plusieurs. Nyam adapte ses conseils.",
+    step(8, "target", "Quels sont tes objectifs ?", "Choisis-en un ou plusieurs. Omeo adapte ses conseils.",
       [["scale", "Perdre du poids", "Atteindre et garder un poids santé.", 1], ["dumbbell", "Prendre de la masse", "Gagner du muscle avec une alimentation adaptée.", 0, 1], ["utensils", "Manger équilibré", "De meilleures habitudes au quotidien.", 1], ["drop", "Prévenir le diabète", "Mieux gérer sa glycémie.", 1], ["heart", "Prévenir l'hypertension", "Surveiller le sel et la tension.", 0]]
         .map((o) => '<div class="option' + (o[3] ? " on" : "") + '"' + (o[4] ? ' style="opacity:.45"' : "") + '><span class="badge-ico round' + (o[3] ? "" : " neutral") + '">' + I(o[0]) + '</span><div class="grow"><b>' + o[1] + "</b><small>" + (o[4] ? "Incompatible avec « Perdre du poids »" : o[2]) + '</small></div><span class="check' + (o[3] ? " on" : "") + '">' + (o[3] ? I("check") : "") + "</span></div>").join(""),
       { cta: "Continuer · 3 choisis" }));
@@ -109,7 +109,7 @@
     input("lock", "Mot de passe", { state: "focus", value: "••••••••", right: I("eye") }) +
     '<div class="card sunk tight xs stack" style="--gap:6px">' + [["10 caractères minimum", 0], ["Une minuscule et une majuscule", 1], ["Un chiffre", 1], ["Un caractère spécial", 0]].map((r) => '<div class="row" style="gap:8px;color:' + (r[1] ? "var(--primary-text)" : "var(--text-3)") + '">' + I(r[1] ? "check" : "minus") + r[0] + "</div>").join("") + "</div>" +
     '</div><div class="stack mt-20" style="--gap:12px">' +
-    [["J'accepte les <a class='link'>CGU</a> et la <a class='link'>politique de confidentialité</a>", 1, "Obligatoire"], ["J'accepte que Nyam traite mes données de santé (poids, repas, activité) pour calculer mon suivi", 1, "Obligatoire"], ["Je veux recevoir les nouveautés et offres de Nyam", 0, "Facultatif"]]
+    [["J'accepte les <a class='link'>CGU</a> et la <a class='link'>politique de confidentialité</a>", 1, "Obligatoire"], ["J'accepte que Omeo traite mes données de santé (poids, repas, activité) pour calculer mon suivi", 1, "Obligatoire"], ["Je veux recevoir les nouveautés et offres de Omeo", 0, "Facultatif"]]
       .map((c) => '<div class="row" style="align-items:flex-start"><span class="check' + (c[1] ? " on" : "") + '">' + (c[1] ? I("check") : "") + '</span><span class="small grow">' + c[0] + ' <span class="faint xs">· ' + c[2] + "</span></span></div>").join("") +
     '</div><button class="btn black mt-24">Créer mon compte</button></div></div>');
 
@@ -125,7 +125,7 @@
     [["Métabolisme de base calculé", 1], ["Objectif calorique ajusté", 1], ["Répartition des macros", 0], ["Plats de ta région", 0]].map((x) => '<div class="row small" style="color:' + (x[1] ? "var(--text)" : "var(--text-3)") + '"><span class="check' + (x[1] ? " on" : "") + '" style="width:22px;height:22px;border-radius:50%">' + (x[1] ? I("check") : "") + "</span>" + x[0] + "</div>").join("") + "</div></div></div>");
 
   S("onboarding", "ONB-16", "Ton plan est prêt", "Résumé des objectifs calculés par l'API, avec durée de l'essai. Rassurant et concret avant l'accueil.",
-    '<div class="scroll no-nav"><div class="pad" style="padding-top:28px"><span class="tag">' + I("sparkles") + ' Essai Nyam Plus · 7 jours</span><h1 class="h-xl mt-16">Franck, voici<br>ton plan quotidien</h1>' +
+    '<div class="scroll no-nav"><div class="pad" style="padding-top:28px"><span class="tag">' + I("sparkles") + ' Essai Omeo Plus · 7 jours</span><h1 class="h-xl mt-16">Franck, voici<br>ton plan quotidien</h1>' +
     '<div class="card black mt-24 center" style="padding:26px"><p class="eyebrow" style="color:inherit;opacity:.6">Objectif calorique</p><div class="num mt-8" style="font-size:52px;font-weight:600">2 340<span style="font-size:18px;opacity:.6"> kcal</span></div><p class="small" style="opacity:.7">Pour perdre ~0,5 kg par semaine</p></div>' +
     '<div class="grid3 mt-12">' + [["Protéines", "128 g", "var(--prot)"], ["Glucides", "270 g", "var(--carb)"], ["Lipides", "72 g", "var(--fat)"]].map((m) => '<div class="stat center"><span style="display:block;width:8px;height:8px;border-radius:50%;background:' + m[2] + ';margin:0 auto 8px"></span><div class="v" style="font-size:19px">' + m[1] + '</div><div class="l">' + m[0] + "</div></div>").join("") + "</div>" +
     '<div class="list mt-12">' + [["drop", "Eau", "2,6 L par jour"], ["footprints", "Pas", "8 000 par jour"], ["flag", "Poids cible", "74 kg · vers fin mars"]].map((x) => '<div class="li" style="min-height:56px"><span class="badge-ico sm">' + I(x[0]) + '</span><div class="grow"><b>' + x[1] + '</b></div><span class="bold small">' + x[2] + "</span></div>").join("") + "</div>" +

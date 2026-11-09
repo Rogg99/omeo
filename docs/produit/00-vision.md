@@ -1,9 +1,9 @@
 # Vision produit
 
 ## Pitch
-Nyam aide chacun à **mieux manger et à bouger plus**, à partir de ce qu'il mange vraiment : les plats africains d'abord, puis les cuisines du monde.
+Omeo aide chacun à **mieux manger et à bouger plus**, à partir de ce qu'il mange vraiment : les plats africains d'abord, puis les cuisines du monde.
 
-L'utilisateur photographie son assiette. Nyam identifie les ingrédients, estime les portions et calcule les apports. Il les compare ensuite à l'activité physique importée automatiquement depuis le téléphone ou la montre.
+L'utilisateur photographie son assiette. Omeo identifie les ingrédients, estime les portions et calcule les apports. Il les compare ensuite à l'activité physique importée automatiquement depuis le téléphone ou la montre.
 
 ## Cibles
 - Adultes urbains d'Afrique francophone (Cameroun, Sénégal, Côte d'Ivoire, Togo…), puis l'international.
@@ -18,7 +18,7 @@ L'utilisateur photographie son assiette. Nyam identifie les ingrédients, estime
 5. **Respect des données** : les données de santé sont lues sans jamais être modifiées. Le serveur ne reçoit que des totaux quotidiens. Les consentements sont explicites.
 6. **L'API calcule, le mobile affiche** (règle absolue) : objectifs, apports, totaux, balance, quotas, points, niveaux, badges, validation des challenges… Tout est calculé par l'API. Le mobile ne fait que collecter les données (saisies, photos, données de santé brutes) et afficher les résultats renvoyés par l'API.
 
-## Ce que Nyam ne fait pas
+## Ce que Omeo ne fait pas
 - Pas de communauté ni de réseau social.
 - Pas de scan de produits (code-barres, emballage).
 - Pas de recettes publiées par les utilisateurs : l'équipe les produit.

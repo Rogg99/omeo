@@ -3,7 +3,7 @@
 > Coller d'abord le [socle commun](README.md#socle-commun-à-coller-en-tête-de-chaque-prompt).
 
 ```text
-LIVRABLE : le site public de Nyam, dans web/. Next.js 16 (App Router), React 19, TypeScript strict,
+LIVRABLE : le site public de Omeo, dans web/. Next.js 16 (App Router), React 19, TypeScript strict,
 Tailwind 4 et pnpm. Il tourne dans Docker sur http://localhost.
 
 RÉFÉRENCE : previews/web/ (accueil, fonctionnalités, tarifs, abonnement et tous ses états, FAQ, contact,

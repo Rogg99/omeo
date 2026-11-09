@@ -1,4 +1,4 @@
-/* Nyam Admin — back-office multi-rôles (Next.js). Densité confortable, tableaux lisibles, actions historisées. */
+/* Omeo Admin — back-office multi-rôles (Next.js). Densité confortable, tableaux lisibles, actions historisées. */
 body { background: var(--bg); font-size: 14px; }
 .app { display: grid; grid-template-columns: 252px 1fr; min-height: 100vh; }
 

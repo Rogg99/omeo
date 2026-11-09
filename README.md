@@ -1,4 +1,4 @@
-# Nyam
+# Omeo
 
 > Scanne. Comprends. Mange mieux.
 
@@ -25,7 +25,7 @@ Tout tourne dans Docker sauf le mobile. nginx sert de point d'entrée unique :
 | http://api.localhost | API, pour le dev et le mobile (doc sur `/api/v1/docs/`). Le web et l'admin ne l'exposent jamais : ils relaient `/api/...` côté serveur |
 | http://10.0.2.2 | API depuis l'émulateur Android |
 | http://s3.localhost | Stockage S3 (MinIO) : les clients y téléversent et lisent les fichiers par URL signée |
-| http://s3-console.localhost | Console MinIO (dev : `nyam` / `nyam-dev-secret`) |
+| http://s3-console.localhost | Console MinIO (dev : `omeo` / `omeo-dev-secret`) |
 
 ```bash
 cp api/.env.example api/.env

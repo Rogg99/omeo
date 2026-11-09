@@ -130,16 +130,17 @@ PERFORMANCE :
 - Réponse en moins de 150 ms au 95e percentile en local, hors IA.
 - Pagination par curseur pour l'app, par page pour l'admin.
 
-DONNÉES DE DÉMO :
-- Commande `python manage.py seed`. Elle crée :
-  - environ 150 aliments ouest-africains et environ 40 plats (ndolé, thiéboudienne, attiéké poisson,
-    mafé, yassa, alloco…) ;
-  - 30 recettes, 20 plantes, 40 exercices, 10 séances, 3 programmes, 6 challenges ;
-  - les badges, les niveaux et le barème de points ;
-  - les FAQ et les documents légaux ;
-  - 4 comptes de démo (trial, free, plus, staff de chaque rôle) ;
-  - 60 jours d'historique.
-- Mêmes jeux de données que les maquettes, pour pouvoir comparer.
+SEEDERS (docs/technique/seeders.md, à appliquer à la lettre) :
+- seed_reference : idempotente, lancée à chaque démarrage après migrate. Elle lit api/seeds/reference/
+  (réglages, offres, quotas, points, niveaux, badges, villes, textes légaux) et n'écrase jamais une
+  valeur existante. En production, elle refuse de publier les textes légaux s'il reste des [crochets].
+- create_superadmin : commande interactive (mot de passe, QR de la double authentification).
+- import_foods (WAFCT 2019, sel = sodium × 2,5, source et identifiant d'origine conservés) et
+  import_content (contenus importés en brouillon).
+- seed_demo [--reset] [--seed 42] : interdite en production, déterministe, passe par les vrais
+  services. Comptes et données de docs/technique/seeders.md, avec les mêmes données que les maquettes.
+- Démarrage du conteneur api : migrate, seed_reference, puis seed_demo si SEED_DEMO=true.
+  Ajoute SEED_DEMO=true dans .env.example.
 
 TESTS (pytest-django, factory_boy, freezegun) :
 - Couverture d'au moins 90 % sur services et calculations.
@@ -152,6 +153,7 @@ OUTILLAGE À LIVRER :
 - GitHub Actions : lint, typage, tests, oasdiff contre contracts/openapi.yaml, et build Docker.
 - Mise à jour de .env.example et du README de l'API.
 
-ORDRE : socle core et auth en premier, car les clients en dépendent. Ensuite, les modules dans l'ordre
-du socle commun. Après chaque module : migrations, tests, vérification du schéma, commit.
+ORDRE : socle core et auth en premier, car les clients en dépendent. Ensuite seed_reference et
+seed_demo (squelette, enrichi à chaque module), pour que l'API ait tout de suite de vraies données.
+Puis les modules dans l'ordre du socle commun ; chaque module complète seed_demo avec ses données. Après chaque module : migrations, tests, vérification du schéma, commit.
 ```

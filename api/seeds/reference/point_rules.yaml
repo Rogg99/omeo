@@ -1,0 +1,13 @@
+# Barème de points (modèle PointRule) — docs/produit/features/06-gamification.md
+- { action: meal_logged,         points: 10,  cap: 4,    cap_period: day }
+- { action: day_complete,        points: 20,  cap: 1,    cap_period: day }
+- { action: water_goal,          points: 10,  cap: 1,    cap_period: day }
+- { action: kcal_goal,           points: 20,  cap: 1,    cap_period: day }
+- { action: steps_goal,          points: 15,  cap: 1,    cap_period: day }
+- { action: workout_completed,   points: 30,  cap: 2,    cap_period: day }
+- { action: weight_logged,       points: 5,   cap: 1,    cap_period: week }
+- { action: challenge_day,       points: 10,  cap: null, cap_period: none }
+- { action: challenge_completed, points: 100, cap: null, cap_period: none }
+- { action: program_completed,   points: 300, cap: null, cap_period: none }
+- { action: feedback_given,      points: 5,   cap: 3,    cap_period: day }
+- { action: referral_validated,  points: 50,  cap: null, cap_period: none }

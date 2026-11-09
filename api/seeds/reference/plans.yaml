@@ -1,0 +1,20 @@
+# Offres (modèle Plan). Prix en cents USD — question ouverte n°1 (4,49 / 46,99 ou 4,99 / 49,99).
+- code: trial
+  name: { fr: Essai, en: Trial }
+  price_cents: 0
+  interval: none
+- code: free
+  name: { fr: Free, en: Free }
+  price_cents: 0
+  interval: none
+- code: plus_monthly
+  name: { fr: Omeo Plus mensuel, en: Omeo Plus monthly }
+  price_cents: 449
+  interval: month
+  store_product_ids: { google: omeo_plus_monthly, apple: app.omeo.plus.monthly }
+- code: plus_annual
+  name: { fr: Omeo Plus annuel, en: Omeo Plus annual }
+  price_cents: 4699
+  interval: year
+  is_featured: true
+  store_product_ids: { google: omeo_plus_annual, apple: app.omeo.plus.annual }

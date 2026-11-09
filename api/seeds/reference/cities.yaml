@@ -1,0 +1,32 @@
+# Villes suggérées à l'onboarding (modèle City, is_suggested: true). Fuseaux IANA.
+# Les traductions des noms se complètent dans l'admin (repli : nom français).
+- { country: SN, timezone: Africa/Dakar,        name: { fr: Dakar } }
+- { country: SN, timezone: Africa/Dakar,        name: { fr: Thiès } }
+- { country: SN, timezone: Africa/Dakar,        name: { fr: Saint-Louis } }
+- { country: CI, timezone: Africa/Abidjan,      name: { fr: Abidjan } }
+- { country: CI, timezone: Africa/Abidjan,      name: { fr: Bouaké } }
+- { country: CI, timezone: Africa/Abidjan,      name: { fr: Yamoussoukro } }
+- { country: CM, timezone: Africa/Douala,       name: { fr: Yaoundé } }
+- { country: CM, timezone: Africa/Douala,       name: { fr: Douala } }
+- { country: CM, timezone: Africa/Douala,       name: { fr: Bafoussam } }
+- { country: TG, timezone: Africa/Lome,         name: { fr: Lomé } }
+- { country: TG, timezone: Africa/Lome,         name: { fr: Kara } }
+- { country: BJ, timezone: Africa/Porto-Novo,   name: { fr: Cotonou } }
+- { country: BJ, timezone: Africa/Porto-Novo,   name: { fr: Porto-Novo } }
+- { country: ML, timezone: Africa/Bamako,       name: { fr: Bamako } }
+- { country: BF, timezone: Africa/Ouagadougou,  name: { fr: Ouagadougou } }
+- { country: BF, timezone: Africa/Ouagadougou,  name: { fr: Bobo-Dioulasso } }
+- { country: NE, timezone: Africa/Niamey,       name: { fr: Niamey } }
+- { country: GN, timezone: Africa/Conakry,      name: { fr: Conakry } }
+- { country: GA, timezone: Africa/Libreville,   name: { fr: Libreville } }
+- { country: CG, timezone: Africa/Brazzaville,  name: { fr: Brazzaville } }
+- { country: CD, timezone: Africa/Kinshasa,     name: { fr: Kinshasa } }
+- { country: CD, timezone: Africa/Lubumbashi,   name: { fr: Lubumbashi } }
+- { country: RW, timezone: Africa/Kigali,       name: { fr: Kigali } }
+- { country: MG, timezone: Indian/Antananarivo, name: { fr: Antananarivo } }
+- { country: MA, timezone: Africa/Casablanca,   name: { fr: Casablanca } }
+- { country: TN, timezone: Africa/Tunis,        name: { fr: Tunis } }
+- { country: DZ, timezone: Africa/Algiers,      name: { fr: Alger } }
+- { country: FR, timezone: Europe/Paris,        name: { fr: Paris } }
+- { country: BE, timezone: Europe/Brussels,     name: { fr: Bruxelles } }
+- { country: CA, timezone: America/Toronto,     name: { fr: Montréal } }

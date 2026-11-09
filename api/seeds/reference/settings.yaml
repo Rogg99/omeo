@@ -1,0 +1,36 @@
+# Réglages initiaux (modèle Setting). Créés s'ils n'existent pas, JAMAIS écrasés ensuite :
+# toute modification se fait dans l'admin. Valeurs : docs/produit/03-regles-metier.md (à valider par un·e nutritionniste).
+nutrition:
+  activity_factor: 1.2                 # dépense de base = métabolisme × 1,2 (sédentaire)
+  lose_weight_deficit: 0.175           # −15 à −20 %
+  gain_muscle_surplus: 0.125           # +10 à +15 %
+  min_kcal: { female: 1200, male: 1500 }
+  protein_g_per_kg: { lose_weight: 1.8, gain_muscle: 2.0, eat_balanced: 1.4, prevent_diabetes: 1.4, prevent_hypertension: 1.4 }
+  fat_ratio: { lose_weight: 0.275, gain_muscle: 0.25, eat_balanced: 0.30, prevent_diabetes: 0.30, prevent_hypertension: 0.30 }
+  carbs_ratio_balanced: 0.50           # manger équilibré : 45 à 55 %
+  water_ml_per_kg: 32.5                # 30 à 35 ml/kg
+  water_ml_per_active_hour: 500
+  fiber_g: { female: 25, male: 34 }
+  salt_max_g: 5                        # recommandation OMS
+  activity_bonus_ratio: 0.5            # moitié de l'excédent d'activité ajoutée à l'objectif
+  kcal_target_tolerance: 0.10          # « objectif respecté » à 10 % près
+ai:
+  vision_model: ""                     # à choisir (question ouverte n°10)
+  text_model: ""
+  translation_model: ""
+  prompt_version: meal-v1
+  low_confidence_threshold: 0.6
+  monthly_budget_usd: 0
+app:
+  min_version_android: "1.0.0"
+  min_version_ios: "1.0.0"
+  min_age: 16                          # question ouverte n°5 : valeur prudente, réglable
+  active_locales: [fr, en, es, pt, ar, zh, ja, de]
+  features: { text_analysis: true, programs: true, challenges: true, insights: true, offline_workouts: true, web_checkout: true }
+  web_checkout_countries: []           # activé pays par pays (question ouverte n°4)
+trial: { default_days: 3, invite_days: 7 }
+referral: { days_per_referral: 7, cap_days: 35 }
+challenges: { default_success_threshold: 0.8 }
+notifications: { max_push_per_day: 3, default_quiet_start: "22:00", default_quiet_end: "07:00" }
+billing: { refund_approval_threshold_usd: 50 }
+four_eyes: { content: true, finance: true, settings: true }

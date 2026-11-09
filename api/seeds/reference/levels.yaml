@@ -1,0 +1,9 @@
+# Niveaux (modèle Level), thème culinaire validé (question ouverte n°9, D33).
+# Un utilisateur régulier gagne environ 80 à 120 points par jour :
+# Pousse en ~3 jours, Marmiton en ~10 jours, Cuisinier en ~1 mois, Chef en ~2 mois, Grand chef en ~4 mois.
+- { rank: 1, min_points: 0,     name: { fr: Graine,     en: Seed } }
+- { rank: 2, min_points: 300,   name: { fr: Pousse,     en: Sprout } }
+- { rank: 3, min_points: 1000,  name: { fr: Marmiton,   en: Kitchen helper } }
+- { rank: 4, min_points: 2500,  name: { fr: Cuisinier,  en: Cook } }
+- { rank: 5, min_points: 5500,  name: { fr: Chef,       en: Chef } }
+- { rank: 6, min_points: 11000, name: { fr: Grand chef, en: Head chef } }

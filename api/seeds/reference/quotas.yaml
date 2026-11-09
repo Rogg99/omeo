@@ -1,0 +1,11 @@
+# Règles de quotas (modèle QuotaRule). limit: null = illimité.
+# Quotas de l'essai : question ouverte n°2 (les 28 / 10 d'origine étaient prévus pour 4 jours).
+- { plan_tier: trial, feature: photo_analysis,    limit: 21,   period: trial }
+- { plan_tier: trial, feature: text_analysis,     limit: 8,    period: trial }
+- { plan_tier: trial, feature: challenges_active, limit: 1,    period: trial }
+- { plan_tier: free,  feature: photo_analysis,    limit: 3,    period: day }
+- { plan_tier: free,  feature: text_analysis,     limit: 0,    period: day }
+- { plan_tier: free,  feature: challenges_active, limit: 1,    period: day }
+- { plan_tier: plus,  feature: photo_analysis,    limit: 140,  period: month }
+- { plan_tier: plus,  feature: text_analysis,     limit: 140,  period: month }
+- { plan_tier: plus,  feature: challenges_active, limit: null, period: month }

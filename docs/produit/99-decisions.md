@@ -36,6 +36,10 @@
 | D30 | Email non vérifié | App utilisable. Paiement web, changement d'email, export de données et validation du parrainage exigent un email vérifié |
 | D31 | Compte suspendu | Sessions révoquées, tout accès refusé, sauf le support et la suppression du compte (RGPD) |
 | D32 | Design tokens et traductions | Tokens dans un JSON unique (format W3C) d'où sont générés le CSS et le thème Flutter. Traductions en ICU MessageFormat, avec le français comme source |
+| D33 | Niveaux | Graine, Pousse, Marmiton, Cuisinier, Chef, Grand chef (de 0 à 11 000 points) |
+| D34 | Seeders | Trois niveaux : référence (toujours, idempotent), catalogue (WAFCT 2019 et contenus en brouillon), démo (dev uniquement, déterministe). Voir [seeders.md](../technique/seeders.md) |
+| D35 | Images | Pas de photo pour les aliments (une icône par catégorie). Vraies photos obligatoires pour les plats et recettes publiés, pas d'image générée par IA pour un vrai plat |
+| D36 | Textes légaux | Version 1 rédigée (CGU, confidentialité, cookies, mentions légales), à faire valider par un·e juriste. Publication refusée en production tant que l'identité de l'éditeur n'est pas complétée |
 
 ## Questions ouvertes
 1. Prix en USD : 4,49 $ et 46,99 $, ou 4,99 $ et 49,99 $ ?
@@ -46,5 +50,5 @@
 6. Liste définitive des objectifs proposés à l'onboarding.
 7. Production des vidéos d'exercices.
 8. Validation des calculs nutritionnels par un ou une nutritionniste.
-9. Noms des niveaux.
+9. ~~Noms des niveaux.~~ Réglé (D33).
 10. Modèles OpenRouter retenus et budget d'IA par utilisateur.

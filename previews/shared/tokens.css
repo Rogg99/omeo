@@ -1,0 +1,216 @@
+/* =========================================================================
+   Nyam — Design tokens partagés (mobile, admin, web)
+   Base : crème, brun, accent orange, vert désaturé (sauge / kaki profond)
+   en alternance avec le noir. Thèmes clair et sombre. Compatible RTL.
+   ========================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap");
+
+:root {
+  /* Neutres chauds */
+  --cream-50: #fbf8f2;
+  --cream-100: #f6f1e7;
+  --cream-200: #ede5d6;
+  --cream-300: #ddd2bf;
+  --sand-500: #a39581;
+  --brown-600: #7a5638;
+  --brown-700: #5b3f2c;
+  --brown-900: #2b1f17;
+  --ink-950: #151411;
+
+  /* Vert désaturé */
+  --sage-50: #f0f3ec;
+  --sage-100: #e2e8da;
+  --sage-200: #c8d3bc;
+  --sage-400: #8a9d7c;
+  --sage-600: #56694d;
+  --sage-700: #43553c;
+  --sage-800: #33422f;
+  --sage-900: #242f22;
+
+  /* Accent */
+  --orange-50: #fdf0e4;
+  --orange-100: #fadfc7;
+  --orange-500: #e2742b;
+  --orange-600: #c75f1c;
+
+  /* Sémantique */
+  --red-50: #fbe9e5;
+  --red-600: #b9422e;
+  --amber-50: #f9efd9;
+  --amber-600: #a8730f;
+  --blue-50: #e5eef3;
+  --blue-600: #3c6a86;
+
+  /* Données nutritionnelles (constantes sur toutes les plateformes) */
+  --kcal: var(--sage-700);
+  --prot: #d0802f;
+  --carb: #6f8a5e;
+  --fat: #7a5638;
+  --fiber: #8d8a3e;
+  --salt: #557a92;
+  --water: #4f86a8;
+
+  /* Rôles — thème clair */
+  --bg: var(--cream-100);
+  --bg-elev: var(--cream-50);
+  --surface: #fffdf9;
+  --surface-2: var(--cream-200);
+  --surface-sunk: #f1ebdf;
+  --line: #e7dfd1;
+  --line-strong: var(--cream-300);
+  --text: var(--ink-950);
+  --text-2: #5f5549;
+  --text-3: #8d8274;
+  --text-inv: #fffdf9;
+
+  --primary: var(--sage-700);
+  --primary-hover: var(--sage-800);
+  --primary-soft: var(--sage-100);
+  --primary-text: var(--sage-700);
+  --on-primary: #fffdf9;
+
+  --contrast: var(--ink-950);      /* le « noir » qui alterne avec le vert */
+  --on-contrast: #fbf8f2;
+
+  --accent: var(--orange-500);
+  --accent-soft: var(--orange-50);
+  --accent-text: var(--orange-600);
+
+  --danger: var(--red-600);
+  --danger-soft: var(--red-50);
+  --warning: var(--amber-600);
+  --warning-soft: var(--amber-50);
+  --info: var(--blue-600);
+  --info-soft: var(--blue-50);
+  --success: var(--sage-700);
+  --success-soft: var(--sage-100);
+
+  --focus: 0 0 0 3px color-mix(in srgb, var(--orange-500) 45%, transparent);
+
+  /* Typo */
+  --font-display: "Space Grotesk", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-body: "DM Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-accent: "Instrument Serif", Georgia, serif;
+
+  /* Rayons, ombres, espacements */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(43, 31, 23, 0.05), 0 1px 1px rgba(43, 31, 23, 0.03);
+  --shadow-2: 0 6px 20px -8px rgba(43, 31, 23, 0.16), 0 2px 6px -2px rgba(43, 31, 23, 0.06);
+  --shadow-3: 0 24px 48px -16px rgba(43, 31, 23, 0.28);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Thème sombre : surfaces chaudes très foncées, vert éclairci pour garder le contraste */
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg-elev: #171613;
+  --surface: #1c1b17;
+  --surface-2: #26241f;
+  --surface-sunk: #151410;
+  --line: #2e2b25;
+  --line-strong: #3b372f;
+  --text: #f4efe6;
+  --text-2: #bdb3a5;
+  --text-3: #8c8376;
+  --text-inv: #151411;
+
+  --primary: #9fb592;
+  --primary-hover: #b3c7a6;
+  --primary-soft: #26301f;
+  --primary-text: #b0c5a3;
+  --on-primary: #12170f;
+
+  --contrast: #f4efe6;
+  --on-contrast: #151411;
+
+  --accent: #ee8a45;
+  --accent-soft: #3a2517;
+  --accent-text: #f2a26b;
+
+  --danger: #e57a65;
+  --danger-soft: #3a1d17;
+  --warning: #e0ac4a;
+  --warning-soft: #33280f;
+  --info: #7fb0cf;
+  --info-soft: #172631;
+  --success: #9fb592;
+  --success-soft: #26301f;
+
+  --kcal: #9fb592;
+  --prot: #e79a52;
+  --carb: #94b082;
+  --fat: #c08e66;
+  --fiber: #bdb862;
+  --salt: #84aac2;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px -10px rgba(0, 0, 0, 0.6);
+  --shadow-3: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; margin: 0; line-height: 1.15; }
+p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+
+:focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--r-xs); }
+
+.serif { font-family: var(--font-accent); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.ico { width: 1.25em; height: 1.25em; flex: none; display: inline-block; vertical-align: middle; }
+
+/* Placeholder photo : texture chaude + motif, en attendant les vraies photos */
+.photo {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 90% at 20% 15%, rgba(255, 255, 255, 0.35), transparent 55%),
+    radial-gradient(80% 80% at 85% 90%, rgba(0, 0, 0, 0.25), transparent 60%),
+    var(--ph, linear-gradient(135deg, #b8723e, #6b3f22));
+  color: rgba(255, 255, 255, 0.92);
+}
+.photo::after {
+  content: attr(data-label);
+  position: absolute; inset: auto 10px 8px auto;
+  font: 600 10px/1 var(--font-body);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  opacity: 0.7;
+}
+.ph-ndole { --ph: linear-gradient(135deg, #5c6b2f, #2f3a18); }
+.ph-thieb { --ph: linear-gradient(135deg, #c96a2c, #7a3517); }
+.ph-alloco { --ph: linear-gradient(135deg, #e3a33c, #a2561c); }
+.ph-baobab { --ph: linear-gradient(135deg, #b9a07c, #6e5a3f); }
+.ph-bissap { --ph: linear-gradient(135deg, #9c2c45, #4e1020); }
+.ph-moringa { --ph: linear-gradient(135deg, #7e9a52, #3c5426); }
+.ph-yassa { --ph: linear-gradient(135deg, #e0b25a, #8a5a1e); }
+.ph-fonio { --ph: linear-gradient(135deg, #d8c08a, #8a7448); }
+.ph-sport { --ph: linear-gradient(135deg, #43553c, #151411); }
+.ph-sport2 { --ph: linear-gradient(135deg, #7a5638, #2b1f17); }
+.ph-gombo { --ph: linear-gradient(135deg, #6f8a3a, #2e3f15); }
+.ph-poisson { --ph: linear-gradient(135deg, #b9784a, #503018); }

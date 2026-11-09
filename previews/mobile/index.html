@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nyam · Mobile — tous les écrans</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body class="gallery-body">
+  <header class="g-top">
+    <h1><a class="crumb" href="../index.html">Previews</a> / <span id="logo"></span> Mobile</h1>
+    <div class="g-filters" id="filters" role="toolbar" aria-label="Filtrer par module"></div>
+    <div class="g-toggles" role="group" aria-label="Affichage">
+      <button id="t-dark" aria-pressed="false">Sombre</button>
+      <button id="t-rtl" aria-pressed="false">العربية (RTL)</button>
+      <button id="t-size" aria-pressed="false">Grand</button>
+    </div>
+    <span class="g-count" id="count"></span>
+  </header>
+
+  <main id="gallery"></main>
+
+  <div class="g-focus" id="focus" role="dialog" aria-modal="true" aria-label="Écran agrandi">
+    <div id="focus-device"></div>
+    <aside>
+      <span class="g-id" id="focus-id"></span>
+      <b id="focus-title"></b>
+      <p id="focus-desc"></p>
+      <div class="nav">
+        <button id="prev">← Précédent</button>
+        <button id="next">Suivant →</button>
+      </div>
+      <p class="mt-16" style="font-size:12px;color:#8d8274">Flèches du clavier pour naviguer · Échap pour fermer · Faites défiler l'écran pour voir la suite.</p>
+    </aside>
+    <button class="icon-btn close" id="close" aria-label="Fermer"></button>
+  </div>
+
+  <script src="../shared/icons.js"></script>
+  <script src="components.js"></script>
+  <script src="screens/01-onboarding.js"></script>
+  <script src="screens/02-accueil.js"></script>
+  <script src="screens/03-repas.js"></script>
+  <script src="screens/04-suivi.js"></script>
+  <script src="screens/05-sport.js"></script>
+  <script src="screens/06-programmes.js"></script>
+  <script src="screens/07-contenus.js"></script>
+  <script src="screens/08-plus.js"></script>
+  <script src="screens/09-profil.js"></script>
+  <script src="screens/10-systeme.js"></script>
+  <script>
+    (function () {
+      const { screens, groups, frame } = window.M;
+      const $ = (s) => document.querySelector(s);
+      $("#logo").innerHTML = window.logoMark(26);
+      $("#close").innerHTML = window.icon("x");
+      let filter = "all", rtl = false;
+
+      function render() {
+        const list = screens.filter((s) => filter === "all" || s.group === filter);
+        $("#count").textContent = list.length + " écrans";
+        $("#gallery").innerHTML = groups.filter((g) => filter === "all" || g.id === filter).map((g) => {
+          const items = screens.filter((s) => s.group === g.id);
+          return '<section class="g-section" id="' + g.id + '"><header><h2>' + g.title + "<small>" + items.length + " écrans</small></h2></header><p>" + g.desc + '</p><div class="g-grid">' +
+            items.map((s) => '<figure class="g-item"><div class="g-open" role="button" tabindex="0" data-id="' + s.id + '" aria-label="Agrandir ' + s.title + '">' + frame(withDir(s)) + '</div><figcaption><span class="g-id">' + s.id + "</span><b>" + s.title + "</b><span>" + s.desc + "</span></figcaption></figure>").join("") +
+            "</div></section>";
+        }).join("");
+      }
+      const withDir = (s) => rtl ? Object.assign({}, s, { opts: Object.assign({}, s.opts, { dir: "rtl" }) }) : s;
+
+      $("#filters").innerHTML = '<button data-f="all" aria-pressed="true">Tout</button>' + groups.map((g) => '<button data-f="' + g.id + '" aria-pressed="false">' + g.title + "</button>").join("");
+      $("#filters").addEventListener("click", (e) => {
+        const b = e.target.closest("button"); if (!b) return;
+        filter = b.dataset.f;
+        document.querySelectorAll("#filters button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+        render(); window.scrollTo({ top: 0 });
+      });
+      const toggle = (id, fn) => $(id).addEventListener("click", (e) => { const on = e.currentTarget.getAttribute("aria-pressed") !== "true"; e.currentTarget.setAttribute("aria-pressed", on); fn(on); });
+      toggle("#t-dark", (on) => document.documentElement.dataset.theme = on ? "dark" : "light");
+      toggle("#t-rtl", (on) => { rtl = on; render(); });
+      toggle("#t-size", (on) => document.body.classList.toggle("big", on));
+
+      // Focus
+      let idx = -1;
+      function open(i) {
+        const list = screens.filter((s) => filter === "all" || s.group === filter);
+        idx = (i + list.length) % list.length; const s = list[idx];
+        $("#focus-device").innerHTML = frame(withDir(s));
+        $("#focus-id").textContent = s.id; $("#focus-title").textContent = s.title; $("#focus-desc").textContent = s.desc;
+        $("#focus").setAttribute("open", ""); $("#close").focus();
+      }
+      function close() { $("#focus").removeAttribute("open"); }
+      $("#gallery").addEventListener("click", (e) => {
+        const b = e.target.closest(".g-open"); if (!b) return;
+        const list = screens.filter((s) => filter === "all" || s.group === filter);
+        open(list.findIndex((s) => s.id === b.dataset.id));
+      });
+      $("#gallery").addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("g-open")) { e.preventDefault(); e.target.click(); } });
+      $("#close").onclick = close; $("#prev").onclick = () => open(idx - 1); $("#next").onclick = () => open(idx + 1);
+      $("#focus").addEventListener("click", (e) => { if (e.target.id === "focus") close(); });
+      document.addEventListener("keydown", (e) => {
+        if (!$("#focus").hasAttribute("open")) return;
+        if (e.key === "Escape") close(); if (e.key === "ArrowRight") open(idx + 1); if (e.key === "ArrowLeft") open(idx - 1);
+      });
+      if (location.hash) { const g = location.hash.slice(1); if (groups.some((x) => x.id === g)) { filter = g; } }
+      render();
+      document.querySelectorAll("#filters button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.f === filter));
+    })();
+  </script>
+</body>
+</html>

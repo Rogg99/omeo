@@ -18,7 +18,7 @@
 
   // ---------- Démarrage ----------
   S("onboarding", "ONB-01", "Écran de démarrage", "Logo sur fond vert profond pendant le chargement (< 1,5 s). Pas d'interaction.",
-    '<div style="position:absolute;inset:0;display:grid;place-items:center;--logo-frame:#e2e8da;--logo-heart:#c8d3bc;--logo-bowl:#c8d3bc;--logo-text:#f4efe6">' +
+    '<div style="position:absolute;inset:0;display:grid;place-items:center;--logo-color: #e2e8da;--logo-text:#f4efe6">' +
     '<div class="center">' + window.logo(64, false) + '<div style="font:700 44px/1 var(--font-display);letter-spacing:-.04em;margin-top:14px">Nyam</div>' +
     '<p style="margin-top:10px;opacity:.75;font-size:15px">Scanne. <span style="color:#f2a26b">Comprends.</span> Mange mieux.</p></div></div>' +
     '<div style="position:absolute;bottom:60px;left:0;right:0;display:grid;place-items:center"><div class="spinner" style="width:26px;height:26px;border-width:3px;border-color:rgba(255,255,255,.18);border-top-color:#fff"></div></div>',

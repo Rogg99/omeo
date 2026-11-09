@@ -4,7 +4,7 @@ body { background: var(--bg); font-size: 14px; }
 
 /* Barre latérale (noir, pour alterner avec le vert) */
 .side { background: #151411; color: #d8d0c3; padding: 18px 14px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; overflow-y: auto; scrollbar-width: none;
-  --logo-frame: #e2e8da; --logo-heart: #c8d3bc; --logo-bowl: #c8d3bc; --logo-text: #fbf8f2; }
+  --logo-color: #e2e8da; --logo-text: #fbf8f2; }
 .side .brand { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px 16px; }
 .side .env { font: 600 10px var(--font-body); letter-spacing: .1em; text-transform: uppercase; padding: 3px 7px; border-radius: 6px; background: #2b2a26; color: #f2a26b; }
 .side .grp { font: 600 10.5px var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: #7d766b; padding: 16px 10px 6px; }
@@ -136,7 +136,7 @@ td.num, th.num { text-align: end; font-variant-numeric: tabular-nums; }
 
 /* Auth */
 .auth { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
-.auth .art { background: var(--sage-800); color: #f4efe6; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; --logo-frame: #e2e8da; --logo-heart: #c8d3bc; --logo-bowl: #c8d3bc; --logo-text: #fbf8f2; position: relative; overflow: hidden; }
+.auth .art { background: var(--sage-800); color: #f4efe6; padding: 48px; display: flex; flex-direction: column; justify-content: space-between; --logo-color: #e2e8da; --logo-text: #fbf8f2; position: relative; overflow: hidden; }
 .auth .form { display: grid; place-items: center; padding: 48px; }
 .auth .box { width: 380px; }
 .otp { display: flex; gap: 10px; }

@@ -1,4 +1,4 @@
-/* Jeu d'icônes Nyam (trait 1.75, viewBox 24) + logo. Usage : icon("home") -> <svg>. */
+/* Jeu d'icônes Omeo (trait 1.75, viewBox 24) + logo. Usage : icon("home") -> <svg>. */
 (function () {
   const P = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v12h14V9"/><path d="M10 21v-6h4v6"/>',
@@ -139,23 +139,17 @@
     return '<svg class="ico ' + (cls || "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + "</svg>";
   }
 
-  /* Logo : bol souriant dans un cadre de scan, cœur-pouls au-dessus. */
+  /* Logo Omeo : un disque auquel il manque une bouchée. Monochrome, couleur via --logo-color. */
   function logoMark(size) {
     size = size || 40;
     return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 64 64" aria-hidden="true">' +
-      '<g fill="none" stroke="var(--logo-frame, #33422f)" stroke-width="4" stroke-linecap="round">' +
-      '<path d="M6 18V10a4 4 0 0 1 4-4h8M46 6h8a4 4 0 0 1 4 4v8M58 46v8a4 4 0 0 1-4 4h-8M18 58h-8a4 4 0 0 1-4-4v-8"/></g>' +
-      '<path d="M32 21.5c-3-3.6-8-1.8-8 2 0 3.3 4.4 6 8 8.8 3.6-2.8 8-5.5 8-8.8 0-3.8-5-5.6-8-2z" fill="var(--logo-heart, #43553c)"/>' +
-      '<path d="M26.5 25.5h3l1.3-2.5 2 4.5 1.4-2h3" fill="none" stroke="#fffdf9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '<circle cx="24" cy="34" r="5" fill="#e2742b"/><circle cx="33" cy="33" r="5.5" fill="#f3ead9"/><path d="M38 35c1-4 4-6 7-6-1 3-3 5-7 6z" fill="#6f8a5e"/>' +
-      '<path d="M14 36h36a18 18 0 0 1-36 0z" fill="var(--logo-bowl, #43553c)"/>' +
-      '<path d="M24 44c4.5 3.5 11.5 3.5 16 0" fill="none" stroke="#fffdf9" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<path d="M55.98 32.98A24 24 0 1 1 41.12 9.8A8.5 8.5 0 0 0 50.21 21.41A7 7 0 0 0 55.98 32.98Z" fill="var(--logo-color, #151411)"/>' +
       "</svg>";
   }
 
   function logo(size, withText) {
-    return '<span class="logo" style="display:inline-flex;align-items:center;gap:8px">' + logoMark(size) +
-      (withText === false ? "" : '<span style="font:700 ' + Math.round((size || 40) * 0.62) + 'px/1 var(--font-display);letter-spacing:-0.04em;color:var(--logo-text, var(--sage-800))">Nyam</span>') +
+    return '<span class="logo" style="display:inline-flex;align-items:center;gap:6px">' + logoMark(size) +
+      (withText === false ? "" : '<span style="font:600 ' + Math.round((size || 40) * 0.62) + 'px/1 var(--font-display);letter-spacing:-0.04em;color:var(--logo-text, var(--logo-color, #151411))">omeo</span>') +
       "</span>";
   }
 

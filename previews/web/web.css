@@ -139,7 +139,7 @@ details p { margin-top: 12px; color: var(--text-2); }
 .radio.on { border: 7px solid var(--primary); }
 
 /* Pied de page */
-.foot { background: #151411; color: #c9bfb1; padding: 72px 0 36px; margin-top: 0; --logo-frame: #e2e8da; --logo-heart: #c8d3bc; --logo-bowl: #c8d3bc; --logo-text: #fbf8f2; }
+.foot { background: #151411; color: #c9bfb1; padding: 72px 0 36px; margin-top: 0; --logo-color: #e2e8da; --logo-text: #fbf8f2; }
 .foot a { color: inherit; text-decoration: none; }
 .foot a:hover { color: #fff; }
 .foot h4 { color: #fff; font-size: 15px; margin-bottom: 14px; }

@@ -120,10 +120,16 @@ MOCK DATA FIRST (voir le socle commun) :
 - Les fixtures sont dans lib/mock/ (données JSON désérialisées avec les modèles du client généré
   nyam_api), plus un MockBackend en mémoire qui conserve l'état de la session. On développe en
   partant du flavor mock.
-- Le mock simule aussi ce qui dépend du téléphone : caméra (photos d'exemple de plats), Health Connect
-  et HealthKit (pas, séances et poids simulés), achats sur les stores (achat et restauration simulés),
-  push (notifications locales), réseau coupé (pour tester la file d'attente hors connexion). Ces
-  services natifs sont derrière des interfaces, avec une implémentation fausse et une vraie.
+- La caméra et la galerie ne sont JAMAIS simulées, même en flavor mock : prise de vue réelle,
+  permissions réelles, compression réelle sur l'appareil. Seuls l'envoi de la photo et la réponse de
+  l'analyse IA viennent du mock : la photo prise s'affiche, et une analyse d'exemple est renvoyée,
+  ce qui donne des ingrédients présélectionnés plausibles.
+- Le mock simule en revanche les autres services qui dépendent du téléphone :
+  - Health Connect et HealthKit : pas, séances et poids simulés ;
+  - achats sur les stores : achat et restauration simulés ;
+  - push : remplacées par des notifications locales ;
+  - réseau coupé : pour tester la file d'attente hors connexion.
+  Ces services natifs sont derrière des interfaces, avec une implémentation fausse et une vraie.
 - Panneau de développement caché (5 appuis sur la version de l'app, uniquement en flavor mock ou dev) :
   choix du scénario, de la latence, du compte et de la langue, plus remise à zéro de l'état.
 - lib/mock/ n'est importé que par main_mock.dart. La CI vérifie qu'aucun fichier de lib/mock/ n'est

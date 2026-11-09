@@ -1,0 +1,4755 @@
+openapi: 3.1.0
+info:
+  title: Nyam API
+  version: 1.0.0
+  summary: API unique de Nyam (mobile, admin, site web).
+  description: |
+    Contrat cible, écrit avant le code. Conventions : docs/technique/conventions-api.md.
+    Modèle de données : docs/technique/modele-donnees.md.
+
+    Règle absolue : l'API fait tous les calculs. Les réponses de lecture sont prêtes à afficher.
+    Les rôles requis sur /admin/* sont indiqués par l'extension `x-roles`.
+servers:
+  - url: http://api.localhost/api/v1
+    description: Développement (nginx)
+  - url: https://api.nyam.app/api/v1
+    description: Production
+security:
+  - bearer: []
+tags:
+  - { name: app, description: "Configuration publique" }
+  - { name: auth, description: "Authentification et sessions" }
+  - { name: account, description: "Compte, profil, consentements, données" }
+  - { name: home, description: "Accueil et journal du jour" }
+  - { name: meals, description: "Repas, analyses IA, avis" }
+  - { name: catalog, description: "Aliments et plats" }
+  - { name: tracking, description: "Hydratation, progression, poids" }
+  - { name: activity, description: "Santé, activités, balance, analyses croisées" }
+  - { name: training, description: "Exercices et séances guidées" }
+  - { name: programs, description: "Programmes" }
+  - { name: challenges, description: "Challenges" }
+  - { name: rewards, description: "Points, niveaux, badges, séries" }
+  - { name: content, description: "Recettes, plantes, prévention, FAQ, légal" }
+  - { name: billing, description: "Offres, abonnements, paiements, parrainage" }
+  - { name: notifications, description: "Push et centre de notifications" }
+  - { name: support, description: "Demandes de support" }
+  - { name: webhooks, description: "Notifications des stores et de l'agrégateur" }
+  - { name: admin-dashboard }
+  - { name: admin-users }
+  - { name: admin-content }
+  - { name: admin-feedback }
+  - { name: admin-billing }
+  - { name: admin-support }
+  - { name: admin-campaigns }
+  - { name: admin-settings }
+  - { name: admin-team }
+paths:
+  # ───────────────────────────── APP ─────────────────────────────
+  /app/config:
+    get:
+      tags: [app]
+      operationId: getAppConfig
+      summary: Configuration publique (version minimale, langues, features, villes suggérées)
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AppConfig" }
+  /app/cities:
+    get:
+      tags: [app]
+      operationId: searchCities
+      summary: Suggestions de villes (onboarding, profil)
+      security: []
+      parameters:
+        - { name: q, in: query, schema: { type: string, minLength: 1, maxLength: 60 } }
+        - { name: country, in: query, schema: { type: string, minLength: 2, maxLength: 2 } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [results]
+                properties:
+                  results: { type: array, items: { $ref: "#/components/schemas/City" } }
+
+  # ───────────────────────────── AUTH ─────────────────────────────
+  /auth/register:
+    post:
+      tags: [auth]
+      operationId: register
+      summary: Inscription par email (fin de l'onboarding, étape 9)
+      description: |
+        Crée le compte, le profil (réponses 1 à 8), les consentements, l'essai (3 j ou 7 j avec code valide)
+        et les objectifs. Un code d'invitation invalide ne bloque pas : `invite_code_status` le signale.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RegisterRequest" }
+      responses:
+        "201":
+          description: Compte créé
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /auth/login:
+    post:
+      tags: [auth]
+      operationId: login
+      summary: Connexion par email et mot de passe
+      description: Pour un compte staff, renvoie 401 `mfa_required` avec `meta.mfa_token`.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginRequest" }
+      responses:
+        "200":
+          description: Connecté
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /auth/social:
+    post:
+      tags: [auth]
+      operationId: socialAuth
+      summary: Connexion ou inscription avec Google ou Apple
+      description: |
+        Vérifie l'`id_token` auprès du fournisseur. Si le compte n'existe pas, `profile` et `consents` sont obligatoires
+        (sinon 400 `validation_error`). `created` indique s'il s'agit d'une inscription.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/SocialAuthRequest" }
+      responses:
+        "200":
+          description: Connecté ou inscrit
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /auth/mfa/verify:
+    post:
+      tags: [auth]
+      operationId: verifyMfa
+      summary: Second facteur (TOTP ou code de secours) pour les comptes staff
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mfa_token, code]
+              properties:
+                mfa_token: { type: string }
+                code: { type: string, pattern: "^[0-9A-Za-z-]{6,12}$" }
+      responses:
+        "200":
+          description: Connecté
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuthResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /auth/refresh:
+    post:
+      tags: [auth]
+      operationId: refreshToken
+      summary: Rotation du jeton de rafraîchissement
+      description: Rejouer un refresh déjà utilisé révoque toute la session (détection de vol).
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh]
+              properties:
+                refresh: { type: string }
+      responses:
+        "200":
+          description: Nouveaux jetons
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Tokens" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /auth/logout:
+    post:
+      tags: [auth]
+      operationId: logout
+      summary: Déconnexion de l'appareil courant (ou de tous)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                all_devices: { type: boolean, default: false }
+      responses:
+        "204": { description: Déconnecté }
+  /auth/password/forgot:
+    post:
+      tags: [auth]
+      operationId: forgotPassword
+      summary: Envoie un lien de réinitialisation
+      description: Répond toujours 204, que l'email existe ou non (pas d'énumération).
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email, maxLength: 254 }
+      responses:
+        "204": { description: Traité }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /auth/password/reset:
+    post:
+      tags: [auth]
+      operationId: resetPassword
+      summary: Définit un nouveau mot de passe à partir du lien reçu
+      description: Révoque toutes les sessions existantes.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, password]
+              properties:
+                token: { type: string }
+                password: { $ref: "#/components/schemas/Password" }
+      responses:
+        "204": { description: Mot de passe changé }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /auth/email/verify:
+    post:
+      tags: [auth]
+      operationId: verifyEmail
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token: { type: string }
+      responses:
+        "204": { description: Email vérifié }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /auth/email/resend:
+    post:
+      tags: [auth]
+      operationId: resendVerificationEmail
+      responses:
+        "204": { description: Envoyé }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /referral/check:
+    post:
+      tags: [billing]
+      operationId: checkInviteCode
+      summary: Vérifie un code d'invitation avant l'inscription
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { $ref: "#/components/schemas/InviteCode" }
+      responses:
+        "200":
+          description: Résultat
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [valid, trial_days]
+                properties:
+                  valid: { type: boolean }
+                  referrer_first_name: { type: [string, "null"], description: "Pour « Awa t'invite »" }
+                  trial_days: { type: integer, examples: [7] }
+        "429": { $ref: "#/components/responses/RateLimited" }
+
+  # ───────────────────────────── ACCOUNT ─────────────────────────────
+  /me:
+    get:
+      tags: [account]
+      operationId: getMe
+      summary: Utilisateur, profil, objectifs, droits et préférences
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    delete:
+      tags: [account]
+      operationId: requestAccountDeletion
+      summary: Demande de suppression du compte (purge à J+30)
+      description: Révoque les sessions. Réponse indique si un abonnement store reste à résilier.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [confirm]
+              properties:
+                confirm: { type: string, const: DELETE }
+                password: { type: string, description: "Requis si le compte a un mot de passe" }
+                reason: { type: string, maxLength: 500 }
+      responses:
+        "200":
+          description: Suppression programmée
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [scheduled_for, store_subscription_active]
+                properties:
+                  scheduled_for: { type: string, format: date-time }
+                  store_subscription_active: { type: boolean }
+                  store_channel: { $ref: "#/components/schemas/Channel" }
+  /me/profile:
+    patch:
+      tags: [account]
+      operationId: updateProfile
+      summary: Modifie le profil (recalcule les objectifs si nécessaire)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ProfileUpdate" }
+      responses:
+        "200":
+          description: Profil et objectifs à jour
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Me" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /me/avatar:
+    put:
+      tags: [account]
+      operationId: setAvatar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [upload_id]
+              properties:
+                upload_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Image" }
+    delete:
+      tags: [account]
+      operationId: deleteAvatar
+      responses:
+        "204": { description: Supprimé }
+  /me/email:
+    post:
+      tags: [account]
+      operationId: changeEmail
+      summary: Change l'email (lien de confirmation envoyé à la nouvelle adresse)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        "202": { description: Confirmation envoyée }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /me/password:
+    post:
+      tags: [account]
+      operationId: changePassword
+      summary: Change ou définit le mot de passe (révoque les autres sessions)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [new_password]
+              properties:
+                current_password: { type: string, description: "Absent si compte social sans mot de passe" }
+                new_password: { $ref: "#/components/schemas/Password" }
+      responses:
+        "204": { description: Changé }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /me/social-accounts:
+    get:
+      tags: [account]
+      operationId: listSocialAccounts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [provider, email]
+                  properties:
+                    provider: { type: string, enum: [google, apple] }
+                    email: { type: [string, "null"] }
+  /me/sessions:
+    get:
+      tags: [account]
+      operationId: listSessions
+      summary: Appareils connectés
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Session" } }
+  /me/sessions/{id}:
+    delete:
+      tags: [account]
+      operationId: revokeSession
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "204": { description: Révoquée }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /me/consents:
+    get:
+      tags: [account]
+      operationId: listConsents
+      summary: État actuel des consentements et documents à (ré)accepter
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [consents, pending_documents]
+                properties:
+                  consents: { type: array, items: { $ref: "#/components/schemas/ConsentState" } }
+                  pending_documents: { type: array, items: { $ref: "#/components/schemas/LegalDocumentRef" } }
+    post:
+      tags: [account]
+      operationId: updateConsents
+      summary: Accepte ou retire des consentements (ajout seul côté serveur)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [consents]
+              properties:
+                consents: { type: array, items: { $ref: "#/components/schemas/ConsentInput" }, minItems: 1 }
+      responses:
+        "200":
+          description: État à jour
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/ConsentState" }
+  /me/exports:
+    post:
+      tags: [account]
+      operationId: requestDataExport
+      summary: Demande un export de toutes ses données (lien envoyé par email et notification)
+      responses:
+        "202":
+          description: Export en préparation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DataExport" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+    get:
+      tags: [account]
+      operationId: listDataExports
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/DataExport" } }
+  /me/uploads:
+    post:
+      tags: [account]
+      operationId: createUpload
+      summary: Obtient une URL présignée pour téléverser un fichier directement vers le stockage
+      description: |
+        Le client PUT le fichier sur `upload_url` avec les en-têtes fournis, puis référence `id`.
+        L'API vérifie type réel, taille (≤ 8 Mo) et retire les métadonnées EXIF.
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, content_type, size]
+              properties:
+                kind: { type: string, enum: [meal_photo, avatar, support_attachment] }
+                content_type: { type: string, enum: [image/jpeg, image/png, image/webp, image/heic] }
+                size: { type: integer, minimum: 1, maximum: 8388608 }
+      responses:
+        "201":
+          description: URL présignée
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UploadTicket" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /account-deletion:
+    post:
+      tags: [account]
+      operationId: requestDeletionByEmail
+      summary: Demande publique de suppression (page web exigée par Google Play)
+      description: Envoie un lien de confirmation si le compte existe. Répond toujours 204.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, captcha]
+              properties:
+                email: { type: string, format: email }
+                captcha: { type: string, description: Jeton Cloudflare Turnstile }
+      responses:
+        "204": { description: Traité }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /account-deletion/confirm:
+    post:
+      tags: [account]
+      operationId: confirmDeletionByEmail
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token: { type: string }
+      responses:
+        "204": { description: Suppression programmée }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  # ───────────────────────────── HOME / JOURNAL ─────────────────────────────
+  /me/home:
+    get:
+      tags: [home]
+      operationId: getHome
+      summary: Écran d'accueil complet en un seul appel
+      parameters: [{ $ref: "#/components/parameters/DateOptional" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Home" }
+  /me/days/{date}:
+    get:
+      tags: [home]
+      operationId: getDay
+      summary: Journal d'un jour (objectif, résumé, 4 repas, hydratation, message)
+      parameters: [{ $ref: "#/components/parameters/DatePath" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DayDetail" }
+  /me/calendar:
+    get:
+      tags: [home]
+      operationId: getCalendar
+      summary: État de chaque jour d'un mois (pour le calendrier du journal)
+      parameters:
+        - { name: month, in: query, required: true, schema: { type: string, pattern: "^\\d{4}-\\d{2}$" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [date, status]
+                  properties:
+                    date: { type: string, format: date }
+                    status: { type: string, enum: [empty, partial, on_target, over, under] }
+
+  # ───────────────────────────── MEALS ─────────────────────────────
+  /me/analyses:
+    post:
+      tags: [meals]
+      operationId: createAnalysis
+      summary: Lance une analyse IA (photo ou texte)
+      description: |
+        Décompte le quota dans la même transaction (remboursé si l'analyse échoue).
+        Texte libre / vocal = Plus uniquement (403 `plan_required`). Saisie vocale transcrite sur l'appareil.
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  required: [kind, upload_id]
+                  properties:
+                    kind: { type: string, const: photo }
+                    upload_id: { type: string, format: uuid }
+                - type: object
+                  required: [kind, text]
+                  properties:
+                    kind: { type: string, const: text }
+                    text: { type: string, minLength: 3, maxLength: 500 }
+              discriminator: { propertyName: kind }
+      responses:
+        "202":
+          description: Analyse en file
+          headers:
+            Retry-After: { schema: { type: integer }, description: Secondes avant le prochain poll }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Analysis" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "429": { $ref: "#/components/responses/QuotaExceeded" }
+  /me/analyses/{id}:
+    get:
+      tags: [meals]
+      operationId: getAnalysis
+      summary: État et résultat d'une analyse
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK (status queued|processing|succeeded|failed)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Analysis" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /me/analyses/{id}/feedback:
+    put:
+      tags: [meals]
+      operationId: putAnalysisFeedback
+      summary: Avis 👍/👎 sur une analyse (crée ou remplace)
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FeedbackInput" }
+      responses:
+        "200":
+          description: Enregistré (points éventuels)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [rewards]
+                properties:
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+  /me/quotas:
+    get:
+      tags: [meals]
+      operationId: getQuotas
+      summary: Quotas restants (affichés avant chaque photo)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Quota" } }
+  /me/meals:
+    get:
+      tags: [meals]
+      operationId: listMeals
+      summary: Repas d'un jour ou d'une période
+      parameters:
+        - { name: date, in: query, schema: { type: string, format: date } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/Meal" } }
+    post:
+      tags: [meals]
+      operationId: createMeal
+      summary: Enregistre un repas (depuis une analyse, un plat, une recette, ou des aliments)
+      description: Les valeurs nutritionnelles sont calculées depuis la base d'aliments, jamais depuis l'IA.
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MealInput" }
+      responses:
+        "201":
+          description: Repas créé, jour recalculé, récompenses
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MealWriteResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /me/meals/{id}:
+    get:
+      tags: [meals]
+      operationId: getMeal
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Meal" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [meals]
+      operationId: updateMeal
+      summary: Modifie les aliments, le type de repas, ou déplace vers un autre jour
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/MealUpdate" }
+      responses:
+        "200":
+          description: Repas et jour(s) recalculés
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MealWriteResult" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [meals]
+      operationId: deleteMeal
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: Supprimé, jour recalculé
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [day]
+                properties:
+                  day: { $ref: "#/components/schemas/DaySummary" }
+  /me/meals/{id}/duplicate:
+    post:
+      tags: [meals]
+      operationId: duplicateMeal
+      parameters:
+        - { $ref: "#/components/parameters/Id" }
+        - { $ref: "#/components/parameters/IdempotencyKey" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [date, meal_type]
+              properties:
+                date: { type: string, format: date }
+                meal_type: { $ref: "#/components/schemas/MealType" }
+      responses:
+        "201":
+          description: Copie créée
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/MealWriteResult" }
+  /me/meals/{id}/photo:
+    delete:
+      tags: [meals]
+      operationId: deleteMealPhoto
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "204": { description: Photo supprimée }
+  /me/meal-type-suggestion:
+    get:
+      tags: [meals]
+      operationId: suggestMealType
+      summary: Type de repas proposé selon l'heure locale
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [meal_type, date]
+                properties:
+                  meal_type: { $ref: "#/components/schemas/MealType" }
+                  date: { type: string, format: date }
+
+  # ───────────────────────────── CATALOG ─────────────────────────────
+  /foods:
+    get:
+      tags: [catalog]
+      operationId: searchFoods
+      summary: Recherche d'aliments (ajout d'ingrédient), noms locaux inclus
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string, minLength: 2, maxLength: 60 } }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [results]
+                properties:
+                  results: { type: array, items: { $ref: "#/components/schemas/FoodSummary" } }
+  /dishes:
+    get:
+      tags: [catalog]
+      operationId: searchDishes
+      parameters:
+        - { name: q, in: query, schema: { type: string, maxLength: 60 } }
+        - { name: country, in: query, schema: { type: string, minLength: 2, maxLength: 2 } }
+        - { name: scope, in: query, schema: { type: string, enum: [all, recent, favorites], default: all } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/DishSummary" } }
+  /dishes/{id}:
+    get:
+      tags: [catalog]
+      operationId: getDish
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/DishDetail" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /dishes/{id}/favorite:
+    put:
+      tags: [catalog]
+      operationId: favoriteDish
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Ajouté } }
+    delete:
+      tags: [catalog]
+      operationId: unfavoriteDish
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Retiré } }
+
+  # ───────────────────────────── TRACKING ─────────────────────────────
+  /me/water:
+    post:
+      tags: [tracking]
+      operationId: addWater
+      summary: Ajoute de l'eau (verre 250 ml, bouteille 500 ml, ou libre). Valeur négative = annulation
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount_ml]
+              properties:
+                amount_ml: { type: integer, minimum: -2000, maximum: 3000, not: { const: 0 } }
+                date: { type: string, format: date, description: "Défaut : aujourd'hui (local)" }
+      responses:
+        "201":
+          description: Hydratation à jour
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [water, rewards]
+                properties:
+                  water: { $ref: "#/components/schemas/Water" }
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+  /me/progress:
+    get:
+      tags: [tracking]
+      operationId: getProgress
+      summary: Courbe d'un nutriment (7 j en Free ; 30 j, 90 j, 1 an en Plus)
+      parameters:
+        - name: metric
+          in: query
+          required: true
+          schema: { type: string, enum: [kcal, carbs, fat, protein, fiber, salt] }
+        - name: range
+          in: query
+          schema: { type: string, enum: [7d, 30d, 90d, 1y], default: 7d }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Progress" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /me/weights:
+    get:
+      tags: [tracking]
+      operationId: getWeights
+      summary: Courbe du poids, cible, écart, tendance
+      parameters:
+        - name: range
+          in: query
+          schema: { type: string, enum: [30d, 90d, 1y, all], default: 90d }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WeightOverview" }
+    post:
+      tags: [tracking]
+      operationId: addWeight
+      summary: Saisie manuelle (l'emporte sur l'import le même jour). Recalcule les objectifs
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [weight_kg]
+              properties:
+                weight_kg: { type: number, minimum: 30, maximum: 300 }
+                date: { type: string, format: date }
+      responses:
+        "201":
+          description: Poids enregistré, objectifs recalculés
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [overview, targets, rewards]
+                properties:
+                  overview: { $ref: "#/components/schemas/WeightOverview" }
+                  targets: { $ref: "#/components/schemas/Targets" }
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+  /me/weights/{id}:
+    delete:
+      tags: [tracking]
+      operationId: deleteWeight
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: Supprimé
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WeightOverview" }
+  # ───────────────────────────── ACTIVITY ─────────────────────────────
+  /me/health/connection:
+    put:
+      tags: [activity]
+      operationId: setHealthConnection
+      summary: Déclare la connexion à Health Connect / Apple Health et les types autorisés
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [source, granted_types]
+              properties:
+                source: { type: string, enum: [health_connect, apple_health] }
+                granted_types:
+                  type: array
+                  items: { type: string, enum: [steps, distance, active_calories, workouts, weight, heart_rate] }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HealthConnection" }
+    delete:
+      tags: [activity]
+      operationId: deleteHealthConnection
+      summary: Déconnexion (les données déjà importées sont conservées)
+      responses: { "204": { description: Déconnecté } }
+  /me/health/sync:
+    post:
+      tags: [activity]
+      operationId: syncHealth
+      summary: Envoie les totaux par jour, séances et pesées lus sur l'appareil (upsert idempotent)
+      description: |
+        Le mobile ne lit que les jours modifiés depuis `last_sync_at` (maximum 30 jours en arrière).
+        L'API recalcule balance, objectifs, points et challenges des jours concernés.
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/HealthSyncInput" }
+      responses:
+        "200":
+          description: Jours recalculés
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [days, merge_suggestions, rewards, last_sync_at]
+                properties:
+                  days: { type: array, items: { $ref: "#/components/schemas/DaySummary" } }
+                  merge_suggestions: { type: array, items: { $ref: "#/components/schemas/MergeSuggestion" } }
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+                  last_sync_at: { type: string, format: date-time }
+  /me/activity:
+    get:
+      tags: [activity]
+      operationId: getActivityOverview
+      summary: Écran Sport — pas, distance, calories, balance du jour et de la semaine, séances
+      parameters: [{ $ref: "#/components/parameters/DateOptional" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActivityOverview" }
+  /me/activities:
+    get:
+      tags: [activity]
+      operationId: listActivities
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/Activity" } }
+    post:
+      tags: [activity]
+      operationId: createActivity
+      summary: Saisie manuelle (secours). Calories estimées par l'API
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ActivityInput" }
+      responses:
+        "201":
+          description: Créée
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActivityWriteResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /me/activities/{id}:
+    patch:
+      tags: [activity]
+      operationId: updateActivity
+      description: Seules les activités manuelles sont modifiables.
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ActivityInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActivityWriteResult" }
+        "409": { $ref: "#/components/responses/Conflict" }
+    delete:
+      tags: [activity]
+      operationId: deleteActivity
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: Supprimée
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [day]
+                properties:
+                  day: { $ref: "#/components/schemas/DaySummary" }
+  /me/activities/{id}/merge:
+    post:
+      tags: [activity]
+      operationId: mergeActivity
+      summary: Fusionne une saisie manuelle dans une séance importée qui la recouvre
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [into_id]
+              properties:
+                into_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Fusionnée
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ActivityWriteResult" }
+  /me/insights:
+    get:
+      tags: [activity]
+      operationId: listInsights
+      summary: Analyses croisées nutrition × activité (Plus)
+      parameters: [{ $ref: "#/components/parameters/Cursor" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/Insight" } }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  # ───────────────────────────── TRAINING ─────────────────────────────
+  /exercises:
+    get:
+      tags: [training]
+      operationId: listExercises
+      parameters:
+        - { name: q, in: query, schema: { type: string, maxLength: 60 } }
+        - { name: muscle, in: query, schema: { type: string } }
+        - { name: level, in: query, schema: { $ref: "#/components/schemas/Level" } }
+        - { name: equipment, in: query, schema: { type: string, enum: [none, any] } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK (`locked=true` pour le contenu Plus en Free)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/ExerciseSummary" } }
+  /exercises/{id}:
+    get:
+      tags: [training]
+      operationId: getExercise
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ExerciseDetail" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /workouts:
+    get:
+      tags: [training]
+      operationId: listWorkouts
+      parameters:
+        - { name: goal, in: query, schema: { type: string, enum: [cardio, strength, mobility] } }
+        - { name: level, in: query, schema: { $ref: "#/components/schemas/Level" } }
+        - { name: max_minutes, in: query, schema: { type: integer, minimum: 1 } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/WorkoutSummary" } }
+  /workouts/{id}:
+    get:
+      tags: [training]
+      operationId: getWorkout
+      summary: Séance complète avec ses étapes (vidéos HLS + sous-titres)
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkoutDetail" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /workouts/{id}/download:
+    get:
+      tags: [training]
+      operationId: getWorkoutDownload
+      summary: URL signées des médias MP4 pour usage hors connexion (Plus)
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [files, expires_at]
+                properties:
+                  expires_at: { type: string, format: date-time }
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      required: [exercise_id, url, size]
+                      properties:
+                        exercise_id: { type: string, format: uuid }
+                        url: { type: string, format: uri }
+                        size: { type: integer }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /me/workout-sessions:
+    post:
+      tags: [training]
+      operationId: completeWorkoutSession
+      summary: Enregistre une séance terminée (ou partielle). Calories et points calculés par l'API
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [workout_id, started_at, ended_at, completed_steps]
+              properties:
+                workout_id: { type: string, format: uuid }
+                started_at: { type: string, format: date-time }
+                ended_at: { type: string, format: date-time }
+                completed_steps: { type: integer, minimum: 0 }
+      responses:
+        "201":
+          description: Récapitulatif
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, kcal, duration_s, completed, day, rewards]
+                properties:
+                  id: { type: string, format: uuid }
+                  kcal: { type: integer }
+                  duration_s: { type: integer }
+                  completed: { type: boolean }
+                  day: { $ref: "#/components/schemas/DaySummary" }
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+
+  # ───────────────────────────── PROGRAMS ─────────────────────────────
+  /programs:
+    get:
+      tags: [programs]
+      operationId: listPrograms
+      parameters:
+        - { name: goal, in: query, schema: { $ref: "#/components/schemas/Goal" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/ProgramSummary" } }
+  /programs/{id}:
+    get:
+      tags: [programs]
+      operationId: getProgram
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ProgramDetail" }
+  /programs/{id}/enroll:
+    post:
+      tags: [programs]
+      operationId: enrollProgram
+      summary: Commence un programme (Plus). `replace=true` requis si un autre est actif
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                replace: { type: boolean, default: false }
+      responses:
+        "201":
+          description: Inscrit
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Enrollment" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /me/program:
+    get:
+      tags: [programs]
+      operationId: getActiveProgram
+      summary: Programme actif — jour courant, semaine, avancement
+      parameters: [{ $ref: "#/components/parameters/DateOptional" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Enrollment" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [programs]
+      operationId: quitProgram
+      responses: { "204": { description: Abandonné } }
+  /me/program/tasks/{id}:
+    put:
+      tags: [programs]
+      operationId: checkProgramTask
+      summary: Coche ou décoche une tâche manuelle du jour
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [done]
+              properties:
+                done: { type: boolean }
+                date: { type: string, format: date }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [enrollment, rewards]
+                properties:
+                  enrollment: { $ref: "#/components/schemas/Enrollment" }
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ───────────────────────────── CHALLENGES ─────────────────────────────
+  /challenges:
+    get:
+      tags: [challenges]
+      operationId: listChallenges
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/ChallengeSummary" } }
+  /challenges/{id}:
+    get:
+      tags: [challenges]
+      operationId: getChallenge
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ChallengeSummary" }
+  /challenges/{id}/join:
+    post:
+      tags: [challenges]
+      operationId: joinChallenge
+      summary: "Rejoint un challenge (Free : 1 actif — 429 `quota_exceeded`)"
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Participation" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "429": { $ref: "#/components/responses/QuotaExceeded" }
+  /me/challenges:
+    get:
+      tags: [challenges]
+      operationId: listMyChallenges
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [active, finished] } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/Participation" } }
+  /me/challenges/{id}:
+    get:
+      tags: [challenges]
+      operationId: getMyChallenge
+      summary: Calendrier réussi/raté, série, taux de réussite
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Participation" }
+    delete:
+      tags: [challenges]
+      operationId: leaveChallenge
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Abandonné } }
+  /me/challenges/{id}/days/{date}:
+    put:
+      tags: [challenges]
+      operationId: checkChallengeDay
+      summary: Coche un jour (challenges à validation manuelle uniquement, jour courant ou veille)
+      parameters:
+        - { $ref: "#/components/parameters/Id" }
+        - { $ref: "#/components/parameters/DatePath" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [done]
+              properties:
+                done: { type: boolean }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [participation, rewards]
+                properties:
+                  participation: { $ref: "#/components/schemas/Participation" }
+                  rewards: { $ref: "#/components/schemas/RewardDelta" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ───────────────────────────── REWARDS ─────────────────────────────
+  /me/rewards:
+    get:
+      tags: [rewards]
+      operationId: getRewards
+      summary: Écran « Mes récompenses »
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RewardsOverview" }
+  /me/badges:
+    get:
+      tags: [rewards]
+      operationId: listBadges
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/UserBadge" } }
+  /me/points:
+    get:
+      tags: [rewards]
+      operationId: listPointEvents
+      summary: Historique des points
+      parameters:
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/PointEvent" } }
+  # ───────────────────────────── CONTENT ─────────────────────────────
+  /recipes:
+    get:
+      tags: [content]
+      operationId: listRecipes
+      parameters:
+        - { name: q, in: query, schema: { type: string, maxLength: 60 } }
+        - { name: country, in: query, schema: { type: string, minLength: 2, maxLength: 2 } }
+        - { name: goal, in: query, schema: { $ref: "#/components/schemas/Goal" } }
+        - { name: tag, in: query, schema: { type: array, items: { type: string } }, style: form, explode: true }
+        - { name: max_minutes, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: favorites, in: query, schema: { type: boolean } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK (`locked=true` pour les recettes Plus en Free)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/RecipeSummary" } }
+  /recipes/{id}:
+    get:
+      tags: [content]
+      operationId: getRecipe
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RecipeDetail" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /recipes/{id}/favorite:
+    put:
+      tags: [content]
+      operationId: favoriteRecipe
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Ajoutée } }
+    delete:
+      tags: [content]
+      operationId: unfavoriteRecipe
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Retirée } }
+  /plants:
+    get:
+      tags: [content]
+      operationId: listPlants
+      parameters:
+        - { name: q, in: query, schema: { type: string, maxLength: 60 } }
+        - { name: tag, in: query, schema: { type: string, enum: [traditional_use, nutritional_support, caution] } }
+        - { name: favorites, in: query, schema: { type: boolean } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/PlantSummary" } }
+  /plants/{id}:
+    get:
+      tags: [content]
+      operationId: getPlant
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlantDetail" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /plants/{id}/favorite:
+    put:
+      tags: [content]
+      operationId: favoritePlant
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Ajoutée } }
+    delete:
+      tags: [content]
+      operationId: unfavoritePlant
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: Retirée } }
+  /me/prevention:
+    get:
+      tags: [content]
+      operationId: getPrevention
+      summary: Conseils déclenchés, état « pas assez de données », bilan hebdo (Plus)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PreventionOverview" }
+  /me/prevention/tips/{id}:
+    patch:
+      tags: [content]
+      operationId: updateUserTip
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                read: { type: boolean }
+                dismissed: { type: boolean }
+      responses: { "204": { description: OK } }
+  /faq:
+    get:
+      tags: [content]
+      operationId: listFaq
+      security: []
+      parameters:
+        - { name: audience, in: query, schema: { type: string, enum: [app, web] } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [category, items]
+                  properties:
+                    category: { type: string }
+                    items:
+                      type: array
+                      items:
+                        type: object
+                        required: [id, question, answer]
+                        properties:
+                          id: { type: string, format: uuid }
+                          question: { type: string }
+                          answer: { type: string, description: Markdown }
+  /legal/{kind}:
+    get:
+      tags: [content]
+      operationId: getLegalDocument
+      summary: Dernière version publiée (Markdown)
+      security: []
+      parameters:
+        - { name: kind, in: path, required: true, schema: { $ref: "#/components/schemas/LegalKind" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LegalDocument" }
+
+  # ───────────────────────────── BILLING ─────────────────────────────
+  /billing/plans:
+    get:
+      tags: [billing]
+      operationId: listPlans
+      summary: Offres et prix (USD), avantages, quotas par offre — app, site, page Tarifs
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PlanCatalog" }
+  /me/subscription:
+    get:
+      tags: [billing]
+      operationId: getSubscription
+      summary: Droits effectifs, abonnement courant, canal, quotas, actions possibles
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubscriptionState" }
+  /me/subscription/verify:
+    post:
+      tags: [billing]
+      operationId: verifyStorePurchase
+      summary: Vérifie un achat Google Play / App Store auprès du store et l'attache au compte
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  required: [channel, product_id, purchase_token]
+                  properties:
+                    channel: { type: string, const: google_play }
+                    product_id: { type: string }
+                    purchase_token: { type: string }
+                - type: object
+                  required: [channel, signed_transaction]
+                  properties:
+                    channel: { type: string, const: app_store }
+                    signed_transaction: { type: string, description: JWS StoreKit 2 }
+              discriminator: { propertyName: channel }
+      responses:
+        "200":
+          description: État à jour
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubscriptionState" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /me/subscription/restore:
+    post:
+      tags: [billing]
+      operationId: restorePurchases
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [channel, receipts]
+              properties:
+                channel: { type: string, enum: [google_play, app_store] }
+                receipts: { type: array, items: { type: string }, maxItems: 50 }
+      responses:
+        "200":
+          description: État à jour
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/SubscriptionState" }
+  /me/payments:
+    get:
+      tags: [billing]
+      operationId: listPayments
+      parameters: [{ $ref: "#/components/parameters/Cursor" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/Payment" } }
+  /me/billing/checkout:
+    post:
+      tags: [billing]
+      operationId: createWebCheckout
+      summary: Session de paiement web (carte, Apple Pay, Google Pay via l'agrégateur)
+      description: Refusé (409) si un abonnement store est actif. Le site redirige vers `checkout_url`.
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [plan_code, success_url, cancel_url]
+              properties:
+                plan_code: { type: string, enum: [plus_monthly, plus_annual] }
+                promo_code: { type: string, maxLength: 40 }
+                success_url: { type: string, format: uri }
+                cancel_url: { type: string, format: uri }
+      responses:
+        "201":
+          description: Session créée
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [checkout_url, expires_at]
+                properties:
+                  checkout_url: { type: string, format: uri }
+                  expires_at: { type: string, format: date-time }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /me/billing/promo-check:
+    post:
+      tags: [billing]
+      operationId: checkPromoCode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, plan_code]
+              properties:
+                code: { type: string, maxLength: 40 }
+                plan_code: { type: string, enum: [plus_monthly, plus_annual] }
+      responses:
+        "200":
+          description: Prix après remise (calculé par l'API)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [valid]
+                properties:
+                  valid: { type: boolean }
+                  label: { type: string }
+                  original: { $ref: "#/components/schemas/Money" }
+                  discounted: { $ref: "#/components/schemas/Money" }
+  /me/billing/portal:
+    post:
+      tags: [billing]
+      operationId: createBillingPortal
+      summary: Lien vers le portail de l'agrégateur (moyen de paiement, résiliation) — abonnement web
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [return_url]
+              properties:
+                return_url: { type: string, format: uri }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [url]
+                properties:
+                  url: { type: string, format: uri }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /me/referral:
+    get:
+      tags: [billing]
+      operationId: getReferral
+      summary: Code, lien de partage, filleuls validés, jours gagnés sur 35
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReferralOverview" }
+
+  # ───────────────────────────── NOTIFICATIONS ─────────────────────────────
+  /me/devices:
+    post:
+      tags: [notifications]
+      operationId: registerPushDevice
+      summary: Enregistre ou met à jour le jeton push de l'appareil
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, platform]
+              properties:
+                token: { type: string, maxLength: 4096 }
+                platform: { type: string, enum: [android, ios] }
+                app_version: { type: string, maxLength: 20 }
+      responses:
+        "204": { description: Enregistré }
+  /me/devices/{token}:
+    delete:
+      tags: [notifications]
+      operationId: unregisterPushDevice
+      parameters:
+        - { name: token, in: path, required: true, schema: { type: string } }
+      responses: { "204": { description: Retiré } }
+  /me/notification-preferences:
+    get:
+      tags: [notifications]
+      operationId: getNotificationPreferences
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/NotificationPreferences" }
+    put:
+      tags: [notifications]
+      operationId: updateNotificationPreferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NotificationPreferences" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/NotificationPreferences" }
+  /me/notifications:
+    get:
+      tags: [notifications]
+      operationId: listNotifications
+      parameters:
+        - { name: unread, in: query, schema: { type: boolean } }
+        - { $ref: "#/components/parameters/Cursor" }
+        - { $ref: "#/components/parameters/Limit" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/CursorPage"
+                  - type: object
+                    required: [unread_count]
+                    properties:
+                      unread_count: { type: integer }
+                      results: { type: array, items: { $ref: "#/components/schemas/Notification" } }
+  /me/notifications/read:
+    post:
+      tags: [notifications]
+      operationId: markNotificationsRead
+      summary: Marque comme lues (liste d'ids, ou toutes)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids: { type: array, items: { type: string, format: uuid }, maxItems: 100 }
+                all: { type: boolean }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [unread_count]
+                properties:
+                  unread_count: { type: integer }
+  /me/notifications/{id}/opened:
+    post:
+      tags: [notifications]
+      operationId: trackNotificationOpened
+      summary: Ouverture d'une push (statistiques de campagne)
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses: { "204": { description: OK } }
+
+  # ───────────────────────────── SUPPORT ─────────────────────────────
+  /support/tickets:
+    post:
+      tags: [support]
+      operationId: createTicket
+      summary: Demande de support (app connectée, ou formulaire de contact web avec captcha)
+      security: [{ bearer: [] }, {}]
+      parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TicketInput" }
+      responses:
+        "201":
+          description: Créée
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [number]
+                properties:
+                  number: { type: string, examples: [NY-10234] }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /me/tickets:
+    get:
+      tags: [support]
+      operationId: listMyTickets
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/TicketSummary" } }
+  /me/tickets/{id}:
+    get:
+      tags: [support]
+      operationId: getMyTicket
+      summary: Fil de la demande (sans les notes internes)
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TicketDetail" }
+
+  # ───────────────────────────── WEBHOOKS ─────────────────────────────
+  /webhooks/google-play:
+    post:
+      tags: [webhooks]
+      operationId: googlePlayRtdn
+      summary: Real-Time Developer Notifications (Pub/Sub push, jeton OIDC vérifié)
+      security: []
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object } } }
+      responses: { "204": { description: Accepté (idempotent) }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /webhooks/app-store:
+    post:
+      tags: [webhooks]
+      operationId: appStoreNotification
+      summary: App Store Server Notifications v2 (JWS vérifié)
+      security: []
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, required: [signedPayload], properties: { signedPayload: { type: string } } } } }
+      responses: { "204": { description: Accepté }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  /webhooks/payments:
+    post:
+      tags: [webhooks]
+      operationId: paymentProviderWebhook
+      summary: Événements de l'agrégateur de paiement web (signature HMAC vérifiée)
+      security: []
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object } } }
+      responses: { "204": { description: Accepté }, "401": { $ref: "#/components/responses/Unauthorized" } }
+  # ═════════════════════════════ ADMIN ═════════════════════════════
+  /admin/me:
+    get:
+      tags: [admin-team]
+      operationId: adminGetMe
+      summary: Membre de l'équipe connecté, rôles et permissions (pour filtrer le menu)
+      x-roles: [any]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StaffMember" }
+  /admin/dashboard:
+    get:
+      tags: [admin-dashboard]
+      operationId: adminDashboard
+      summary: Indicateurs (inscriptions, actifs, rétention, conversion, revenus par canal, IA, avis, support)
+      x-roles: [superadmin, finance, content, support, moderation]
+      parameters:
+        - { name: from, in: query, required: true, schema: { type: string, format: date } }
+        - { name: to, in: query, required: true, schema: { type: string, format: date } }
+        - { name: country, in: query, schema: { type: string } }
+        - { name: locale, in: query, schema: { $ref: "#/components/schemas/Locale" } }
+        - { name: platform, in: query, schema: { type: string, enum: [android, ios, web] } }
+      responses:
+        "200":
+          description: OK (les blocs non autorisés pour le rôle sont `null`)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminDashboard" }
+
+  # ── Utilisateurs
+  /admin/users:
+    get:
+      tags: [admin-users]
+      operationId: adminListUsers
+      x-roles: [superadmin, support, finance]
+      parameters:
+        - { name: q, in: query, schema: { type: string, description: "email, nom ou id" } }
+        - { name: plan, in: query, schema: { $ref: "#/components/schemas/PlanTier" } }
+        - { name: status, in: query, schema: { type: string, enum: [active, suspended, deletion_pending] } }
+        - { name: country, in: query, schema: { type: string } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+        - { $ref: "#/components/parameters/Ordering" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AdminUserRow" } }
+  /admin/users/{id}:
+    get:
+      tags: [admin-users]
+      operationId: adminGetUser
+      summary: Fiche utilisateur (données santé masquées)
+      x-roles: [superadmin, support, finance]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminUserDetail" }
+  /admin/users/{id}/health:
+    get:
+      tags: [admin-users]
+      operationId: adminRevealUserHealth
+      summary: Révèle les données de santé (consultation journalisée, motif obligatoire)
+      x-roles: [superadmin, support]
+      parameters:
+        - { $ref: "#/components/parameters/Id" }
+        - { name: reason, in: query, required: true, schema: { type: string, minLength: 5, maxLength: 200 } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminUserHealth" }
+  /admin/users/{id}/actions:
+    post:
+      tags: [admin-users]
+      operationId: adminUserAction
+      summary: Action sur un compte (journalisée)
+      x-roles: [superadmin, support, finance]
+      description: |
+        Rôles par action — support : resend_verification, send_password_reset, extend_trial ;
+        finance : grant_plus_days, reset_quota ; superadmin : tout, dont suspend, reactivate, export_data, delete_data.
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AdminUserActionInput" }
+      responses:
+        "200":
+          description: Fiche à jour
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminUserDetail" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+
+  # ── Contenus (CRUD générique typé — voir aussi x-content-types)
+  /admin/content/{type}:
+    get:
+      tags: [admin-content]
+      operationId: adminListContent
+      x-roles: [superadmin, content]
+      parameters:
+        - { $ref: "#/components/parameters/ContentType" }
+        - { name: q, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/ContentStatus" } }
+        - { name: missing_locale, in: query, schema: { $ref: "#/components/schemas/Locale" } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+        - { $ref: "#/components/parameters/Ordering" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AdminContentRow" } }
+    post:
+      tags: [admin-content]
+      operationId: adminCreateContent
+      summary: Crée un contenu en brouillon
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AdminContentPayload" }
+      responses:
+        "201":
+          description: Créé
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminContentItem" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+  /admin/content/{type}/{id}:
+    get:
+      tags: [admin-content]
+      operationId: adminGetContent
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminContentItem" }
+    patch:
+      tags: [admin-content]
+      operationId: adminUpdateContent
+      summary: Modifie (verrou optimiste via `version`)
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AdminContentPayload" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminContentItem" }
+        "409": { $ref: "#/components/responses/Conflict" }
+    delete:
+      tags: [admin-content]
+      operationId: adminDeleteContent
+      summary: Supprime un brouillon jamais publié (sinon archiver)
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
+      responses:
+        "204": { description: Supprimé }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /admin/content/{type}/{id}/transition:
+    post:
+      tags: [admin-content]
+      operationId: adminTransitionContent
+      summary: brouillon → relecture → publié → archivé
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to]
+              properties:
+                to: { $ref: "#/components/schemas/ContentStatus" }
+                comment: { type: string, maxLength: 500 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminContentItem" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /admin/content/{type}/{id}/revisions:
+    get:
+      tags: [admin-content]
+      operationId: adminListRevisions
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, author, created_at]
+                  properties:
+                    id: { type: string, format: uuid }
+                    author: { type: string }
+                    created_at: { type: string, format: date-time }
+                    snapshot: { type: object }
+  /admin/content/{type}/{id}/translate:
+    post:
+      tags: [admin-content]
+      operationId: adminMachineTranslate
+      summary: Propose une traduction IA des champs manquants (à relire, non publiée)
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [locales]
+              properties:
+                locales: { type: array, items: { $ref: "#/components/schemas/Locale" }, minItems: 1 }
+      responses:
+        "200":
+          description: Champs proposés
+          content:
+            application/json:
+              schema: { type: object, additionalProperties: { $ref: "#/components/schemas/I18nText" } }
+  /admin/translations:
+    get:
+      tags: [admin-content]
+      operationId: adminTranslationCoverage
+      summary: Couverture des traductions par type de contenu et langue
+      x-roles: [superadmin, content]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [type, locale, total, missing]
+                  properties:
+                    type: { $ref: "#/components/schemas/ContentTypeName" }
+                    locale: { $ref: "#/components/schemas/Locale" }
+                    total: { type: integer }
+                    missing: { type: integer }
+                    percent: { type: number }
+  /admin/media:
+    post:
+      tags: [admin-content]
+      operationId: adminCreateMediaUpload
+      summary: URL présignée pour image, vidéo (transcodée en HLS par une tâche) ou sous-titres VTT
+      x-roles: [superadmin, content]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, content_type, size]
+              properties:
+                kind: { type: string, enum: [image, video, subtitles] }
+                content_type: { type: string }
+                size: { type: integer, maximum: 524288000 }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UploadTicket" }
+
+  # ── Avis sur les analyses
+  /admin/feedback:
+    get:
+      tags: [admin-feedback]
+      operationId: adminListFeedback
+      x-roles: [superadmin, moderation]
+      parameters:
+        - { name: rating, in: query, schema: { type: string, enum: [up, down] } }
+        - { name: reason, in: query, schema: { $ref: "#/components/schemas/FeedbackReason" } }
+        - { name: status, in: query, schema: { type: string, enum: [new, handled, ignored] } }
+        - { name: dish_id, in: query, schema: { type: string, format: uuid } }
+        - { name: max_confidence, in: query, schema: { type: number } }
+        - { name: locale, in: query, schema: { $ref: "#/components/schemas/Locale" } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+      responses:
+        "200":
+          description: OK (👎 en premier par défaut)
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AdminFeedbackRow" } }
+  /admin/feedback/{id}:
+    get:
+      tags: [admin-feedback]
+      operationId: adminGetFeedback
+      summary: Photo, réponse IA d'origine, version corrigée, commentaire
+      x-roles: [superadmin, moderation]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminFeedbackDetail" }
+  /admin/feedback/{id}/resolve:
+    post:
+      tags: [admin-feedback]
+      operationId: adminResolveFeedback
+      x-roles: [superadmin, moderation]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: { type: string, enum: [handled, ignore, create_dish, create_food, add_alias, report_defect] }
+                dish_id: { type: string, format: uuid }
+                alias: { type: string, maxLength: 80 }
+                note: { type: string, maxLength: 1000 }
+      responses:
+        "200":
+          description: OK (renvoie l'id du brouillon créé le cas échéant)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string }
+                  created_content_id: { type: [string, "null"], format: uuid }
+  /admin/feedback/stats:
+    get:
+      tags: [admin-feedback]
+      operationId: adminFeedbackStats
+      summary: Fiabilité perçue par plat et par pays, plats les plus contestés
+      x-roles: [superadmin, moderation]
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminFeedbackStats" }
+
+  # ── Abonnements et paiements
+  /admin/plans:
+    get:
+      tags: [admin-billing]
+      operationId: adminListPlans
+      x-roles: [superadmin, finance]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/AdminPlan" } }
+  /admin/plans/{code}:
+    patch:
+      tags: [admin-billing]
+      operationId: adminUpdatePlan
+      x-roles: [superadmin, finance]
+      parameters:
+        - { name: code, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AdminPlan" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminPlan" }
+  /admin/quotas:
+    get:
+      tags: [admin-billing]
+      operationId: adminListQuotaRules
+      x-roles: [superadmin, finance]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/QuotaRule" } }
+    put:
+      tags: [admin-billing]
+      operationId: adminReplaceQuotaRules
+      x-roles: [superadmin, finance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: array, items: { $ref: "#/components/schemas/QuotaRule" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/QuotaRule" } }
+  /admin/subscriptions:
+    get:
+      tags: [admin-billing]
+      operationId: adminListSubscriptions
+      x-roles: [superadmin, finance]
+      parameters:
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/SubscriptionStatus" } }
+        - { name: channel, in: query, schema: { $ref: "#/components/schemas/Channel" } }
+        - { name: q, in: query, schema: { type: string } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AdminSubscriptionRow" } }
+  /admin/payments:
+    get:
+      tags: [admin-billing]
+      operationId: adminListPayments
+      x-roles: [superadmin, finance]
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [succeeded, failed, refunded, pending] } }
+        - { name: channel, in: query, schema: { $ref: "#/components/schemas/Channel" } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AdminPaymentRow" } }
+  /admin/payments/{id}/refund:
+    post:
+      tags: [admin-billing]
+      operationId: adminRefundPayment
+      summary: Rembourse un paiement web (les stores remboursent eux-mêmes)
+      x-roles: [superadmin, finance]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                amount_cents: { type: integer, minimum: 1, description: "Défaut : total" }
+                reason: { type: string, minLength: 3, maxLength: 500 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AdminPaymentRow" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /admin/promo-codes:
+    get:
+      tags: [admin-billing]
+      operationId: adminListPromoCodes
+      x-roles: [superadmin, finance]
+      parameters: [{ $ref: "#/components/parameters/Page" }, { $ref: "#/components/parameters/PageSize" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/PromoCode" } }
+    post:
+      tags: [admin-billing]
+      operationId: adminCreatePromoCode
+      x-roles: [superadmin, finance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PromoCode" }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PromoCode" }
+  /admin/promo-codes/{id}:
+    patch:
+      tags: [admin-billing]
+      operationId: adminUpdatePromoCode
+      x-roles: [superadmin, finance]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PromoCode" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PromoCode" }
+
+  # ── Support
+  /admin/tickets:
+    get:
+      tags: [admin-support]
+      operationId: adminListTickets
+      x-roles: [superadmin, support]
+      parameters:
+        - { name: status, in: query, schema: { $ref: "#/components/schemas/TicketStatus" } }
+        - { name: category, in: query, schema: { $ref: "#/components/schemas/TicketCategory" } }
+        - { name: assignee, in: query, schema: { type: string, description: "uuid ou `me` ou `none`" } }
+        - { name: q, in: query, schema: { type: string } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AdminTicketRow" } }
+  /admin/tickets/{id}:
+    get:
+      tags: [admin-support]
+      operationId: adminGetTicket
+      x-roles: [superadmin, support]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK (inclut notes internes)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TicketDetail" }
+    patch:
+      tags: [admin-support]
+      operationId: adminUpdateTicket
+      x-roles: [superadmin, support]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { $ref: "#/components/schemas/TicketStatus" }
+                assignee_id: { type: [string, "null"], format: uuid }
+                priority: { type: string, enum: [low, normal, high] }
+                category: { $ref: "#/components/schemas/TicketCategory" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TicketDetail" }
+  /admin/tickets/{id}/messages:
+    post:
+      tags: [admin-support]
+      operationId: adminReplyTicket
+      summary: Réponse (email + notification in-app) ou note interne
+      x-roles: [superadmin, support]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [kind, body]
+              properties:
+                kind: { type: string, enum: [reply, internal_note] }
+                body: { type: string, minLength: 1, maxLength: 10000 }
+                template_id: { type: string, format: uuid }
+                set_status: { $ref: "#/components/schemas/TicketStatus" }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TicketDetail" }
+  /admin/reply-templates:
+    get:
+      tags: [admin-support]
+      operationId: adminListReplyTemplates
+      x-roles: [superadmin, support]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, name, body]
+                  properties:
+                    id: { type: string, format: uuid }
+                    name: { type: string }
+                    category: { $ref: "#/components/schemas/TicketCategory" }
+                    body: { $ref: "#/components/schemas/I18nText" }
+
+  # ── Campagnes
+  /admin/campaigns:
+    get:
+      tags: [admin-campaigns]
+      operationId: adminListCampaigns
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/Page" }, { $ref: "#/components/parameters/PageSize" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/Campaign" } }
+    post:
+      tags: [admin-campaigns]
+      operationId: adminCreateCampaign
+      x-roles: [superadmin, content]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignInput" }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Campaign" }
+  /admin/campaigns/audience:
+    post:
+      tags: [admin-campaigns]
+      operationId: adminEstimateAudience
+      summary: Nombre de destinataires d'un segment (consentement marketing inclus)
+      x-roles: [superadmin, content]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Segment" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count]
+                properties:
+                  count: { type: integer }
+  /admin/campaigns/{id}:
+    get:
+      tags: [admin-campaigns]
+      operationId: adminGetCampaign
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Campaign" }
+    patch:
+      tags: [admin-campaigns]
+      operationId: adminUpdateCampaign
+      x-roles: [superadmin, content]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CampaignInput" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Campaign" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /admin/campaigns/{id}/{action}:
+    post:
+      tags: [admin-campaigns]
+      operationId: adminCampaignAction
+      x-roles: [superadmin, content]
+      parameters:
+        - { $ref: "#/components/parameters/Id" }
+        - { name: action, in: path, required: true, schema: { type: string, enum: [schedule, cancel, send_test] } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Campaign" }
+        "409": { $ref: "#/components/responses/Conflict" }
+
+  # ── Réglages
+  /admin/settings:
+    get:
+      tags: [admin-settings]
+      operationId: adminGetSettings
+      x-roles: [superadmin]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+    patch:
+      tags: [admin-settings]
+      operationId: adminUpdateSettings
+      x-roles: [superadmin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Settings" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Settings" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+
+  # ── Équipe et audit
+  /admin/team:
+    get:
+      tags: [admin-team]
+      operationId: adminListTeam
+      x-roles: [superadmin]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: "#/components/schemas/StaffMember" } }
+    post:
+      tags: [admin-team]
+      operationId: adminInviteStaff
+      summary: Invite un membre (email d'invitation, 2FA à configurer à la première connexion)
+      x-roles: [superadmin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, roles]
+              properties:
+                email: { type: string, format: email }
+                roles: { type: array, items: { $ref: "#/components/schemas/StaffRole" }, minItems: 1 }
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StaffMember" }
+  /admin/team/{id}:
+    patch:
+      tags: [admin-team]
+      operationId: adminUpdateStaff
+      x-roles: [superadmin]
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roles: { type: array, items: { $ref: "#/components/schemas/StaffRole" } }
+                active: { type: boolean }
+                reset_mfa: { type: boolean }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/StaffMember" }
+  /admin/mfa/setup:
+    post:
+      tags: [admin-team]
+      operationId: adminSetupMfa
+      summary: Génère le secret TOTP (QR) puis le confirme avec un code
+      x-roles: [any]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code: { type: string, description: "Absent = génération ; présent = confirmation" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  otpauth_uri: { type: string }
+                  recovery_codes: { type: array, items: { type: string } }
+                  confirmed: { type: boolean }
+  /admin/audit:
+    get:
+      tags: [admin-team]
+      operationId: adminListAudit
+      x-roles: [superadmin]
+      parameters:
+        - { name: actor_id, in: query, schema: { type: string, format: uuid } }
+        - { name: action, in: query, schema: { type: string } }
+        - { name: target_type, in: query, schema: { type: string } }
+        - { name: target_id, in: query, schema: { type: string } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/AuditEntry" } }
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Id: { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+    DatePath: { name: date, in: path, required: true, schema: { type: string, format: date } }
+    DateOptional: { name: date, in: query, description: "Journée locale. Défaut : aujourd'hui", schema: { type: string, format: date } }
+    Cursor: { name: cursor, in: query, schema: { type: string } }
+    Limit: { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+    Page: { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+    PageSize: { name: page_size, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 25 } }
+    Ordering: { name: ordering, in: query, schema: { type: string, examples: ["-created_at"] } }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: UUID v4. Rejouer la même clé renvoie la réponse d'origine (24 h).
+      schema: { type: string, format: uuid }
+    ContentType: { name: type, in: path, required: true, schema: { $ref: "#/components/schemas/ContentTypeName" } }
+
+  responses:
+    ValidationError:
+      description: Données invalides (`validation_error`, détail par champ)
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    Unauthorized:
+      description: Non authentifié (`not_authenticated`, `token_expired`, `invalid_credentials`, `mfa_required`)
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    Forbidden:
+      description: Interdit (`forbidden`, `forbidden_role`, `plan_required`, `consent_required`, `account_suspended`)
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    NotFound:
+      description: Introuvable (ou appartient à un autre utilisateur)
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    Conflict:
+      description: Conflit d'état (`conflict`, `already_enrolled`, `idempotency_conflict`)
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    QuotaExceeded:
+      description: Quota épuisé (`quota_exceeded`, `meta.resets_at`, `meta.upgrade`)
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+    RateLimited:
+      description: Trop de requêtes (`rate_limited`)
+      headers: { Retry-After: { schema: { type: integer } } }
+      content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } }
+
+  schemas:
+    # ───────── Communs
+    Problem:
+      type: object
+      required: [type, title, status, code]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        code: { type: string }
+        detail: { type: string }
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              required: [code, message]
+              properties: { code: { type: string }, message: { type: string } }
+        meta: { type: object, additionalProperties: true }
+        request_id: { type: string }
+    CursorPage:
+      type: object
+      required: [results, next_cursor]
+      properties:
+        results: { type: array, items: {} }
+        next_cursor: { type: [string, "null"] }
+    PageMeta:
+      type: object
+      required: [results, count, page, page_size]
+      properties:
+        results: { type: array, items: {} }
+        count: { type: integer }
+        page: { type: integer }
+        page_size: { type: integer }
+    Money:
+      type: object
+      required: [amount_cents, currency]
+      properties:
+        amount_cents: { type: integer }
+        currency: { type: string, const: USD }
+        formatted: { type: string, examples: ["$4.49"], description: "Formaté selon Accept-Language" }
+    Image:
+      type: object
+      required: [url]
+      properties:
+        url: { type: string, format: uri }
+        width: { type: integer }
+        height: { type: integer }
+        blurhash: { type: string }
+    I18nText:
+      type: object
+      description: "Admin uniquement. Clés = codes de langue."
+      additionalProperties: { type: string }
+      propertyNames: { $ref: "#/components/schemas/Locale" }
+    Locale: { type: string, enum: [fr, en, es, pt, ar, zh, ja, de] }
+    Goal: { type: string, enum: [lose_weight, gain_muscle, eat_balanced, prevent_diabetes, prevent_hypertension] }
+    Sex: { type: string, enum: [male, female] }
+    Level: { type: string, enum: [beginner, intermediate, advanced] }
+    MealType: { type: string, enum: [breakfast, lunch, snack, dinner] }
+    PlanTier: { type: string, enum: [trial, free, plus] }
+    Channel: { type: string, enum: [google_play, app_store, web, grant] }
+    SubscriptionStatus: { type: string, enum: [trial, active, grace, canceled, expired, refunded] }
+    LegalKind: { type: string, enum: [terms, privacy, cookies, legal_notice] }
+    ConsentKind: { type: string, enum: [terms, privacy, health_data, marketing] }
+    ContentStatus: { type: string, enum: [draft, review, published, archived] }
+    FeedbackReason: { type: string, enum: [wrong_dish, missing_ingredient, wrong_quantities, other] }
+    TicketStatus: { type: string, enum: [new, open, waiting_user, resolved, closed] }
+    TicketCategory: { type: string, enum: [question, technical, billing, suggestion, personal_data, account_deletion] }
+    StaffRole: { type: string, enum: [superadmin, content, support, finance, moderation] }
+    InviteCode: { type: string, pattern: "^[A-Za-z0-9]{4,10}$" }
+    Password:
+      type: string
+      minLength: 10
+      maxLength: 128
+      description: "≥ 10 caractères, minuscule, majuscule, chiffre, caractère spécial (vérifié par l'API)"
+    Nutrients:
+      type: object
+      required: [kcal, protein_g, carbs_g, fat_g]
+      properties:
+        kcal: { type: integer }
+        protein_g: { type: number }
+        carbs_g: { type: number }
+        sugars_g: { type: number }
+        fat_g: { type: number }
+        saturated_fat_g: { type: number }
+        fiber_g: { type: number }
+        salt_g: { type: number }
+    Gauge:
+      type: object
+      description: Valeur prête à afficher (consommé / objectif)
+      required: [value, target, percent]
+      properties:
+        value: { type: number }
+        target: { type: number }
+        remaining: { type: number, description: "target - value, borné à 0 côté API" }
+        percent: { type: integer, description: "0-100+ (arrondi API)" }
+        status: { type: string, enum: [under, on_target, over] }
+    RewardDelta:
+      type: object
+      description: Récompenses gagnées par l'action (pour animation)
+      required: [points]
+      properties:
+        points: { type: integer }
+        total_points: { type: integer }
+        level_up: { anyOf: [{ $ref: "#/components/schemas/LevelInfo" }, { type: "null" }] }
+        badges: { type: array, items: { $ref: "#/components/schemas/BadgeRef" } }
+        streak: { type: integer }
+
+    # ───────── App / auth / compte
+    AppConfig:
+      type: object
+      required: [min_version, latest_version, locales, features, quotas_display, legal_versions]
+      properties:
+        min_version: { type: object, properties: { android: { type: string }, ios: { type: string } } }
+        latest_version: { type: object, properties: { android: { type: string }, ios: { type: string } } }
+        locales: { type: array, items: { $ref: "#/components/schemas/Locale" } }
+        features: { type: object, additionalProperties: { type: boolean } }
+        web_checkout_countries: { type: array, items: { type: string } }
+        min_age: { type: integer }
+        trial_days: { type: object, properties: { default: { type: integer }, with_invite: { type: integer } } }
+        quotas_display: { type: object, additionalProperties: true }
+        legal_versions: { type: object, additionalProperties: { type: integer } }
+        support_email: { type: string, format: email }
+        store_urls: { type: object, properties: { google_play: { type: string }, app_store: { type: string } } }
+    City:
+      type: object
+      required: [id, name, country]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        country: { type: string }
+        timezone: { type: string }
+    OnboardingProfile:
+      type: object
+      required: [first_name, last_name, birth_date, sex, height_cm, weight_kg, target_weight_kg, goals]
+      properties:
+        first_name: { type: string, minLength: 1, maxLength: 40 }
+        last_name: { type: string, minLength: 1, maxLength: 40 }
+        birth_date: { type: string, format: date }
+        sex: { $ref: "#/components/schemas/Sex" }
+        city_id: { type: string, format: uuid }
+        city_label: { type: string, maxLength: 80 }
+        height_cm: { type: number, minimum: 100, maximum: 250 }
+        weight_kg: { type: number, minimum: 30, maximum: 300 }
+        target_weight_kg: { type: number, minimum: 30, maximum: 300 }
+        goals: { type: array, items: { $ref: "#/components/schemas/Goal" }, minItems: 1, uniqueItems: true }
+        locale: { $ref: "#/components/schemas/Locale" }
+        timezone: { type: string }
+    ConsentInput:
+      type: object
+      required: [kind, granted]
+      properties:
+        kind: { $ref: "#/components/schemas/ConsentKind" }
+        granted: { type: boolean }
+        version: { type: integer, description: "Version du document acceptée" }
+    DeviceInfo:
+      type: object
+      properties:
+        name: { type: string, maxLength: 80 }
+        platform: { type: string, enum: [android, ios, web, admin] }
+        app_version: { type: string, maxLength: 20 }
+        fingerprint: { type: string, maxLength: 128, description: "Empreinte hachée (anti-fraude parrainage)" }
+    RegisterRequest:
+      type: object
+      required: [email, password, profile, consents]
+      properties:
+        email: { type: string, format: email, maxLength: 254 }
+        password: { $ref: "#/components/schemas/Password" }
+        invite_code: { $ref: "#/components/schemas/InviteCode" }
+        profile: { $ref: "#/components/schemas/OnboardingProfile" }
+        consents: { type: array, items: { $ref: "#/components/schemas/ConsentInput" }, minItems: 2 }
+        device: { $ref: "#/components/schemas/DeviceInfo" }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, maxLength: 128 }
+        device: { $ref: "#/components/schemas/DeviceInfo" }
+    SocialAuthRequest:
+      type: object
+      required: [provider, id_token]
+      properties:
+        provider: { type: string, enum: [google, apple] }
+        id_token: { type: string }
+        nonce: { type: string, description: Apple }
+        invite_code: { $ref: "#/components/schemas/InviteCode" }
+        profile: { $ref: "#/components/schemas/OnboardingProfile" }
+        consents: { type: array, items: { $ref: "#/components/schemas/ConsentInput" } }
+        device: { $ref: "#/components/schemas/DeviceInfo" }
+    Tokens:
+      type: object
+      required: [access, refresh, access_expires_at]
+      properties:
+        access: { type: string }
+        refresh: { type: string }
+        access_expires_at: { type: string, format: date-time }
+    AuthResult:
+      type: object
+      required: [tokens, me, created]
+      properties:
+        tokens: { $ref: "#/components/schemas/Tokens" }
+        me: { $ref: "#/components/schemas/Me" }
+        created: { type: boolean }
+        invite_code_status: { type: string, enum: [none, valid, invalid] }
+    Targets:
+      type: object
+      required: [kcal, protein_g, carbs_g, fat_g, fiber_g, salt_max_g, water_ml]
+      properties:
+        kcal: { type: integer }
+        protein_g: { type: integer }
+        carbs_g: { type: integer }
+        fat_g: { type: integer }
+        fiber_g: { type: integer }
+        salt_max_g: { type: number }
+        water_ml: { type: integer }
+        bmr_kcal: { type: integer }
+        valid_from: { type: string, format: date }
+        warning: { type: [string, "null"], description: "Ex. cible contradictoire avec l'objectif (texte traduit)" }
+    Entitlements:
+      type: object
+      description: Droits effectifs calculés par l'API — le mobile n'en déduit rien d'autre
+      required: [tier, features]
+      properties:
+        tier: { $ref: "#/components/schemas/PlanTier" }
+        trial_ends_at: { type: [string, "null"], format: date-time }
+        plus_until: { type: [string, "null"], format: date-time }
+        features:
+          type: object
+          description: "Clé = feature, valeur = autorisée"
+          additionalProperties: { type: boolean }
+          examples: [{ text_analysis: false, progress_long_range: false, programs: false, insights: false, offline_workouts: false, streak_freeze: false }]
+    Me:
+      type: object
+      required: [id, email, email_verified, locale, profile, targets, entitlements, preferences]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        email_verified: { type: boolean }
+        has_password: { type: boolean }
+        locale: { $ref: "#/components/schemas/Locale" }
+        created_at: { type: string, format: date-time }
+        profile:
+          type: object
+          required: [first_name, last_name, sex, height_cm, current_weight_kg, target_weight_kg, goals]
+          properties:
+            first_name: { type: string }
+            last_name: { type: string }
+            initials: { type: string }
+            avatar: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+            birth_date: { type: string, format: date }
+            age: { type: integer }
+            sex: { $ref: "#/components/schemas/Sex" }
+            city: { anyOf: [{ $ref: "#/components/schemas/City" }, { type: "null" }] }
+            city_label: { type: [string, "null"] }
+            height_cm: { type: number }
+            current_weight_kg: { type: number }
+            target_weight_kg: { type: number }
+            goals: { type: array, items: { $ref: "#/components/schemas/Goal" } }
+            activity_adjustment: { type: boolean }
+            timezone: { type: string }
+        targets: { $ref: "#/components/schemas/Targets" }
+        entitlements: { $ref: "#/components/schemas/Entitlements" }
+        preferences:
+          type: object
+          properties:
+            theme: { type: string, enum: [system, light, dark] }
+            unit_weight: { type: string, enum: [kg, lb] }
+            unit_height: { type: string, enum: [cm, ft] }
+            unit_volume: { type: string, enum: [cl, oz] }
+        pending_documents: { type: array, items: { $ref: "#/components/schemas/LegalDocumentRef" } }
+        rewards_summary: { $ref: "#/components/schemas/RewardsSummary" }
+    ProfileUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        first_name: { type: string, maxLength: 40 }
+        last_name: { type: string, maxLength: 40 }
+        birth_date: { type: string, format: date }
+        sex: { $ref: "#/components/schemas/Sex" }
+        city_id: { type: [string, "null"], format: uuid }
+        city_label: { type: [string, "null"], maxLength: 80 }
+        height_cm: { type: number, minimum: 100, maximum: 250 }
+        target_weight_kg: { type: number, minimum: 30, maximum: 300 }
+        goals: { type: array, items: { $ref: "#/components/schemas/Goal" }, minItems: 1 }
+        activity_adjustment: { type: boolean }
+        locale: { $ref: "#/components/schemas/Locale" }
+        theme: { type: string, enum: [system, light, dark] }
+        unit_weight: { type: string, enum: [kg, lb] }
+        unit_height: { type: string, enum: [cm, ft] }
+        unit_volume: { type: string, enum: [cl, oz] }
+    Session:
+      type: object
+      required: [id, device_name, platform, last_used_at, current]
+      properties:
+        id: { type: string, format: uuid }
+        device_name: { type: string }
+        platform: { type: string }
+        app_version: { type: string }
+        city: { type: [string, "null"] }
+        last_used_at: { type: string, format: date-time }
+        current: { type: boolean }
+    LegalDocumentRef:
+      type: object
+      required: [kind, version, title]
+      properties:
+        kind: { $ref: "#/components/schemas/LegalKind" }
+        version: { type: integer }
+        title: { type: string }
+    LegalDocument:
+      allOf:
+        - $ref: "#/components/schemas/LegalDocumentRef"
+        - type: object
+          required: [body, published_at]
+          properties:
+            body: { type: string, description: Markdown }
+            published_at: { type: string, format: date-time }
+    ConsentState:
+      type: object
+      required: [kind, granted, updated_at]
+      properties:
+        kind: { $ref: "#/components/schemas/ConsentKind" }
+        granted: { type: boolean }
+        version: { type: [integer, "null"] }
+        updated_at: { type: string, format: date-time }
+        withdrawable: { type: boolean, description: "false pour CGU / confidentialité (retrait = suppression du compte)" }
+    DataExport:
+      type: object
+      required: [id, status, requested_at]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [queued, ready, expired] }
+        requested_at: { type: string, format: date-time }
+        download_url: { type: [string, "null"], format: uri }
+        expires_at: { type: [string, "null"], format: date-time }
+    UploadTicket:
+      type: object
+      required: [id, upload_url, method, headers, expires_at]
+      properties:
+        id: { type: string, format: uuid }
+        upload_url: { type: string, format: uri }
+        method: { type: string, const: PUT }
+        headers: { type: object, additionalProperties: { type: string } }
+        expires_at: { type: string, format: date-time }
+
+    # ───────── Accueil / journal
+    WeekDay:
+      type: object
+      required: [date, label, is_today, status]
+      properties:
+        date: { type: string, format: date }
+        label: { type: string, examples: [Lun] }
+        day_number: { type: integer }
+        is_today: { type: boolean }
+        status: { type: string, enum: [empty, partial, on_target, over, under, future] }
+    DaySummary:
+      type: object
+      description: Résumé recalculé d'un jour (renvoyé après chaque écriture)
+      required: [date, kcal, protein, carbs, fat, water]
+      properties:
+        date: { type: string, format: date }
+        kcal: { $ref: "#/components/schemas/Gauge" }
+        protein: { $ref: "#/components/schemas/Gauge" }
+        carbs: { $ref: "#/components/schemas/Gauge" }
+        fat: { $ref: "#/components/schemas/Gauge" }
+        fiber: { $ref: "#/components/schemas/Gauge" }
+        salt: { $ref: "#/components/schemas/Gauge" }
+        water: { $ref: "#/components/schemas/Gauge" }
+        target_adjusted_by_activity_kcal: { type: integer }
+        balance: { anyOf: [{ $ref: "#/components/schemas/Balance" }, { type: "null" }] }
+        meals_count: { type: integer }
+    Balance:
+      type: object
+      required: [consumed_kcal, burned_kcal, difference_kcal, status]
+      properties:
+        consumed_kcal: { type: integer }
+        burned_kcal: { type: integer }
+        difference_kcal: { type: integer }
+        status: { type: string, enum: [deficit, balanced, surplus] }
+        label: { type: string, description: Texte traduit }
+    Water:
+      type: object
+      required: [date, gauge, quick_add_ml]
+      properties:
+        date: { type: string, format: date }
+        gauge: { $ref: "#/components/schemas/Gauge" }
+        quick_add_ml: { type: array, items: { type: integer }, examples: [[250, 500]] }
+    Home:
+      type: object
+      required: [greeting, date, week, day, quick_actions, shortcuts, rewards]
+      properties:
+        greeting: { type: string, examples: ["Bonjour, Awa"] }
+        date: { type: string, format: date }
+        week: { type: array, items: { $ref: "#/components/schemas/WeekDay" }, minItems: 7, maxItems: 7 }
+        day: { $ref: "#/components/schemas/DaySummary" }
+        quick_actions:
+          type: array
+          items:
+            type: object
+            required: [kind, enabled]
+            properties:
+              kind: { type: string, enum: [photo, voice, catalog] }
+              enabled: { type: boolean }
+              locked_reason: { type: [string, "null"], enum: [plan_required, quota_exceeded, null] }
+              remaining: { type: [integer, "null"] }
+        active_program: { anyOf: [{ $ref: "#/components/schemas/ProgramToday" }, { type: "null" }] }
+        active_challenges: { type: array, items: { $ref: "#/components/schemas/ChallengeToday" } }
+        shortcuts: { type: array, items: { type: string, enum: [nutrition, sport, recipes, plants] } }
+        rewards: { $ref: "#/components/schemas/RewardsSummary" }
+        insight: { anyOf: [{ $ref: "#/components/schemas/Insight" }, { type: "null" }] }
+        tip: { anyOf: [{ $ref: "#/components/schemas/UserTip" }, { type: "null" }] }
+        banners:
+          type: array
+          items:
+            type: object
+            required: [kind]
+            properties:
+              kind: { type: string, enum: [verify_email, trial_ending, reaccept_terms, connect_health, quota_low] }
+              message: { type: string }
+              action: { type: string }
+    DayDetail:
+      type: object
+      required: [day, meals_by_type, water, message]
+      properties:
+        day: { $ref: "#/components/schemas/DaySummary" }
+        meals_by_type:
+          type: array
+          items:
+            type: object
+            required: [meal_type, label, kcal, meals]
+            properties:
+              meal_type: { $ref: "#/components/schemas/MealType" }
+              label: { type: string }
+              kcal: { type: integer }
+              meals: { type: array, items: { $ref: "#/components/schemas/Meal" } }
+        water: { $ref: "#/components/schemas/Water" }
+        message: { type: string, description: Encouragement adapté à la journée }
+        previous_date: { type: string, format: date }
+        next_date: { type: [string, "null"], format: date }
+
+    # ───────── Repas / analyses
+    Quota:
+      type: object
+      required: [feature, limit, used, remaining, period]
+      properties:
+        feature: { type: string, enum: [photo_analysis, text_analysis, challenges_active] }
+        limit: { type: [integer, "null"] }
+        used: { type: integer }
+        remaining: { type: [integer, "null"] }
+        period: { type: string, enum: [day, month, trial] }
+        resets_at: { type: [string, "null"], format: date-time }
+    AnalysisItem:
+      type: object
+      required: [food_id, label, grams]
+      properties:
+        food_id: { type: string, format: uuid }
+        label: { type: string }
+        grams: { type: number }
+        confidence: { type: number }
+        nutrients: { $ref: "#/components/schemas/Nutrients" }
+    Analysis:
+      type: object
+      required: [id, kind, status, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        kind: { type: string, enum: [photo, text] }
+        status: { type: string, enum: [queued, processing, succeeded, failed] }
+        failure_reason: { type: [string, "null"], enum: [blurry, no_food, unsupported, provider_error, timeout, null] }
+        failure_message: { type: [string, "null"] }
+        photo: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+        dish: { anyOf: [{ $ref: "#/components/schemas/DishSummary" }, { type: "null" }] }
+        dish_label: { type: [string, "null"] }
+        confidence: { type: [number, "null"] }
+        low_confidence: { type: boolean }
+        items: { type: array, items: { $ref: "#/components/schemas/AnalysisItem" } }
+        totals: { $ref: "#/components/schemas/Nutrients" }
+        suggested_meal_type: { $ref: "#/components/schemas/MealType" }
+        suggested_recipe_id: { type: [string, "null"], format: uuid }
+        quota: { $ref: "#/components/schemas/Quota" }
+        created_at: { type: string, format: date-time }
+    FeedbackInput:
+      type: object
+      required: [rating]
+      properties:
+        rating: { type: string, enum: [up, down] }
+        reason: { $ref: "#/components/schemas/FeedbackReason" }
+        comment: { type: string, maxLength: 1000 }
+    MealItemInput:
+      type: object
+      required: [food_id, grams]
+      properties:
+        food_id: { type: string, format: uuid }
+        grams: { type: number, exclusiveMinimum: 0, maximum: 3000 }
+    MealInput:
+      type: object
+      required: [source, meal_type]
+      properties:
+        source: { type: string, enum: [photo, text, dish, recipe, foods, program] }
+        meal_type: { $ref: "#/components/schemas/MealType" }
+        date: { type: string, format: date }
+        eaten_at: { type: string, format: date-time }
+        analysis_id: { type: string, format: uuid, description: "source = photo|text" }
+        dish_id: { type: string, format: uuid, description: "source = dish" }
+        recipe_id: { type: string, format: uuid, description: "source = recipe|program" }
+        portions: { type: number, minimum: 0.25, maximum: 10, description: "dish/recipe : multiple de la portion standard" }
+        items: { type: array, items: { $ref: "#/components/schemas/MealItemInput" }, maxItems: 40, description: "Ingrédients validés (corrigés) — obligatoire pour photo|text|foods" }
+        keep_photo: { type: boolean, default: true }
+    MealUpdate:
+      type: object
+      minProperties: 1
+      properties:
+        meal_type: { $ref: "#/components/schemas/MealType" }
+        date: { type: string, format: date }
+        items: { type: array, items: { $ref: "#/components/schemas/MealItemInput" }, maxItems: 40 }
+        portions: { type: number, minimum: 0.25, maximum: 10 }
+    Meal:
+      type: object
+      required: [id, date, meal_type, source, title, nutrients, items, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        date: { type: string, format: date }
+        eaten_at: { type: string, format: date-time }
+        meal_type: { $ref: "#/components/schemas/MealType" }
+        source: { type: string }
+        title: { type: string }
+        photo: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+        nutrients: { $ref: "#/components/schemas/Nutrients" }
+        items: { type: array, items: { $ref: "#/components/schemas/AnalysisItem" } }
+        analysis_id: { type: [string, "null"], format: uuid }
+        feedback_given: { type: boolean }
+        created_at: { type: string, format: date-time }
+    MealWriteResult:
+      type: object
+      required: [meal, day, rewards]
+      properties:
+        meal: { $ref: "#/components/schemas/Meal" }
+        day: { $ref: "#/components/schemas/DaySummary" }
+        previous_day: { anyOf: [{ $ref: "#/components/schemas/DaySummary" }, { type: "null" }], description: "Si le repas a changé de jour" }
+        rewards: { $ref: "#/components/schemas/RewardDelta" }
+
+    # ───────── Catalogue
+    FoodSummary:
+      type: object
+      required: [id, name, per_100g]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        matched_alias: { type: [string, "null"] }
+        category: { type: string }
+        default_portion_g: { type: [number, "null"] }
+        per_100g: { $ref: "#/components/schemas/Nutrients" }
+    DishSummary:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        country: { type: string }
+        image: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+        standard_portion_g: { type: number }
+        kcal_per_portion: { type: integer }
+        is_favorite: { type: boolean }
+    DishDetail:
+      allOf:
+        - $ref: "#/components/schemas/DishSummary"
+        - type: object
+          properties:
+            aliases: { type: array, items: { type: string } }
+            components: { type: array, items: { $ref: "#/components/schemas/AnalysisItem" } }
+            nutrients_per_portion: { $ref: "#/components/schemas/Nutrients" }
+            recipe_id: { type: [string, "null"], format: uuid }
+
+    # ───────── Suivi
+    Progress:
+      type: object
+      required: [metric, range, unit, today, series, summary_last_7]
+      properties:
+        metric: { type: string }
+        range: { type: string }
+        unit: { type: string, enum: [kcal, g] }
+        today: { type: number }
+        delta_vs_yesterday: { type: number }
+        delta_percent: { type: [integer, "null"] }
+        target: { type: [number, "null"] }
+        average: { type: number }
+        empty: { type: boolean, description: "Aucun repas encore : afficher l'illustration" }
+        series:
+          type: array
+          items:
+            type: object
+            required: [date, value]
+            properties:
+              date: { type: string, format: date }
+              value: { type: [number, "null"] }
+              status: { type: string, enum: [under, on_target, over, empty] }
+        summary_last_7:
+          type: array
+          items:
+            type: object
+            required: [date, kcal]
+            properties:
+              date: { type: string, format: date }
+              kcal: { type: integer }
+              status: { type: string }
+        health: { $ref: "#/components/schemas/HealthConnection" }
+    WeightOverview:
+      type: object
+      required: [current_kg, target_kg, remaining_kg, series]
+      properties:
+        current_kg: { type: [number, "null"] }
+        target_kg: { type: number }
+        remaining_kg: { type: [number, "null"] }
+        start_kg: { type: [number, "null"] }
+        trend: { type: string, enum: [down, stable, up, unknown] }
+        trend_kg_per_week: { type: [number, "null"] }
+        bmi: { type: [number, "null"] }
+        series:
+          type: array
+          items:
+            type: object
+            required: [id, date, weight_kg, source]
+            properties:
+              id: { type: string, format: uuid }
+              date: { type: string, format: date }
+              weight_kg: { type: number }
+              source: { type: string, enum: [manual, health_connect, apple_health] }
+        next_reminder: { type: [string, "null"], format: date }
+
+    # ───────── Activité
+    HealthConnection:
+      type: object
+      required: [connected]
+      properties:
+        connected: { type: boolean }
+        source: { type: [string, "null"], enum: [health_connect, apple_health, null] }
+        granted_types: { type: array, items: { type: string } }
+        read_types_label: { type: string, description: "« Données lues : pas, calories, … »" }
+        last_sync_at: { type: [string, "null"], format: date-time }
+    HealthSyncInput:
+      type: object
+      required: [source, days]
+      properties:
+        source: { type: string, enum: [health_connect, apple_health] }
+        days:
+          type: array
+          maxItems: 31
+          items:
+            type: object
+            required: [date]
+            properties:
+              date: { type: string, format: date }
+              steps: { type: integer, minimum: 0, maximum: 200000 }
+              distance_m: { type: integer, minimum: 0 }
+              active_kcal: { type: integer, minimum: 0, maximum: 20000 }
+              total_burned_kcal: { type: integer, minimum: 0 }
+        workouts:
+          type: array
+          maxItems: 200
+          items:
+            type: object
+            required: [external_id, type, started_at, duration_s]
+            properties:
+              external_id: { type: string, maxLength: 128 }
+              type: { type: string }
+              started_at: { type: string, format: date-time }
+              duration_s: { type: integer, minimum: 1 }
+              kcal: { type: integer, minimum: 0 }
+              distance_m: { type: integer }
+              avg_hr: { type: integer }
+        weights:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            required: [measured_at, weight_kg]
+            properties:
+              measured_at: { type: string, format: date-time }
+              weight_kg: { type: number, minimum: 30, maximum: 300 }
+    MergeSuggestion:
+      type: object
+      required: [manual_id, imported_id]
+      properties:
+        manual_id: { type: string, format: uuid }
+        imported_id: { type: string, format: uuid }
+        message: { type: string }
+    ActivityInput:
+      type: object
+      required: [type, duration_s, intensity]
+      properties:
+        type: { type: string, enum: [walking, running, football, dancing, cycling, strength, swimming, other] }
+        duration_s: { type: integer, minimum: 60, maximum: 43200 }
+        intensity: { type: string, enum: [light, moderate, vigorous] }
+        started_at: { type: string, format: date-time }
+        date: { type: string, format: date }
+        label: { type: string, maxLength: 60 }
+    Activity:
+      type: object
+      required: [id, date, type, duration_s, kcal, source, editable]
+      properties:
+        id: { type: string, format: uuid }
+        date: { type: string, format: date }
+        type: { type: string }
+        label: { type: string }
+        started_at: { type: string, format: date-time }
+        duration_s: { type: integer }
+        intensity: { type: [string, "null"] }
+        kcal: { type: integer }
+        distance_m: { type: [integer, "null"] }
+        avg_hr: { type: [integer, "null"] }
+        source: { type: string, enum: [manual, health_connect, apple_health, workout] }
+        editable: { type: boolean }
+    ActivityWriteResult:
+      type: object
+      required: [activity, day, rewards]
+      properties:
+        activity: { $ref: "#/components/schemas/Activity" }
+        day: { $ref: "#/components/schemas/DaySummary" }
+        merge_suggestion: { anyOf: [{ $ref: "#/components/schemas/MergeSuggestion" }, { type: "null" }] }
+        rewards: { $ref: "#/components/schemas/RewardDelta" }
+    ActivityOverview:
+      type: object
+      required: [date, steps, health, balance_day, balance_week, activities]
+      properties:
+        date: { type: string, format: date }
+        steps: { $ref: "#/components/schemas/Gauge" }
+        distance_m: { type: integer }
+        active_kcal: { type: integer }
+        active_minutes: { type: integer }
+        health: { $ref: "#/components/schemas/HealthConnection" }
+        balance_day: { $ref: "#/components/schemas/Balance" }
+        balance_week:
+          type: array
+          items:
+            type: object
+            required: [date, consumed_kcal, burned_kcal]
+            properties:
+              date: { type: string, format: date }
+              consumed_kcal: { type: integer }
+              burned_kcal: { type: integer }
+        activities: { type: array, items: { $ref: "#/components/schemas/Activity" } }
+        recommended_workouts: { type: array, items: { $ref: "#/components/schemas/WorkoutSummary" } }
+    Insight:
+      type: object
+      required: [id, week_start, message]
+      properties:
+        id: { type: string, format: uuid }
+        week_start: { type: string, format: date }
+        kind: { type: string }
+        message: { type: string }
+        data: { type: object, additionalProperties: true }
+
+    # ───────── Entraînement
+    Media:
+      type: object
+      required: [hls_url]
+      properties:
+        hls_url: { type: string, format: uri }
+        poster: { $ref: "#/components/schemas/Image" }
+        duration_s: { type: integer }
+        subtitles: { type: array, items: { type: object, properties: { locale: { $ref: "#/components/schemas/Locale" }, url: { type: string, format: uri } } } }
+    ExerciseSummary:
+      type: object
+      required: [id, name, level, locked]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        thumbnail: { $ref: "#/components/schemas/Image" }
+        muscles: { type: array, items: { type: string } }
+        level: { $ref: "#/components/schemas/Level" }
+        equipment: { type: array, items: { type: string } }
+        locked: { type: boolean }
+    ExerciseDetail:
+      allOf:
+        - $ref: "#/components/schemas/ExerciseSummary"
+        - type: object
+          required: [instructions, video]
+          properties:
+            instructions: { type: string }
+            video: { $ref: "#/components/schemas/Media" }
+    WorkoutSummary:
+      type: object
+      required: [id, name, goal, level, duration_s, locked]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        goal: { type: string, enum: [cardio, strength, mobility] }
+        level: { $ref: "#/components/schemas/Level" }
+        duration_s: { type: integer }
+        exercises_count: { type: integer }
+        estimated_kcal: { type: integer }
+        cover: { $ref: "#/components/schemas/Image" }
+        locked: { type: boolean }
+    WorkoutDetail:
+      allOf:
+        - $ref: "#/components/schemas/WorkoutSummary"
+        - type: object
+          required: [steps]
+          properties:
+            description: { type: string }
+            downloadable: { type: boolean }
+            steps:
+              type: array
+              items:
+                type: object
+                required: [order, exercise, mode, rest_s]
+                properties:
+                  order: { type: integer }
+                  exercise: { $ref: "#/components/schemas/ExerciseDetail" }
+                  mode: { type: string, enum: [time, reps] }
+                  duration_s: { type: [integer, "null"] }
+                  reps: { type: [integer, "null"] }
+                  rest_s: { type: integer }
+
+    # ───────── Programmes / challenges
+    ProgramSummary:
+      type: object
+      required: [id, name, goal, weeks, locked]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        goal: { $ref: "#/components/schemas/Goal" }
+        weeks: { type: integer }
+        cover: { $ref: "#/components/schemas/Image" }
+        locked: { type: boolean }
+        is_active: { type: boolean }
+    ProgramDayView:
+      type: object
+      required: [day_index, date, tasks]
+      properties:
+        day_index: { type: integer }
+        date: { type: string, format: date }
+        tip: { type: [string, "null"] }
+        workout: { anyOf: [{ $ref: "#/components/schemas/WorkoutSummary" }, { type: "null" }] }
+        suggested_recipes: { type: array, items: { $ref: "#/components/schemas/RecipeSummary" } }
+        tasks:
+          type: array
+          items:
+            type: object
+            required: [id, label, done, validation]
+            properties:
+              id: { type: string, format: uuid }
+              label: { type: string }
+              done: { type: boolean }
+              validation: { type: string, enum: [auto, manual] }
+              progress: { type: [number, "null"], description: "0-1 pour les tâches automatiques" }
+        status: { type: string, enum: [done, partial, missed, today, upcoming] }
+    ProgramDetail:
+      allOf:
+        - $ref: "#/components/schemas/ProgramSummary"
+        - type: object
+          properties:
+            days_preview: { type: array, items: { $ref: "#/components/schemas/ProgramDayView" } }
+            rewards: { type: object, properties: { points: { type: integer }, badge: { $ref: "#/components/schemas/BadgeRef" } } }
+    ProgramToday:
+      type: object
+      required: [enrollment_id, program_name, day_index, total_days, percent]
+      properties:
+        enrollment_id: { type: string, format: uuid }
+        program_name: { type: string }
+        day_index: { type: integer }
+        total_days: { type: integer }
+        percent: { type: integer }
+        tasks_done: { type: integer }
+        tasks_total: { type: integer }
+    Enrollment:
+      type: object
+      required: [id, program, status, started_on, day_index, percent, today, week]
+      properties:
+        id: { type: string, format: uuid }
+        program: { $ref: "#/components/schemas/ProgramSummary" }
+        status: { type: string, enum: [active, completed, abandoned, replaced] }
+        started_on: { type: string, format: date }
+        day_index: { type: integer }
+        percent: { type: integer }
+        assiduity_percent: { type: integer }
+        today: { $ref: "#/components/schemas/ProgramDayView" }
+        week: { type: array, items: { $ref: "#/components/schemas/ProgramDayView" } }
+        report: { type: [object, "null"], description: "Bilan final (poids, assiduité) si terminé" }
+    ChallengeSummary:
+      type: object
+      required: [id, name, duration_days, rule_label, validation]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        duration_days: { type: integer }
+        rule_label: { type: string, examples: ["Boire 2 L d'eau"] }
+        validation: { type: string, enum: [auto, manual] }
+        success_threshold_percent: { type: integer }
+        points: { type: integer }
+        badge: { $ref: "#/components/schemas/BadgeRef" }
+        cover: { $ref: "#/components/schemas/Image" }
+        joined: { type: boolean }
+    ChallengeToday:
+      type: object
+      required: [participation_id, name, day_index, duration_days, today_status]
+      properties:
+        participation_id: { type: string, format: uuid }
+        name: { type: string }
+        day_index: { type: integer }
+        duration_days: { type: integer }
+        today_status: { type: string, enum: [pending, success, failed] }
+        today_progress: { type: [number, "null"] }
+        today_label: { type: string, examples: ["1,4 L sur 2 L"] }
+        can_check: { type: boolean }
+    Participation:
+      type: object
+      required: [id, challenge, status, started_on, success_rate_percent, streak, days]
+      properties:
+        id: { type: string, format: uuid }
+        challenge: { $ref: "#/components/schemas/ChallengeSummary" }
+        status: { type: string, enum: [active, succeeded, failed, abandoned] }
+        started_on: { type: string, format: date }
+        ends_on: { type: string, format: date }
+        success_rate_percent: { type: integer }
+        streak: { type: integer }
+        today: { $ref: "#/components/schemas/ChallengeToday" }
+        days:
+          type: array
+          items:
+            type: object
+            required: [date, status]
+            properties:
+              date: { type: string, format: date }
+              status: { type: string, enum: [pending, success, failed, upcoming] }
+
+    # ───────── Récompenses
+    LevelInfo:
+      type: object
+      required: [rank, name]
+      properties:
+        rank: { type: integer }
+        name: { type: string }
+        icon: { $ref: "#/components/schemas/Image" }
+        min_points: { type: integer }
+    BadgeRef:
+      type: object
+      required: [id, name]
+      properties:
+        id: { type: string, format: uuid }
+        code: { type: string }
+        name: { type: string }
+        icon: { $ref: "#/components/schemas/Image" }
+    RewardsSummary:
+      type: object
+      required: [level, total_points, streak]
+      properties:
+        level: { $ref: "#/components/schemas/LevelInfo" }
+        total_points: { type: integer }
+        streak: { type: integer }
+        progress_to_next_percent: { type: integer }
+    RewardsOverview:
+      type: object
+      required: [level, next_level, total_points, points_to_next, progress_percent, week_points, streak, best_streak, badges_earned, badges_next]
+      properties:
+        level: { $ref: "#/components/schemas/LevelInfo" }
+        next_level: { anyOf: [{ $ref: "#/components/schemas/LevelInfo" }, { type: "null" }] }
+        total_points: { type: integer }
+        points_to_next: { type: integer }
+        progress_percent: { type: integer }
+        week_points: { type: integer }
+        streak: { type: integer }
+        best_streak: { type: integer }
+        streak_freeze_available: { type: boolean }
+        badges_earned: { type: array, items: { $ref: "#/components/schemas/UserBadge" } }
+        badges_next: { type: array, items: { $ref: "#/components/schemas/UserBadge" } }
+    UserBadge:
+      type: object
+      required: [badge, family, state, progress_percent]
+      properties:
+        badge: { $ref: "#/components/schemas/BadgeRef" }
+        family: { type: string }
+        description: { type: string }
+        state: { type: string, enum: [locked, in_progress, earned] }
+        progress_percent: { type: integer }
+        progress_label: { type: string, examples: ["4 / 7 jours"] }
+        earned_at: { type: [string, "null"], format: date-time }
+    PointEvent:
+      type: object
+      required: [id, label, points, date]
+      properties:
+        id: { type: string, format: uuid }
+        action: { type: string }
+        label: { type: string }
+        points: { type: integer }
+        date: { type: string, format: date }
+
+    # ───────── Contenus
+    RecipeSummary:
+      type: object
+      required: [id, name, total_minutes, locked]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        country: { type: string }
+        image: { $ref: "#/components/schemas/Image" }
+        total_minutes: { type: integer }
+        difficulty: { type: string, enum: [easy, medium, hard] }
+        kcal_per_serving: { type: integer }
+        tags: { type: array, items: { type: string } }
+        tag_labels: { type: array, items: { type: string } }
+        is_favorite: { type: boolean }
+        locked: { type: boolean }
+    RecipeDetail:
+      allOf:
+        - $ref: "#/components/schemas/RecipeSummary"
+        - type: object
+          required: [servings, ingredients, steps, nutrients_per_serving]
+          properties:
+            description: { type: string }
+            prep_minutes: { type: integer }
+            cook_minutes: { type: integer }
+            servings: { type: integer }
+            ingredients: { type: array, items: { type: object, required: [label], properties: { label: { type: string }, food_id: { type: string, format: uuid }, grams: { type: number } } } }
+            steps: { type: array, items: { type: object, required: [order, text], properties: { order: { type: integer }, text: { type: string }, image: { $ref: "#/components/schemas/Image" } } } }
+            nutrients_per_serving: { $ref: "#/components/schemas/Nutrients" }
+            related_plants: { type: array, items: { $ref: "#/components/schemas/PlantSummary" } }
+    PlantSummary:
+      type: object
+      required: [id, common_name, scientific_name]
+      properties:
+        id: { type: string, format: uuid }
+        common_name: { type: string }
+        scientific_name: { type: string }
+        image: { $ref: "#/components/schemas/Image" }
+        tags: { type: array, items: { type: string } }
+        is_favorite: { type: boolean }
+    PlantDetail:
+      allOf:
+        - $ref: "#/components/schemas/PlantSummary"
+        - type: object
+          required: [traditional_use, nutritional_benefits, precautions, disclaimer]
+          properties:
+            traditional_use: { type: string }
+            nutritional_benefits: { type: string }
+            precautions: { type: string }
+            contraindications: { type: array, items: { type: object, properties: { code: { type: string }, label: { type: string } } } }
+            disclaimer: { type: string }
+            related_recipes: { type: array, items: { $ref: "#/components/schemas/RecipeSummary" } }
+    UserTip:
+      type: object
+      required: [id, topic, title, body, tier]
+      properties:
+        id: { type: string, format: uuid }
+        topic: { type: string }
+        title: { type: string }
+        body: { type: string }
+        tier: { type: string, enum: [free, plus] }
+        locked: { type: boolean }
+        triggered_on: { type: string, format: date }
+        related_recipes: { type: array, items: { $ref: "#/components/schemas/RecipeSummary" } }
+        related_plants: { type: array, items: { $ref: "#/components/schemas/PlantSummary" } }
+        read: { type: boolean }
+    PreventionOverview:
+      type: object
+      required: [state, tips]
+      properties:
+        state: { type: string, enum: [not_enough_data, ok] }
+        tips: { type: array, items: { $ref: "#/components/schemas/UserTip" } }
+        weekly_report: { type: [object, "null"], additionalProperties: true, description: Plus uniquement }
+        weekly_report_locked: { type: boolean }
+
+    # ───────── Abonnement / parrainage
+    PlanCatalog:
+      type: object
+      required: [plans, comparison]
+      properties:
+        plans:
+          type: array
+          items:
+            type: object
+            required: [code, name, price, interval, featured]
+            properties:
+              code: { type: string }
+              name: { type: string }
+              price: { $ref: "#/components/schemas/Money" }
+              monthly_equivalent: { $ref: "#/components/schemas/Money" }
+              savings_percent: { type: [integer, "null"] }
+              interval: { type: string, enum: [month, year, none] }
+              featured: { type: boolean }
+              store_product_ids: { type: object, properties: { google: { type: string }, apple: { type: string } } }
+        comparison:
+          type: array
+          items:
+            type: object
+            required: [feature, label, free, plus]
+            properties:
+              feature: { type: string }
+              label: { type: string }
+              trial: { type: string }
+              free: { type: string }
+              plus: { type: string }
+    SubscriptionState:
+      type: object
+      required: [entitlements, quotas, can_purchase_in_app, can_manage]
+      properties:
+        entitlements: { $ref: "#/components/schemas/Entitlements" }
+        subscription:
+          anyOf:
+            - type: object
+              required: [plan_code, channel, status, current_period_end, auto_renew]
+              properties:
+                plan_code: { type: string }
+                plan_name: { type: string }
+                channel: { $ref: "#/components/schemas/Channel" }
+                status: { $ref: "#/components/schemas/SubscriptionStatus" }
+                current_period_end: { type: string, format: date-time }
+                auto_renew: { type: boolean }
+                price: { $ref: "#/components/schemas/Money" }
+            - type: "null"
+        trial_days_left: { type: [integer, "null"] }
+        granted_days_left: { type: [integer, "null"] }
+        quotas: { type: array, items: { $ref: "#/components/schemas/Quota" } }
+        can_purchase_in_app: { type: boolean }
+        can_manage: { type: string, enum: [store, web, none] }
+        web_checkout_allowed: { type: boolean, description: Pays autorisé à renvoyer vers le site }
+    Payment:
+      type: object
+      required: [id, channel, amount, status, paid_at]
+      properties:
+        id: { type: string, format: uuid }
+        channel: { $ref: "#/components/schemas/Channel" }
+        description: { type: string }
+        amount: { $ref: "#/components/schemas/Money" }
+        status: { type: string, enum: [succeeded, failed, refunded, pending] }
+        paid_at: { type: string, format: date-time }
+        receipt_url: { type: [string, "null"], format: uri }
+    ReferralOverview:
+      type: object
+      required: [code, share_url, share_message, validated_count, days_earned, days_cap]
+      properties:
+        code: { type: string }
+        share_url: { type: string, format: uri }
+        share_message: { type: string }
+        validated_count: { type: integer }
+        pending_count: { type: integer }
+        days_earned: { type: integer }
+        days_cap: { type: integer, examples: [35] }
+        referees: { type: array, items: { type: object, properties: { first_name: { type: string }, status: { type: string, enum: [pending, validated, rejected] }, date: { type: string, format: date } } } }
+
+    # ───────── Notifications / support
+    NotificationPreferences:
+      type: object
+      required: [categories, quiet_start, quiet_end]
+      properties:
+        categories:
+          type: object
+          properties:
+            meal_reminders: { type: boolean }
+            hydration: { type: boolean }
+            weigh_in: { type: boolean }
+            programs_challenges: { type: boolean }
+            rewards: { type: boolean }
+            prevention: { type: boolean }
+            campaigns: { type: boolean, description: Lié au consentement marketing }
+            subscription: { type: boolean, const: true, readOnly: true }
+        meal_reminder_times:
+          type: object
+          properties:
+            breakfast: { type: string, pattern: "^\\d{2}:\\d{2}$" }
+            lunch: { type: string, pattern: "^\\d{2}:\\d{2}$" }
+            dinner: { type: string, pattern: "^\\d{2}:\\d{2}$" }
+        weigh_in_weekday: { type: integer, minimum: 1, maximum: 7 }
+        quiet_start: { type: string, pattern: "^\\d{2}:\\d{2}$" }
+        quiet_end: { type: string, pattern: "^\\d{2}:\\d{2}$" }
+    Notification:
+      type: object
+      required: [id, category, title, body, created_at, read]
+      properties:
+        id: { type: string, format: uuid }
+        category: { type: string }
+        title: { type: string }
+        body: { type: string }
+        deeplink: { type: [string, "null"] }
+        image: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+        created_at: { type: string, format: date-time }
+        read: { type: boolean }
+    TicketInput:
+      type: object
+      required: [category, subject, message]
+      properties:
+        category: { $ref: "#/components/schemas/TicketCategory" }
+        subject: { type: string, minLength: 3, maxLength: 120 }
+        message: { type: string, minLength: 10, maxLength: 5000 }
+        email: { type: string, format: email, description: "Requis sans authentification" }
+        name: { type: string, maxLength: 80 }
+        attachment_ids: { type: array, items: { type: string, format: uuid }, maxItems: 3 }
+        captcha: { type: string, description: "Requis sans authentification" }
+        meta: { type: object, properties: { app_version: { type: string }, os: { type: string }, device: { type: string } } }
+    TicketSummary:
+      type: object
+      required: [id, number, subject, status, updated_at]
+      properties:
+        id: { type: string, format: uuid }
+        number: { type: string }
+        subject: { type: string }
+        category: { $ref: "#/components/schemas/TicketCategory" }
+        status: { $ref: "#/components/schemas/TicketStatus" }
+        has_unread_reply: { type: boolean }
+        updated_at: { type: string, format: date-time }
+    TicketDetail:
+      allOf:
+        - $ref: "#/components/schemas/TicketSummary"
+        - type: object
+          required: [messages]
+          properties:
+            email: { type: string }
+            user_id: { type: [string, "null"], format: uuid }
+            assignee: { type: [string, "null"] }
+            priority: { type: string }
+            meta: { type: object, additionalProperties: true }
+            messages:
+              type: array
+              items:
+                type: object
+                required: [id, direction, body, created_at]
+                properties:
+                  id: { type: string, format: uuid }
+                  direction: { type: string, enum: [inbound, outbound, internal_note] }
+                  author: { type: [string, "null"] }
+                  body: { type: string }
+                  attachments: { type: array, items: { $ref: "#/components/schemas/Image" } }
+                  created_at: { type: string, format: date-time }
+
+    # ───────── Admin
+    StaffMember:
+      type: object
+      required: [id, email, roles, mfa_enabled, active]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string }
+        name: { type: string }
+        roles: { type: array, items: { $ref: "#/components/schemas/StaffRole" } }
+        permissions: { type: array, items: { type: string }, description: "Ex. users.view, users.suspend, content.publish" }
+        mfa_enabled: { type: boolean }
+        active: { type: boolean }
+        last_login_at: { type: [string, "null"], format: date-time }
+    AdminDashboard:
+      type: object
+      properties:
+        signups: { $ref: "#/components/schemas/KpiSeries" }
+        active_users: { type: [object, "null"], properties: { dau: { type: integer }, wau: { type: integer }, mau: { type: integer } } }
+        retention: { type: [object, "null"], properties: { d1: { type: number }, d7: { type: number }, d30: { type: number } } }
+        trial_to_plus_rate: { type: [number, "null"] }
+        revenue_by_channel: { type: [array, "null"], items: { type: object, properties: { channel: { $ref: "#/components/schemas/Channel" }, amount: { $ref: "#/components/schemas/Money" } } } }
+        mrr: { anyOf: [{ $ref: "#/components/schemas/Money" }, { type: "null" }] }
+        analyses: { $ref: "#/components/schemas/KpiSeries" }
+        ai_cost: { anyOf: [{ $ref: "#/components/schemas/Money" }, { type: "null" }] }
+        negative_feedback_rate: { type: [number, "null"] }
+        support_pending: { type: [integer, "null"] }
+    KpiSeries:
+      type: [object, "null"]
+      properties:
+        total: { type: integer }
+        delta_percent: { type: [number, "null"] }
+        series: { type: array, items: { type: object, properties: { date: { type: string, format: date }, value: { type: number } } } }
+    AdminUserRow:
+      type: object
+      required: [id, email, name, tier, status, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string }
+        name: { type: string }
+        country: { type: [string, "null"] }
+        locale: { $ref: "#/components/schemas/Locale" }
+        tier: { $ref: "#/components/schemas/PlanTier" }
+        status: { type: string, enum: [active, suspended, deletion_pending] }
+        platform: { type: [string, "null"] }
+        last_seen_at: { type: [string, "null"], format: date-time }
+        created_at: { type: string, format: date-time }
+    AdminUserDetail:
+      allOf:
+        - $ref: "#/components/schemas/AdminUserRow"
+        - type: object
+          properties:
+            email_verified: { type: boolean }
+            goals: { type: array, items: { $ref: "#/components/schemas/Goal" } }
+            health_masked: { type: boolean, const: true }
+            subscription: { $ref: "#/components/schemas/SubscriptionState" }
+            payments: { type: array, items: { $ref: "#/components/schemas/Payment" } }
+            referral: { $ref: "#/components/schemas/ReferralOverview" }
+            sessions: { type: array, items: { $ref: "#/components/schemas/Session" } }
+            consents: { type: array, items: { $ref: "#/components/schemas/ConsentState" } }
+            tickets: { type: array, items: { $ref: "#/components/schemas/TicketSummary" } }
+            stats: { type: object, properties: { meals: { type: integer }, analyses: { type: integer }, streak: { type: integer }, points: { type: integer } } }
+    AdminUserHealth:
+      type: object
+      properties:
+        birth_date: { type: string, format: date }
+        sex: { $ref: "#/components/schemas/Sex" }
+        height_cm: { type: number }
+        current_weight_kg: { type: number }
+        target_weight_kg: { type: number }
+        targets: { $ref: "#/components/schemas/Targets" }
+    AdminUserActionInput:
+      type: object
+      required: [action, reason]
+      properties:
+        action: { type: string, enum: [suspend, reactivate, resend_verification, send_password_reset, extend_trial, grant_plus_days, reset_quota, export_data, delete_data] }
+        days: { type: integer, minimum: 1, maximum: 365 }
+        feature: { type: string, enum: [photo_analysis, text_analysis] }
+        reason: { type: string, minLength: 3, maxLength: 500 }
+    ContentTypeName:
+      type: string
+      enum: [foods, dishes, recipes, plants, exercises, workouts, programs, challenges, badges, levels, point-rules, prevention-tips, faq, legal, cities]
+    AdminContentRow:
+      type: object
+      required: [id, type, title, status, updated_at, missing_locales]
+      properties:
+        id: { type: string, format: uuid }
+        type: { $ref: "#/components/schemas/ContentTypeName" }
+        title: { type: string }
+        status: { $ref: "#/components/schemas/ContentStatus" }
+        missing_locales: { type: array, items: { $ref: "#/components/schemas/Locale" } }
+        thumbnail: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+        updated_at: { type: string, format: date-time }
+        updated_by: { type: [string, "null"] }
+    AdminContentPayload:
+      type: object
+      required: [data]
+      properties:
+        version: { type: integer, description: Verrou optimiste (requis en PATCH) }
+        data:
+          description: Corps typé selon `type` dans l'URL
+          oneOf:
+            - $ref: "#/components/schemas/AdminFood"
+            - $ref: "#/components/schemas/AdminDish"
+            - $ref: "#/components/schemas/AdminRecipe"
+            - $ref: "#/components/schemas/AdminPlant"
+            - $ref: "#/components/schemas/AdminExercise"
+            - $ref: "#/components/schemas/AdminWorkout"
+            - $ref: "#/components/schemas/AdminProgram"
+            - $ref: "#/components/schemas/AdminChallenge"
+            - $ref: "#/components/schemas/AdminBadge"
+            - $ref: "#/components/schemas/AdminLevel"
+            - $ref: "#/components/schemas/AdminPointRule"
+            - $ref: "#/components/schemas/AdminPreventionTip"
+            - $ref: "#/components/schemas/AdminFaq"
+            - $ref: "#/components/schemas/AdminLegal"
+            - $ref: "#/components/schemas/AdminCity"
+    AdminContentItem:
+      allOf:
+        - $ref: "#/components/schemas/AdminContentRow"
+        - type: object
+          required: [version, data]
+          properties:
+            version: { type: integer }
+            data: { type: object, additionalProperties: true }
+            computed: { type: object, additionalProperties: true, description: "Valeurs calculées (nutriments, durée…), lecture seule" }
+    AdminFood:
+      type: object
+      required: [name, category, kcal, protein_g, carbs_g, fat_g]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        aliases: { type: array, items: { type: string } }
+        category: { type: string }
+        kcal: { type: number, minimum: 0, maximum: 900 }
+        protein_g: { type: number, minimum: 0, maximum: 100 }
+        carbs_g: { type: number, minimum: 0, maximum: 100 }
+        sugars_g: { type: number, minimum: 0, maximum: 100 }
+        fat_g: { type: number, minimum: 0, maximum: 100 }
+        saturated_fat_g: { type: number, minimum: 0, maximum: 100 }
+        fiber_g: { type: number, minimum: 0, maximum: 100 }
+        salt_g: { type: number, minimum: 0, maximum: 100 }
+        default_portion_g: { type: number }
+        source: { type: string }
+    AdminDish:
+      type: object
+      required: [name, country, standard_portion_g, components]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        aliases: { type: array, items: { type: string } }
+        country: { type: string }
+        standard_portion_g: { type: number }
+        image_upload_id: { type: string, format: uuid }
+        recipe_id: { type: [string, "null"], format: uuid }
+        components: { type: array, items: { $ref: "#/components/schemas/MealItemInput" } }
+    AdminRecipe:
+      type: object
+      required: [name, servings, ingredients, steps]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        description: { $ref: "#/components/schemas/I18nText" }
+        country: { type: string }
+        prep_minutes: { type: integer }
+        cook_minutes: { type: integer }
+        difficulty: { type: string, enum: [easy, medium, hard] }
+        servings: { type: integer, minimum: 1 }
+        tags: { type: array, items: { type: string } }
+        goals: { type: array, items: { $ref: "#/components/schemas/Goal" } }
+        is_free: { type: boolean }
+        image_upload_id: { type: string, format: uuid }
+        ingredients: { type: array, items: { type: object, required: [food_id, grams], properties: { food_id: { type: string, format: uuid }, grams: { type: number }, display: { $ref: "#/components/schemas/I18nText" } } } }
+        steps: { type: array, items: { type: object, required: [text], properties: { text: { $ref: "#/components/schemas/I18nText" }, image_upload_id: { type: string, format: uuid } } } }
+    AdminPlant:
+      type: object
+      required: [common_name, scientific_name, traditional_use, nutritional_benefits, precautions]
+      properties:
+        common_name: { $ref: "#/components/schemas/I18nText" }
+        scientific_name: { type: string }
+        tags: { type: array, items: { type: string } }
+        traditional_use: { $ref: "#/components/schemas/I18nText" }
+        nutritional_benefits: { $ref: "#/components/schemas/I18nText" }
+        precautions: { $ref: "#/components/schemas/I18nText" }
+        contraindications: { type: array, items: { type: string } }
+        related_recipe_ids: { type: array, items: { type: string, format: uuid } }
+        image_upload_id: { type: string, format: uuid }
+    AdminExercise:
+      type: object
+      required: [name, instructions, level, met]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        instructions: { $ref: "#/components/schemas/I18nText" }
+        muscles: { type: array, items: { type: string } }
+        level: { $ref: "#/components/schemas/Level" }
+        equipment: { type: array, items: { type: string } }
+        met: { type: number, minimum: 1, maximum: 20 }
+        is_free: { type: boolean }
+        video_upload_id: { type: string, format: uuid }
+        subtitle_upload_ids: { type: object, additionalProperties: { type: string, format: uuid } }
+    AdminWorkout:
+      type: object
+      required: [name, goal, level, steps]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        description: { $ref: "#/components/schemas/I18nText" }
+        goal: { type: string, enum: [cardio, strength, mobility] }
+        level: { $ref: "#/components/schemas/Level" }
+        is_free: { type: boolean }
+        cover_upload_id: { type: string, format: uuid }
+        steps: { type: array, minItems: 1, items: { type: object, required: [exercise_id, mode, rest_s], properties: { exercise_id: { type: string, format: uuid }, mode: { type: string, enum: [time, reps] }, duration_s: { type: integer }, reps: { type: integer }, rest_s: { type: integer } } } }
+    RuleDef:
+      type: object
+      required: [metric, operator, threshold]
+      properties:
+        metric: { type: string, enum: [water_ml, steps, active_minutes, meals_count, protein_g, kcal_within_target, workout_completed, weight_logged, manual] }
+        operator: { type: string, enum: [gte, lte] }
+        threshold: { type: number }
+        period: { type: string, const: day }
+    AdminProgram:
+      type: object
+      required: [name, goal, weeks, days]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        description: { $ref: "#/components/schemas/I18nText" }
+        goal: { $ref: "#/components/schemas/Goal" }
+        weeks: { type: integer, minimum: 1, maximum: 52 }
+        points: { type: integer }
+        badge_id: { type: [string, "null"], format: uuid }
+        cover_upload_id: { type: string, format: uuid }
+        days:
+          type: array
+          items:
+            type: object
+            required: [day_index]
+            properties:
+              day_index: { type: integer, minimum: 1 }
+              tip: { $ref: "#/components/schemas/I18nText" }
+              workout_id: { type: [string, "null"], format: uuid }
+              recipe_ids: { type: array, items: { type: string, format: uuid } }
+              tasks: { type: array, items: { type: object, required: [label], properties: { label: { $ref: "#/components/schemas/I18nText" }, rule: { anyOf: [{ $ref: "#/components/schemas/RuleDef" }, { type: "null" }] } } } }
+    AdminChallenge:
+      type: object
+      required: [name, duration_days, rule]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        description: { $ref: "#/components/schemas/I18nText" }
+        duration_days: { type: integer, minimum: 7, maximum: 30 }
+        rule: { $ref: "#/components/schemas/RuleDef" }
+        success_threshold: { type: number, minimum: 0.5, maximum: 1, default: 0.8 }
+        points_per_day: { type: integer }
+        points_completion: { type: integer }
+        badge_id: { type: [string, "null"], format: uuid }
+        cover_upload_id: { type: string, format: uuid }
+    AdminBadge:
+      type: object
+      required: [code, family, name, condition]
+      properties:
+        code: { type: string, pattern: "^[a-z0-9_]+$" }
+        family: { type: string, enum: [streak, nutrition, hydration, activity, challenge, program, discovery, referral] }
+        name: { $ref: "#/components/schemas/I18nText" }
+        description: { $ref: "#/components/schemas/I18nText" }
+        condition: { type: object, additionalProperties: true }
+        bonus_points: { type: integer }
+        icon_upload_id: { type: string, format: uuid }
+    AdminLevel:
+      type: object
+      required: [rank, name, min_points]
+      properties:
+        rank: { type: integer, minimum: 1 }
+        name: { $ref: "#/components/schemas/I18nText" }
+        min_points: { type: integer, minimum: 0 }
+        icon_upload_id: { type: string, format: uuid }
+    AdminPointRule:
+      type: object
+      required: [action, points]
+      properties:
+        action: { type: string }
+        points: { type: integer, minimum: 0 }
+        cap: { type: [integer, "null"] }
+        cap_period: { type: string, enum: [day, week, none] }
+    AdminPreventionTip:
+      type: object
+      required: [code, topic, title, body, trigger, tier]
+      properties:
+        code: { type: string }
+        topic: { type: string, enum: [water, salt, sugar, fiber, activity, protein] }
+        title: { $ref: "#/components/schemas/I18nText" }
+        body: { $ref: "#/components/schemas/I18nText" }
+        trigger: { type: object, additionalProperties: true }
+        tier: { type: string, enum: [free, plus] }
+        related_recipe_ids: { type: array, items: { type: string, format: uuid } }
+        related_plant_ids: { type: array, items: { type: string, format: uuid } }
+    AdminFaq:
+      type: object
+      required: [category, question, answer]
+      properties:
+        category: { type: string }
+        question: { $ref: "#/components/schemas/I18nText" }
+        answer: { $ref: "#/components/schemas/I18nText" }
+        order: { type: integer }
+        audience: { type: string, enum: [app, web, both] }
+    AdminLegal:
+      type: object
+      required: [kind, body]
+      properties:
+        kind: { $ref: "#/components/schemas/LegalKind" }
+        body: { $ref: "#/components/schemas/I18nText" }
+        requires_reaccept: { type: boolean }
+    AdminCity:
+      type: object
+      required: [name, country, timezone]
+      properties:
+        name: { $ref: "#/components/schemas/I18nText" }
+        country: { type: string }
+        timezone: { type: string }
+        is_suggested: { type: boolean }
+    AdminFeedbackRow:
+      type: object
+      required: [id, rating, status, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        rating: { type: string, enum: [up, down] }
+        reason: { anyOf: [{ $ref: "#/components/schemas/FeedbackReason" }, { type: "null" }] }
+        status: { type: string, enum: [new, handled, ignored] }
+        dish_label: { type: [string, "null"] }
+        confidence: { type: [number, "null"] }
+        locale: { $ref: "#/components/schemas/Locale" }
+        country: { type: [string, "null"] }
+        thumbnail: { anyOf: [{ $ref: "#/components/schemas/Image" }, { type: "null" }] }
+        created_at: { type: string, format: date-time }
+    AdminFeedbackDetail:
+      allOf:
+        - $ref: "#/components/schemas/AdminFeedbackRow"
+        - type: object
+          properties:
+            photo: { $ref: "#/components/schemas/Image" }
+            input_text: { type: [string, "null"] }
+            comment: { type: [string, "null"] }
+            model: { type: string }
+            prompt_version: { type: string }
+            ai_raw: { type: object, additionalProperties: true }
+            ai_items: { type: array, items: { $ref: "#/components/schemas/AnalysisItem" } }
+            corrected_items: { type: array, items: { $ref: "#/components/schemas/AnalysisItem" } }
+            handled_by: { type: [string, "null"] }
+            handled_action: { type: [string, "null"] }
+    AdminFeedbackStats:
+      type: object
+      properties:
+        by_dish: { type: array, items: { type: object, properties: { dish_id: { type: string }, dish: { type: string }, total: { type: integer }, negative_rate: { type: number } } } }
+        by_country: { type: array, items: { type: object, properties: { country: { type: string }, total: { type: integer }, negative_rate: { type: number } } } }
+        top_contested: { type: array, items: { type: object, properties: { dish: { type: string }, negatives: { type: integer } } } }
+    AdminPlan:
+      type: object
+      properties:
+        code: { type: string, readOnly: true }
+        name: { $ref: "#/components/schemas/I18nText" }
+        price_cents: { type: integer, minimum: 0 }
+        interval: { type: string, enum: [month, year, none] }
+        is_featured: { type: boolean }
+        store_product_ids: { type: object, properties: { google: { type: string }, apple: { type: string } } }
+        web_price_id: { type: [string, "null"] }
+        active: { type: boolean }
+    QuotaRule:
+      type: object
+      required: [plan_tier, feature, limit, period]
+      properties:
+        plan_tier: { $ref: "#/components/schemas/PlanTier" }
+        feature: { type: string, enum: [photo_analysis, text_analysis, challenges_active] }
+        limit: { type: [integer, "null"], minimum: 0 }
+        period: { type: string, enum: [day, month, trial] }
+    AdminSubscriptionRow:
+      type: object
+      required: [id, user_id, user_email, plan_code, channel, status]
+      properties:
+        id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        user_email: { type: string }
+        plan_code: { type: string }
+        channel: { $ref: "#/components/schemas/Channel" }
+        status: { $ref: "#/components/schemas/SubscriptionStatus" }
+        current_period_end: { type: string, format: date-time }
+        auto_renew: { type: boolean }
+        created_at: { type: string, format: date-time }
+    AdminPaymentRow:
+      allOf:
+        - $ref: "#/components/schemas/Payment"
+        - type: object
+          properties:
+            user_id: { type: string, format: uuid }
+            user_email: { type: string }
+            external_id: { type: string }
+            refundable: { type: boolean }
+            refunded: { anyOf: [{ $ref: "#/components/schemas/Money" }, { type: "null" }] }
+    PromoCode:
+      type: object
+      required: [code, kind, value, valid_from]
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        code: { type: string, pattern: "^[A-Z0-9_-]{3,40}$" }
+        kind: { type: string, enum: [percent, amount, free_days] }
+        value: { type: number, minimum: 0 }
+        plan_codes: { type: array, items: { type: string } }
+        max_redemptions: { type: [integer, "null"] }
+        redeemed_count: { type: integer, readOnly: true }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: [string, "null"], format: date-time }
+        active: { type: boolean }
+    AdminTicketRow:
+      allOf:
+        - $ref: "#/components/schemas/TicketSummary"
+        - type: object
+          properties:
+            email: { type: string }
+            assignee: { type: [string, "null"] }
+            priority: { type: string }
+            channel: { type: string, enum: [app, web] }
+            created_at: { type: string, format: date-time }
+    Segment:
+      type: object
+      properties:
+        locales: { type: array, items: { $ref: "#/components/schemas/Locale" } }
+        countries: { type: array, items: { type: string } }
+        tiers: { type: array, items: { $ref: "#/components/schemas/PlanTier" } }
+        goals: { type: array, items: { $ref: "#/components/schemas/Goal" } }
+        inactive_days_min: { type: [integer, "null"] }
+    CampaignInput:
+      type: object
+      required: [title, body, segment]
+      properties:
+        title: { $ref: "#/components/schemas/I18nText" }
+        body: { $ref: "#/components/schemas/I18nText" }
+        deeplink: { type: [string, "null"] }
+        image_upload_id: { type: [string, "null"], format: uuid }
+        segment: { $ref: "#/components/schemas/Segment" }
+        scheduled_at: { type: [string, "null"], format: date-time }
+    Campaign:
+      allOf:
+        - $ref: "#/components/schemas/CampaignInput"
+        - type: object
+          required: [id, status]
+          properties:
+            id: { type: string, format: uuid }
+            status: { type: string, enum: [draft, scheduled, sending, sent, canceled] }
+            audience_count: { type: integer }
+            sent_count: { type: integer }
+            opened_count: { type: integer }
+            open_rate: { type: [number, "null"] }
+            created_by: { type: string }
+            created_at: { type: string, format: date-time }
+    Settings:
+      type: object
+      properties:
+        nutrition:
+          type: object
+          properties:
+            activity_factor: { type: number }
+            lose_weight_deficit: { type: number, description: "0.15 à 0.20" }
+            gain_muscle_surplus: { type: number }
+            min_kcal: { type: object, properties: { female: { type: integer }, male: { type: integer } } }
+            protein_g_per_kg: { type: object, additionalProperties: { type: number } }
+            fat_ratio: { type: object, additionalProperties: { type: number } }
+            water_ml_per_kg: { type: number }
+            water_ml_per_active_hour: { type: integer }
+            fiber_g: { type: object, properties: { female: { type: integer }, male: { type: integer } } }
+            salt_max_g: { type: number }
+            activity_bonus_ratio: { type: number, description: "0.5 = moitié de l'excédent" }
+            kcal_target_tolerance: { type: number, description: "0.10" }
+        ai:
+          type: object
+          properties:
+            vision_model: { type: string }
+            text_model: { type: string }
+            translation_model: { type: string }
+            prompt_version: { type: string }
+            system_prompt: { type: string }
+            low_confidence_threshold: { type: number }
+            monthly_budget_usd: { type: number }
+        app:
+          type: object
+          properties:
+            min_version_android: { type: string }
+            min_version_ios: { type: string }
+            min_age: { type: integer }
+            active_locales: { type: array, items: { $ref: "#/components/schemas/Locale" } }
+            features: { type: object, additionalProperties: { type: boolean } }
+            web_checkout_countries: { type: array, items: { type: string } }
+        trial:
+          type: object
+          properties:
+            default_days: { type: integer }
+            invite_days: { type: integer }
+        referral:
+          type: object
+          properties:
+            days_per_referral: { type: integer }
+            cap_days: { type: integer }
+        challenges:
+          type: object
+          properties:
+            default_success_threshold: { type: number }
+        notifications:
+          type: object
+          properties:
+            max_push_per_day: { type: integer }
+            default_quiet_start: { type: string }
+            default_quiet_end: { type: string }
+    AuditEntry:
+      type: object
+      required: [id, action, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        actor: { type: [string, "null"] }
+        action: { type: string }
+        target_type: { type: string }
+        target_id: { type: string }
+        before: { type: [object, "null"], additionalProperties: true }
+        after: { type: [object, "null"], additionalProperties: true }
+        ip: { type: string }
+        created_at: { type: string, format: date-time }

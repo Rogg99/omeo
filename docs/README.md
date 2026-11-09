@@ -43,4 +43,7 @@
 
 ### Technique
 - Stack retenue : API **Django** (Django REST Framework, PostgreSQL, Celery + Redis), mobile **Flutter**, admin **Next.js**, site **Next.js**. Structure du dépôt : [README racine](../README.md).
-- _À venir : architecture, modèle de données, contrats d'API._
+- [Conventions de l'API](technique/conventions-api.md) : authentification, erreurs, pagination, idempotence, sécurité
+- [Modèle de données](technique/modele-donnees.md)
+- Contrat d'API : [contracts/openapi.yaml](../contracts/openapi.yaml)
+- Prompts de développement par livrable : [prompts/](prompts/)

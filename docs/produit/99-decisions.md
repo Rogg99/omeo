@@ -25,6 +25,10 @@
 | D19 | Langues | 8 au lancement : FR, EN, ES, PT, AR, ZH, JA, DE. D'autres ensuite |
 | D20 | Notifications | Rappels (repas, eau, pesée, challenges) et campagnes depuis l'admin |
 | D21 | Design | Couleurs actuelles conservées, vert désaturé, alternance noir et vert |
+| D22 | Onboarding hors connexion | Exception à D1 : l'avertissement « poids cible incohérent avec l'objectif » (étape 7) est une simple validation de saisie, faite par le mobile. Les objectifs eux-mêmes restent calculés par l'API |
+| D23 | Unités | L'API stocke et renvoie tout en métrique. Le mobile convertit en lb, ft ou oz uniquement pour l'affichage et la saisie |
+| D24 | Saisie vocale | Transcription sur l'appareil (reconnaissance vocale du système). L'API reçoit le texte |
+| D25 | Contrat d'API | Écrit avant le code ([contracts/openapi.yaml](../../contracts/openapi.yaml)). Les clients TypeScript et Dart sont générés à partir de ce fichier |
 
 ## Questions ouvertes
 1. Prix en USD : 4,49 $ et 46,99 $, ou 4,99 $ et 49,99 $ ?

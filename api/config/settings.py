@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
 ]
 LOCAL_APPS = [
+    "apps.core",           # socle commun : stockage, erreurs, idempotence, audit…
     "apps.accounts",       # comptes, profils, consentements, parrainage
     "apps.nutrition",      # aliments, plats, objectifs, calculs nutritionnels
     "apps.meals",          # repas, analyses IA (OpenRouter), avis d'analyse
@@ -106,8 +107,47 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+
+# Stockage objet compatible S3 (MinIO en dev, S3 / R2 en prod). Voir apps/core/storage.py.
+#   S3_ENDPOINT_URL        : adresse utilisée par l'API pour parler au stockage (réseau interne)
+#   S3_PUBLIC_ENDPOINT_URL : adresse vue par les clients ; sert à signer les URL (le Host fait partie de la signature)
+S3_ENDPOINT_URL = env("S3_ENDPOINT_URL", default=None)
+S3_PUBLIC_ENDPOINT_URL = env("S3_PUBLIC_ENDPOINT_URL", default=S3_ENDPOINT_URL)
+S3_REGION = env("S3_REGION", default="us-east-1")
+S3_ACCESS_KEY_ID = env("S3_ACCESS_KEY_ID")
+S3_SECRET_ACCESS_KEY = env("S3_SECRET_ACCESS_KEY")
+S3_PRIVATE_BUCKET = env("S3_PRIVATE_BUCKET", default="nyam-private")
+S3_PUBLIC_BUCKET = env("S3_PUBLIC_BUCKET", default="nyam-public")
+S3_PUBLIC_BASE_URL = env("S3_PUBLIC_BASE_URL", default=f"{S3_PUBLIC_ENDPOINT_URL}/{S3_PUBLIC_BUCKET}")
+UPLOAD_URL_TTL_SECONDS = 15 * 60
+DOWNLOAD_URL_TTL_SECONDS = 60 * 60
+UPLOAD_MAX_BYTES = 8 * 1024 * 1024
+
+_s3_common = {
+    "access_key": S3_ACCESS_KEY_ID,
+    "secret_key": S3_SECRET_ACCESS_KEY,
+    "endpoint_url": S3_ENDPOINT_URL,
+    "region_name": S3_REGION,
+    "signature_version": "s3v4",
+    "addressing_style": "path",
+    "file_overwrite": False,
+}
+STORAGES = {
+    # Fichiers des utilisateurs : privés, servis uniquement par URL signée et temporaire
+    "default": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {**_s3_common, "bucket_name": S3_PRIVATE_BUCKET, "default_acl": None,
+                    "querystring_auth": True, "querystring_expire": DOWNLOAD_URL_TTL_SECONDS,
+                    "custom_domain": None},
+    },
+    # Médias des contenus publiés : lecture publique, cache long (servis par CDN en prod)
+    "public": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {**_s3_common, "bucket_name": S3_PUBLIC_BUCKET, "querystring_auth": False,
+                    "object_parameters": {"CacheControl": "public, max-age=31536000, immutable"}},
+    },
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

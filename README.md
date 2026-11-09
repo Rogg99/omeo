@@ -1,45 +1,38 @@
-# Nyam — Documentation projet
+# Nyam
 
-> « Scanne. Comprends. Mange mieux. »
-> Application de suivi nutritionnel et sportif, pensée d'abord pour l'Afrique francophone, puis pour l'international.
+> Scanne. Comprends. Mange mieux.
 
-## Livrables
+Application de suivi nutritionnel et sportif. La documentation produit est dans [docs/](docs/README.md).
 
-| Livrable | Description |
-|---|---|
-| **API** | Backend unique pour le mobile, l'admin et le site |
-| **Mobile** | Application Flutter (Android et iOS), produit principal |
-| **Admin** | Back-office web multi-rôles |
-| **Site web** | Vitrine et landing, avec une page de paiement web (pas d'espace utilisateur) |
+## Structure
 
-## Sommaire
+| Dossier | Rôle | Stack |
+|---|---|---|
+| [api/](api/) | API unique : **seule à faire les calculs** | Django, Django REST Framework, PostgreSQL, Celery + Redis |
+| [mobile/](mobile/) | Application Android / iOS : **affiche seulement** | Flutter (version fixée par FVM) |
+| [admin/](admin/) | Back-office multi-rôles | Next.js |
+| [web/](web/) | Site vitrine, landing et page de paiement | Next.js |
+| [docs/](docs/) | Documentation produit et technique | Markdown |
 
-### Produit
-- [Vision produit](produit/00-vision.md)
-- [Catalogue des features](produit/01-catalogue-features.md)
-- [Offres, prix & quotas](produit/02-offres-quotas.md)
-- [Règles métier & calculs](produit/03-regles-metier.md)
-- [Décisions & questions ouvertes](produit/99-decisions.md)
+## Démarrage local
 
-### Features de l'application mobile
-1. [Onboarding & compte](produit/features/01-onboarding-compte.md)
-2. [Saisie des repas](produit/features/02-saisie-repas.md)
-3. [Suivi nutritionnel](produit/features/03-suivi-nutrition.md)
-4. [Sport & activité](produit/features/04-sport-activite.md)
-5. [Programmes & challenges](produit/features/05-programmes-challenges.md)
-6. [Gamification](produit/features/06-gamification.md)
-7. [Contenus](produit/features/07-contenus.md)
-8. [Abonnement, paiement & parrainage](produit/features/08-abonnement-paiement.md)
-9. [Notifications](produit/features/09-notifications.md)
-10. [Profil, paramètres, langues & support](produit/features/10-profil-parametres-support.md)
+```bash
+# Base de données et Redis
+docker compose up -d
 
-### Plateformes
-- [Admin](produit/admin.md)
-- [Site web](produit/site-vitrine.md)
+# API (http://localhost:8000, documentation de l'API sur /api/v1/docs/)
+cd api
+python -m venv .venv && .venv/Scripts/pip install -r requirements.txt
+cp .env.example .env
+.venv/Scripts/python manage.py migrate
+.venv/Scripts/python manage.py runserver
 
-### Design
-- Captures de référence : [Captures/](Captures/)
-- Direction visuelle : [Vision produit › Identité visuelle](produit/00-vision.md#identité-visuelle)
+# Mobile
+cd mobile && fvm flutter pub get && fvm flutter run
 
-### Technique
-_À venir : architecture, modèle de données, API, application Flutter, admin, site._
+# Admin (http://localhost:3001)
+cd admin && pnpm install && pnpm dev
+
+# Site web (http://localhost:3000)
+cd web && pnpm install && pnpm dev
+```

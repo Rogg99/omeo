@@ -1,0 +1,36 @@
+# --- Général ---
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+*.swp
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- API (Django) ---
+api/.venv/
+__pycache__/
+*.py[cod]
+api/db.sqlite3
+api/media/
+api/staticfiles/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# --- Node (admin, web) ---
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+.pnpm-store/
+.vercel/
+
+# --- Mobile : voir mobile/.gitignore ---

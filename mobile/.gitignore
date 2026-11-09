@@ -1,0 +1,61 @@
+# FVM Version Cache
+.fvm/
+.vscode/
+
+# Misc
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Flutter / Dart / Pub
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Code générée
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+
+# Secrets / environnement
+.env
+.env.*
+!.env.example
+
+# Android
+/android/app/debug
+/android/app/profile
+/android/app/release
+**/android/key.properties
+**/android/app/google-services.json
+*.jks
+*.keystore
+
+# iOS
+**/ios/Runner/GoogleService-Info.plist
+**/ios/Pods/
+
+# Symbolication / obfuscation
+app.*.symbols
+app.*.map.json

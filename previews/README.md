@@ -33,7 +33,7 @@ Conformément à [docs/produit/99-decisions.md](../docs/produit/99-decisions.md)
 
 ## Limites
 
-- Les photos sont des placeholders en dégradé : à remplacer par de vraies photos de plats.
+- Les photos viennent de Wikimedia Commons (licences libres), voir [shared/img/CREDITS.md](shared/img/CREDITS.md).
 - Le logo est une reconstitution SVG simplifiée : à remplacer par le fichier officiel.
 - Les polices viennent de Google Fonts : sans connexion, le rendu bascule sur les polices système.
 - Les drapeaux emoji s'affichent en lettres sous Windows.

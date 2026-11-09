@@ -185,14 +185,18 @@ img { max-width: 100%; display: block; }
 
 .ico { width: 1.25em; height: 1.25em; flex: none; display: inline-block; vertical-align: middle; }
 
-/* Placeholder photo : texture chaude + motif, en attendant les vraies photos */
+/* Photo : image réelle (--ph-img) posée sur un dégradé de repli (--ph) */
 .photo {
   position: relative;
   overflow: hidden;
   background:
+    linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.35)),
+    var(--ph-img, none),
     radial-gradient(120% 90% at 20% 15%, rgba(255, 255, 255, 0.35), transparent 55%),
     radial-gradient(80% 80% at 85% 90%, rgba(0, 0, 0, 0.25), transparent 60%),
     var(--ph, linear-gradient(135deg, #b8723e, #6b3f22));
+  background-size: cover;
+  background-position: center;
   color: rgba(255, 255, 255, 0.92);
 }
 .photo::after {
@@ -202,15 +206,15 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.08em; text-transform: uppercase;
   opacity: 0.7;
 }
-.ph-ndole { --ph: linear-gradient(135deg, #5c6b2f, #2f3a18); }
-.ph-thieb { --ph: linear-gradient(135deg, #c96a2c, #7a3517); }
-.ph-alloco { --ph: linear-gradient(135deg, #e3a33c, #a2561c); }
-.ph-baobab { --ph: linear-gradient(135deg, #b9a07c, #6e5a3f); }
-.ph-bissap { --ph: linear-gradient(135deg, #9c2c45, #4e1020); }
-.ph-moringa { --ph: linear-gradient(135deg, #7e9a52, #3c5426); }
-.ph-yassa { --ph: linear-gradient(135deg, #e0b25a, #8a5a1e); }
-.ph-fonio { --ph: linear-gradient(135deg, #d8c08a, #8a7448); }
-.ph-sport { --ph: linear-gradient(135deg, #43553c, #151411); }
-.ph-sport2 { --ph: linear-gradient(135deg, #7a5638, #2b1f17); }
-.ph-gombo { --ph: linear-gradient(135deg, #6f8a3a, #2e3f15); }
-.ph-poisson { --ph: linear-gradient(135deg, #b9784a, #503018); }
+.ph-ndole { --ph: linear-gradient(135deg, #5c6b2f, #2f3a18); --ph-img: url("img/ndole.jpg"); }
+.ph-thieb { --ph: linear-gradient(135deg, #c96a2c, #7a3517); --ph-img: url("img/thieb.jpg"); }
+.ph-alloco { --ph: linear-gradient(135deg, #e3a33c, #a2561c); --ph-img: url("img/alloco.jpg"); }
+.ph-baobab { --ph: linear-gradient(135deg, #b9a07c, #6e5a3f); --ph-img: url("img/baobab.jpg"); }
+.ph-bissap { --ph: linear-gradient(135deg, #9c2c45, #4e1020); --ph-img: url("img/bissap.jpg"); }
+.ph-moringa { --ph: linear-gradient(135deg, #7e9a52, #3c5426); --ph-img: url("img/moringa.jpg"); }
+.ph-yassa { --ph: linear-gradient(135deg, #e0b25a, #8a5a1e); --ph-img: url("img/yassa.jpg"); }
+.ph-fonio { --ph: linear-gradient(135deg, #d8c08a, #8a7448); --ph-img: url("img/fonio.jpg"); }
+.ph-sport { --ph: linear-gradient(135deg, #43553c, #151411); --ph-img: url("img/sport.jpg"); }
+.ph-sport2 { --ph: linear-gradient(135deg, #7a5638, #2b1f17); --ph-img: url("img/sport2.jpg"); }
+.ph-gombo { --ph: linear-gradient(135deg, #6f8a3a, #2e3f15); --ph-img: url("img/gombo.jpg"); }
+.ph-poisson { --ph: linear-gradient(135deg, #b9784a, #503018); --ph-img: url("img/poisson.jpg"); }

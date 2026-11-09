@@ -113,11 +113,28 @@ TESTS :
 - integration_test : onboarding complet, ajout d'un repas par photo, achat (sandbox), parcours
   hors connexion puis retour du réseau.
 
-DÉVELOPPEMENT EN PARALLÈLE :
-- Tant que l'API n'est pas prête : `npx @stoplight/prism-cli mock contracts/openapi.yaml -p 4010`,
-  avec un flavor « mock » qui pointe dessus.
-- Flavors : mock, dev (http://api.localhost, ou http://10.0.2.2 depuis l'émulateur), staging, prod.
-  Configuration par --dart-define-from-file.
+MOCK DATA FIRST (voir le socle commun) :
+- Chaque dépôt de features/<module>/data/ a deux implémentations, <Module>MockRepository et
+  <Module>ApiRepository. Le choix se fait dans un provider Riverpod, selon la configuration
+  DATA_SOURCE=mock|api passée par --dart-define. Les écrans ne dépendent que de l'interface abstraite.
+- Les fixtures sont dans lib/mock/ (données JSON désérialisées avec les modèles du client généré
+  nyam_api), plus un MockBackend en mémoire qui conserve l'état de la session. On développe en
+  partant du flavor mock.
+- Le mock simule aussi ce qui dépend du téléphone : caméra (photos d'exemple de plats), Health Connect
+  et HealthKit (pas, séances et poids simulés), achats sur les stores (achat et restauration simulés),
+  push (notifications locales), réseau coupé (pour tester la file d'attente hors connexion). Ces
+  services natifs sont derrière des interfaces, avec une implémentation fausse et une vraie.
+- Panneau de développement caché (5 appuis sur la version de l'app, uniquement en flavor mock ou dev) :
+  choix du scénario, de la latence, du compte et de la langue, plus remise à zéro de l'état.
+- lib/mock/ n'est importé que par main_mock.dart. La CI vérifie qu'aucun fichier de lib/mock/ n'est
+  présent dans un build de production.
+
+FLAVORS :
+- mock : données simulées, aucune dépendance réseau.
+- dev : API locale, http://api.localhost (ou http://10.0.2.2 depuis l'émulateur).
+- staging et prod.
+- Configuration par --dart-define-from-file. Prism reste utilisable pour vérifier les appels HTTP
+  contre le contrat.
 
 LIVRABLES ANNEXES :
 - README du mobile (installation, flavors, génération du client, tests).

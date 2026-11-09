@@ -90,8 +90,19 @@ QUALITÉ :
 - Playwright pour les parcours de bout en bout (invitation sur Android et iOS, contact, suppression,
   parcours d'abonnement complet sur le serveur fictif Prism), avec axe et Lighthouse CI.
 
-DÉVELOPPEMENT EN PARALLÈLE : serveur fictif Prism tant que l'API n'est pas prête (API_URL_INTERNAL
-pointé dessus).
+MOCK DATA FIRST (voir le socle commun) :
+- Couche de données dans src/server/data/, avec une interface, une implémentation mock et une
+  implémentation api, choisies par DATA_SOURCE=mock|api (variable serveur uniquement).
+- Fixtures typées avec les types générés, dans les 8 langues : offres et prix (USD), comparatif,
+  FAQ, documents légaux, codes d'invitation valides et invalides, et comptes de démo pour la page
+  Abonnement (essai, Free, Plus web, Plus store, paiement échoué).
+- Le paiement est simulé : une page interne remplace la redirection vers l'agrégateur et permet de
+  choisir succès, échec ou abandon. Le retour en succès simule l'activation par webhook, après un
+  délai.
+- Les formulaires (contact, suppression de compte) sont simulés avec la validation et les erreurs
+  du contrat. Le captcha est désactivé en mode mock uniquement.
+- Le mode mock est interdit en production : le build échoue si DATA_SOURCE=mock. Prism reste
+  disponible pour valider les appels contre le contrat.
 
 LIVRABLES ANNEXES : README du site, .env.example, CI (lint, typage, tests, build, Lighthouse).
 ```

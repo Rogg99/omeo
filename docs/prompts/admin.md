@@ -102,8 +102,23 @@ QUALITÉ :
   fictif Prism puis sur l'API réelle.
 - Accessibilité vérifiée avec axe dans Playwright.
 
-DÉVELOPPEMENT EN PARALLÈLE : tant que l'API n'est pas prête, lance
-`npx @stoplight/prism-cli mock contracts/openapi.yaml` et fais pointer API_URL_INTERNAL dessus.
+MOCK DATA FIRST (voir le socle commun) :
+- Couche de données dans src/server/data/<module>/, avec une interface, une implémentation mock.ts
+  et une implémentation api.ts (client openapi-fetch). Le choix se fait selon DATA_SOURCE=mock|api,
+  variable lue uniquement côté serveur. Server Components et Server Actions n'appellent que
+  l'interface.
+- Fixtures dans src/server/mock/, typées avec les types générés (components["schemas"][...]),
+  reprenant les données de previews/admin/ : utilisateurs, avis IA avec photos d'exemple, demandes de
+  support, revenus et séries du tableau de bord, contenus dans tous les statuts et toutes les langues.
+  Un état en mémoire, propre au processus de dev, rend les mutations persistantes pendant la session
+  (publier, rembourser, répondre…).
+- Authentification simulée : comptes de démo par rôle (superadmin, content, support, finance,
+  moderation), avec la double authentification simulée (code 000000), pour tester le filtrage du menu
+  et chaque refus de rôle.
+- En mode mock, un bandeau discret « Données simulées » et un sélecteur de scénario et de rôle
+  apparaissent. Ils sont absents du build de production, ce que la CI vérifie (le build échoue si
+  DATA_SOURCE=mock en production).
+- Prism reste disponible pour valider les appels HTTP contre le contrat.
 
 LIVRABLES ANNEXES : README de l'admin, .env.example, CI (lint, typage, tests, build).
 ```

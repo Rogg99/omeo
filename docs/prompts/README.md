@@ -1,13 +1,13 @@
 # Prompts de développement
 
-Un prompt par livrable, à donner à un agent de code (Claude Code) **ouvert à la racine du dépôt**. Les quatre peuvent tourner en parallèle : ils ne partagent que le contrat [contracts/openapi.yaml](../../contracts/openapi.yaml), qu'aucun d'eux ne modifie seul (voir la règle 3 ci-dessous).
+Un prompt par livrable, à donner à un agent de code (Claude Code) **ouvert à la racine du dépôt**. Les quatre peuvent tourner en parallèle : les interfaces démarrent avec des données simulées (**mock data first**) pendant que l'API se construit. Ils ne partagent que le contrat [contracts/openapi.yaml](../../contracts/openapi.yaml), qu'aucun d'eux ne modifie seul (voir la règle 3 ci-dessous).
 
 | Livrable | Prompt | Dépend de |
 |---|---|---|
 | API | [api.md](api.md) | — |
-| Mobile | [mobile.md](mobile.md) | contrat, serveur fictif Prism, puis API réelle |
-| Admin | [admin.md](admin.md) | contrat, serveur fictif Prism, puis API réelle |
-| Site web | [web.md](web.md) | contrat, serveur fictif Prism, puis API réelle |
+| Mobile | [mobile.md](mobile.md) | contrat, puis données simulées, puis API réelle module par module |
+| Admin | [admin.md](admin.md) | contrat, puis données simulées, puis API réelle module par module |
+| Site web | [web.md](web.md) | contrat, puis données simulées, puis API réelle module par module |
 
 Chaque prompt commence par le **socle commun** ci-dessous : il faut le coller en tête du prompt du livrable.
 
@@ -48,6 +48,37 @@ RÈGLES NON NÉGOCIABLES :
 9. Si une décision produit manque ou est ambiguë (voir « Questions ouvertes » dans 99-decisions.md),
    pose la question au lieu d'inventer. Si tu dois avancer malgré tout, rends la valeur réglable
    et signale-le.
+
+MOCK DATA FIRST (interfaces : mobile, admin, web) :
+- Tant que l'API n'est pas terminée, chaque interface fonctionne d'abord avec des données simulées
+  (mock data), intégrées à l'app. Elle doit être entièrement utilisable et démontrable sans API.
+- Les données simulées sont typées par le client généré depuis contracts/openapi.yaml : même forme
+  exacte que les vraies réponses, y compris les erreurs problem+json. Si le contrat change, le mock
+  ne compile plus, et c'est voulu.
+- Une seule abstraction : l'interface parle à des dépôts (repositories). Chaque dépôt a deux
+  implémentations, Mock et Api, choisies par configuration (DATA_SOURCE=mock|api). Les écrans, l'état
+  et les composants ne savent jamais laquelle est active. Passer à l'API réelle se fait module par
+  module, en changeant la configuration, sans toucher à l'interface.
+- Les données reprennent celles des maquettes de previews/ (Awa, ndolé, attiéké, 1 840 kcal…).
+  Les valeurs calculées (restes, pourcentages, totaux, points) sont précalculées dans les fixtures.
+  Après une écriture simulée, le mock renvoie la fixture « après » correspondante.
+  Exception tolérée : un petit calcul dans le dossier mock pour rendre la démo vivante. Il n'existe
+  que dans ce dossier, qui est exclu des builds de production (vérifié en CI).
+- Mock réaliste :
+  - latence simulée réglable (300 ms par défaut, plus de 3 s pour l'analyse IA, avec ses états
+    queued, processing puis succeeded) ;
+  - écritures conservées en mémoire pendant la session ;
+  - un sélecteur de scénarios accessible en dev : compte en essai, Free, Plus ou quota épuisé,
+    journée vide, premier lancement, erreurs (401, 403 plan_required, 426, 429, 500), hors connexion,
+    compte suspendu.
+  Chaque état des maquettes doit pouvoir être atteint.
+- Le mock sert aussi aux tests (widgets, composants, bout en bout) et aux captures de référence
+  (golden).
+- Prism (`npx @stoplight/prism-cli mock contracts/openapi.yaml`) reste disponible pour vérifier les
+  appels HTTP réels contre le contrat, mais ce n'est pas la source de données de démo.
+- Quand un module de l'API est livré : bascule de ce module en DATA_SOURCE=api, test de bout en bout
+  sur l'API réelle, correction des écarts (en cas d'écart, le contrat fait foi), puis commit.
+  Le mock reste disponible pour la démo et les tests.
 
 MÉTHODE :
 - Avance module par module, dans cet ordre : auth et onboarding, repas et analyse, journal et hydratation,

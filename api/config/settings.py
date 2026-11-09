@@ -142,3 +142,7 @@ CELERY_TIMEZONE = "UTC"
 OPENROUTER_API_KEY = env("OPENROUTER_API_KEY", default="")
 OPENROUTER_VISION_MODEL = env("OPENROUTER_VISION_MODEL", default="")
 OPENROUTER_TEXT_MODEL = env("OPENROUTER_TEXT_MODEL", default="")
+
+# Derrière nginx et les proxys Next (web/admin) : liens générés sur le domaine d'origine
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

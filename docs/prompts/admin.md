@@ -3,7 +3,7 @@
 > Coller d'abord le [socle commun](README.md#socle-commun-à-coller-en-tête-de-chaque-prompt).
 
 ```text
-LIVRABLE : le back-office Nyam, dans admin/. Next.js 16 (App Router), React 19, TypeScript strict,
+LIVRABLE : le back-office Omeo, dans admin/. Next.js 16 (App Router), React 19, TypeScript strict,
 Tailwind 4 et pnpm. Il tourne dans Docker sur http://admin.localhost.
 
 RÉFÉRENCE : previews/admin/ (toutes les vues, menu filtré par rôle) et docs/produit/admin.md.

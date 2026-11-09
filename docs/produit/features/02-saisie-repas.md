@@ -5,7 +5,7 @@ On ajoute un repas depuis le bouton central **« + »** de la barre de navigatio
 ## 1. Photo du plat (analyse par l'IA)
 1. L'utilisateur prend une photo ou en choisit une dans sa galerie.
 2. La photo est analysée par un modèle d'IA via OpenRouter. Il renvoie le nom du plat, les ingrédients, leur quantité estimée et un niveau de confiance.
-3. Chaque ingrédient est rapproché de la base d'aliments de Omeo. **Les valeurs nutritionnelles viennent de cette base**, pas de l'IA.
+3. Chaque ingrédient est rapproché de la base d'aliments d'Omeo. **Les valeurs nutritionnelles viennent de cette base**, pas de l'IA.
 4. L'écran « Ingrédients présélectionnés » permet de décocher un ingrédient, d'ajuster une quantité ou d'en ajouter un.
 5. L'utilisateur confirme le type de repas (proposé selon l'heure), puis valide.
 6. Le repas est enregistré, les totaux du jour se mettent à jour et l'utilisateur gagne des points.

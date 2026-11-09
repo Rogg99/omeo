@@ -109,7 +109,7 @@
     input("lock", "Mot de passe", { state: "focus", value: "••••••••", right: I("eye") }) +
     '<div class="card sunk tight xs stack" style="--gap:6px">' + [["10 caractères minimum", 0], ["Une minuscule et une majuscule", 1], ["Un chiffre", 1], ["Un caractère spécial", 0]].map((r) => '<div class="row" style="gap:8px;color:' + (r[1] ? "var(--primary-text)" : "var(--text-3)") + '">' + I(r[1] ? "check" : "minus") + r[0] + "</div>").join("") + "</div>" +
     '</div><div class="stack mt-20" style="--gap:12px">' +
-    [["J'accepte les <a class='link'>CGU</a> et la <a class='link'>politique de confidentialité</a>", 1, "Obligatoire"], ["J'accepte que Omeo traite mes données de santé (poids, repas, activité) pour calculer mon suivi", 1, "Obligatoire"], ["Je veux recevoir les nouveautés et offres de Omeo", 0, "Facultatif"]]
+    [["J'accepte les <a class='link'>CGU</a> et la <a class='link'>politique de confidentialité</a>", 1, "Obligatoire"], ["J'accepte que Omeo traite mes données de santé (poids, repas, activité) pour calculer mon suivi", 1, "Obligatoire"], ["Je veux recevoir les nouveautés et offres d'Omeo", 0, "Facultatif"]]
       .map((c) => '<div class="row" style="align-items:flex-start"><span class="check' + (c[1] ? " on" : "") + '">' + (c[1] ? I("check") : "") + '</span><span class="small grow">' + c[0] + ' <span class="faint xs">· ' + c[2] + "</span></span></div>").join("") +
     '</div><button class="btn black mt-24">Créer mon compte</button></div></div>');
 

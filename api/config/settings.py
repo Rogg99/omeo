@@ -168,7 +168,7 @@ SIMPLE_JWT = {
 }
 SPECTACULAR_SETTINGS = {
     "TITLE": "Omeo API",
-    "DESCRIPTION": "API unique de Omeo (mobile, admin, site). Tous les calculs sont faits ici.",
+    "DESCRIPTION": "API unique d'Omeo (mobile, admin, site). Tous les calculs sont faits ici.",
     "VERSION": "0.1.0",
 }
 

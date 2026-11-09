@@ -4,7 +4,7 @@
 - Photo (l'initiale par défaut), nom, email.
 - **Carte Omeo Plus** : offre actuelle, quotas restants, bouton pour découvrir ou gérer Plus.
 - **Mon corps et mon objectif** : ville, âge, objectifs, taille, poids, poids souhaité. Chaque modification fait recalculer les objectifs par l'API.
-- **Parrainage** : « Offrez 7 jours de Omeo Plus ».
+- **Parrainage** : « Offrez 7 jours d'Omeo Plus ».
 - **Mon compte** : email, mot de passe, modes de connexion, appareils connectés.
 - **Santé & activité** : connexion à Health Connect / Apple Health, autorisations, ajustement automatique de l'objectif.
 - **Mes récompenses** : niveau et badges.

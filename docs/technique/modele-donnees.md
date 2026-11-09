@@ -352,7 +352,7 @@ Recalculé de façon idempotente par `nutrition.services.recompute_day(user, dat
 `user` 1–1, `categories` jsonb (`{"meal_reminders": true, …}`), `meal_reminder_times` (`{"breakfast": "08:00", …}`), `weigh_in_weekday`, `quiet_start` (22:00), `quiet_end` (07:00).
 
 ### Notification (centre de notifications)
-`id`, `user` I, `category` (`meal_reminder`, `hydration`, `weigh_in`, `program`, `challenge`, `reward`, `prevention`, `subscription`, `campaign`, `support`), `title`, `body` (rendus dans la langue de l'utilisateur au moment de l'envoi), `deeplink` (par exemple `nyam://meals/new`), `data` jsonb, `pushed_at?`, `read_at?`, `campaign` FK?. Index sur (`user`, `created_at`).
+`id`, `user` I, `category` (`meal_reminder`, `hydration`, `weigh_in`, `program`, `challenge`, `reward`, `prevention`, `subscription`, `campaign`, `support`), `title`, `body` (rendus dans la langue de l'utilisateur au moment de l'envoi), `deeplink` (par exemple `omeo://meals/new`), `data` jsonb, `pushed_at?`, `read_at?`, `campaign` FK?. Index sur (`user`, `created_at`).
 
 ### Campaign
 `id`, `title` I18nText, `body` I18nText, `deeplink`, `segment` jsonb (langues, pays, offres, objectifs, inactif depuis N jours), `scheduled_at`, `status` (`draft`, `scheduled`, `sending`, `sent`, `canceled`), `sent_count`, `opened_count`, `created_by`. Seuls les utilisateurs ayant donné le consentement `marketing` sont ciblés.

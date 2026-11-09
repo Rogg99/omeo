@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Nyam API
+  title: Omeo API
   version: 1.0.0
-  summary: API unique de Nyam (mobile, admin, site web).
+  summary: API unique d'Omeo (mobile, admin, site web).
   description: |
     Contrat cible, écrit avant le code. Conventions : docs/technique/conventions-api.md.
     Modèle de données : docs/technique/modele-donnees.md.
@@ -17,7 +17,7 @@ info:
 servers:
   - url: http://api.localhost/api/v1
     description: Développement (nginx)
-  - url: https://api.nyam.app/api/v1
+  - url: https://api.omeo.app/api/v1
     description: Production
 security:
   - bearer: []

@@ -46,7 +46,7 @@ Ces règles s'appliquent à tous les endpoints de [contracts/openapi.yaml](../..
 
 ```json
 {
-  "type": "https://nyam.app/errors/quota_exceeded",
+  "type": "https://omeo.app/errors/quota_exceeded",
   "title": "Quota atteint",
   "status": 429,
   "code": "quota_exceeded",

@@ -4,7 +4,7 @@
 Recueillir le minimum nécessaire pour calculer les objectifs de l'utilisateur, puis créer son compte, en moins de 2 minutes.
 
 ## Parcours
-Écran de démarrage → langue (détectée automatiquement, modifiable) → questionnaire en 9 étapes → création du compte → présentation de Omeo Plus (on peut la fermer) → accueil.
+Écran de démarrage → langue (détectée automatiquement, modifiable) → questionnaire en 9 étapes → création du compte → présentation d'Omeo Plus (on peut la fermer) → accueil.
 
 | Étape | Question | Réponse attendue |
 |---|---|---|

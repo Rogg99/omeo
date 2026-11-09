@@ -3,10 +3,10 @@
 > Coller d'abord le [socle commun](README.md#socle-commun-à-coller-en-tête-de-chaque-prompt).
 
 ```text
-LIVRABLE : l'API de Nyam, dans api/. Django 6.1, DRF, PostgreSQL 17, Celery et Redis, drf-spectacular, simplejwt.
+LIVRABLE : l'API d'Omeo, dans api/. Django 6.1, DRF, PostgreSQL 17, Celery et Redis, drf-spectacular, simplejwt.
 Elle tourne dans Docker (compose.yml) et est accessible sur http://api.localhost.
 
-OBJECTIF : implémenter intégralement contracts/openapi.yaml (169 opérations), conformément à
+OBJECTIF : implémenter intégralement contracts/openapi.yaml (173 opérations), conformément à
 docs/technique/modele-donnees.md et docs/technique/conventions-api.md. Le schéma généré
 (/api/v1/schema/) doit être conforme au contrat : la CI le vérifie avec oasdiff et échoue en cas de
 changement incompatible.

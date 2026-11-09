@@ -54,7 +54,7 @@
   // ---------- Vues ----------
   const V = {};
 
-  V.login = () => '<div class="auth"><div class="art">' + window.logo(40) + '<div><h1 style="font-size:46px;line-height:1.05">Le back-office<br><span class="serif" style="color:#f2a26b">de Omeo.</span></h1><p style="opacity:.7;margin-top:14px;max-width:380px">Réservé à l\'équipe. Chaque action est historisée.</p></div><span class="faint small" style="color:#a39581">v1.0 · admin.omeo.app</span></div>' +
+  V.login = () => '<div class="auth"><div class="art">' + window.logo(40) + '<div><h1 style="font-size:46px;line-height:1.05">Le back-office<br><span class="serif" style="color:#f2a26b">d\'Omeo.</span></h1><p style="opacity:.7;margin-top:14px;max-width:380px">Réservé à l\'équipe. Chaque action est historisée.</p></div><span class="faint small" style="color:#a39581">v1.0 · admin.omeo.app</span></div>' +
     '<div class="form"><div class="box"><h2 style="font-size:26px">Connexion</h2><p class="muted mt1">Avec ton compte d\'équipe.</p><div class="grid mt2" style="gap:14px">' + field("Email", "aissatou@omeo.app", { ic: "mail" }) + field("Mot de passe", "••••••••••••", { ic: "lock", focus: true }) +
     '<button class="btn green" style="height:46px;justify-content:center">Continuer</button><a class="small muted" style="text-align:center">Mot de passe oublié ?</a></div><div class="note lock mt2">' + I("shieldCheck") + "<span>Double authentification obligatoire pour tous les comptes.</span></div></div></div></div>";
 

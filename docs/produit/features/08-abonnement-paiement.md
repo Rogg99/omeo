@@ -1,6 +1,6 @@
 # 08 — Abonnement, paiement & parrainage
 
-## Présentation de Omeo Plus
+## Présentation d'Omeo Plus
 - Elle apparaît après l'inscription (on peut la fermer), quand un quota est épuisé, et quand l'utilisateur touche une feature réservée à Plus.
 - Elle montre la situation actuelle (Free ou essai, jours et quotas restants), les offres mensuelle et annuelle (l'annuelle mise en avant) et les avantages de Plus.
 - Prix en USD : voir [Offres, prix & quotas](../02-offres-quotas.md).

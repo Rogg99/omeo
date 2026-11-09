@@ -1,6 +1,6 @@
 # Previews
 
-Maquettes HTML haute fidélité de Omeo, à ouvrir directement dans un navigateur (pas de serveur ni de build). Point d'entrée : [index.html](index.html).
+Maquettes HTML haute fidélité d'Omeo, à ouvrir directement dans un navigateur (pas de serveur ni de build). Point d'entrée : [index.html](index.html).
 
 | Dossier | Contenu |
 |---|---|

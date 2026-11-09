@@ -8,6 +8,7 @@ Un prompt par livrable, à donner à un agent de code (Claude Code) **ouvert à 
 | Mobile | [mobile.md](mobile.md) | contrat, puis données simulées, puis API réelle module par module |
 | Admin | [admin.md](admin.md) | contrat, puis données simulées, puis API réelle module par module |
 | Site web | [web.md](web.md) | contrat, puis données simulées, puis API réelle module par module |
+| Animations d'exercices | [exercices-motion.md](exercices-motion.md) | contrat (champ `animation` à proposer), puis widget mobile, puis lecteur web et admin |
 
 Chaque prompt commence par le **socle commun** ci-dessous : il faut le coller en tête du prompt du livrable.
 

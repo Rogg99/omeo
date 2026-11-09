@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Supprimer mon compte · Nyam</title>
+  <meta name="description" content="Demander la suppression de ton compte Nyam et de tes données.">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<main class="section" style="padding-top:64px">
+  <div class="narrow">
+    <span class="eyebrow">Compte</span>
+    <h1 class="h2 mt16">Supprimer ton compte Nyam</h1>
+    <p class="lead mt16">Le plus simple : dans l'app, va dans <b>Profil › Paramètres › Supprimer mon compte</b>. Tu n'as plus l'app ? Fais la demande ici.</p>
+
+    <div class="grid g2 mt32">
+      <div class="card"><b style="font:600 18px var(--font-display)">Ce qui est supprimé</b><ul style="padding-inline-start:20px;margin:12px 0 0;color:var(--text-2);line-height:1.8"><li>Profil et objectifs</li><li>Repas et photos</li><li>Poids et activité</li><li>Points, badges, parrainages</li></ul><p class="small faint mt16">Sous 30 jours après confirmation.</p></div>
+      <div class="card"><b style="font:600 18px var(--font-display)">Ce qui est conservé</b><ul style="padding-inline-start:20px;margin:12px 0 0;color:var(--text-2);line-height:1.8"><li>Factures (obligation légale, 10 ans)</li><li>Avis anonymisés sur les analyses</li></ul><p class="small faint mt16">Sans lien avec ton identité.</p></div>
+    </div>
+
+    <div class="note warn mt24"><span data-i="alert"></span><span>Supprimer ton compte ne résilie pas un abonnement pris sur Google Play ou l'App Store. Résilie-le d'abord dans le store.</span></div>
+
+    <div class="card mt32" style="padding:36px">
+      <b style="font:600 20px var(--font-display)">Faire la demande</b>
+      <div class="grid mt24" style="gap:16px">
+        <div class="f"><label>Email du compte</label><div class="in focus"><span data-i="mail"></span><span class="grow">franck@exemple.com</span></div></div>
+        <p class="small muted">Nous t'envoyons un lien de confirmation. La suppression démarre quand tu cliques dessus.</p>
+        <button class="btn" style="background:var(--danger);color:#fff">Envoyer le lien de confirmation</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="web.js"></script>
+</body>
+</html>

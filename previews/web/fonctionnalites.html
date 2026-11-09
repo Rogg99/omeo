@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fonctionnalités · Nyam</title>
+  <meta name="description" content="Analyse photo des repas, suivi nutritionnel, sport et santé, programmes et challenges, recettes et plantes.">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<main>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Fonctionnalités</span>
+      <h1 class="h1 mt16" style="max-width:900px">Moins de saisie.<br><span class="serif">Plus de clarté.</span></h1>
+      <div class="row wrapf mt32" id="anchors"></div>
+    </div>
+  </section>
+  <div id="features"></div>
+  <section class="section">
+    <div class="wrap center">
+      <h2 class="h2">Prêt à essayer ?</h2>
+      <p class="lead mt16">Gratuit, avec 3 jours de Plus offerts.</p>
+      <a class="btn mt32" href="index.html#telecharger">Télécharger Nyam</a>
+    </div>
+  </section>
+</main>
+<script src="web.js"></script>
+<script>
+  const I = window.icon;
+  const F = [
+    ["photo", "camera", "Photo analysée par l'IA", "Ton assiette, <span class='serif'>comprise.</span>", "Prends ton plat en photo. Nyam reconnaît le plat, liste les ingrédients et estime les portions. Les valeurs nutritionnelles viennent de notre base d'aliments, construite avec les noms locaux.", ["Plats d'Afrique de l'Ouest et centrale, puis du monde", "Correction des ingrédients et des quantités en un geste", "Saisie vocale ou texte : « un ndolé avec deux plantains » (Plus)", "Catalogue de plats, récents et favoris"], "ph-thieb", "dark"],
+    ["suivi", "chart", "Suivi nutritionnel", "L'essentiel, <span class='serif'>en un coup d'œil.</span>", "Calories restantes, protéines, glucides, lipides, fibres et sel. Un journal par jour avec tes 4 repas et ton hydratation.", ["Objectifs calculés pour toi, recalculés à chaque pesée", "Courbes sur 7 jours, jusqu'à 1 an en Plus", "Suivi du poids avec ta cible et ta tendance", "Rappels utiles, jamais envahissants"], "ph-fonio", "light"],
+    ["sport", "footprints", "Sport & santé", "Automatique <span class='serif'>d'abord.</span>", "Pas, distance, calories et séances arrivent seuls depuis Health Connect ou Apple Health. Nyam calcule ta balance et ajuste ton objectif les jours actifs.", ["Lecture seule : Nyam n'écrit jamais dans tes données santé", "Exercices en vidéo, sous-titrés dans ta langue", "Séances guidées avec minuteur", "Saisie manuelle quand rien n'est importé"], "ph-sport", "black"],
+    ["programmes", "flag", "Programmes & challenges", "Un cap, <span class='serif'>des petites victoires.</span>", "Des programmes de quelques semaines (perdre du poids, prendre de la masse, prévenir le diabète…) et des challenges de 7 à 30 jours, validés automatiquement.", ["Repas suggérés, séance et conseil du jour", "Challenges : 8 000 pas, 2 L d'eau, assiette équilibrée…", "Points, niveaux, badges et séries", "Aucun classement : tu avances à ton rythme"], "ph-sport2", "dark"],
+    ["contenus", "book", "Recettes & plantes", "Les saveurs <span class='serif'>de chez nous.</span>", "Des recettes créées par notre équipe avec leurs apports calculés, et des fiches plantes : usages traditionnels, bienfaits et précautions.", ["Filtres par pays, objectif et temps", "« Ajouter à mon repas » en un geste", "Baobab, moringa, bissap, kinkéliba…", "Conseils de prévention adaptés à tes données"], "ph-ndole", "light"],
+  ];
+  anchors.innerHTML = F.map((f) => '<a class="tag" style="height:40px;padding:0 16px;text-decoration:none;font-size:14px" href="#' + f[0] + '">' + I(f[1]) + f[2] + "</a>").join("");
+  features.innerHTML = F.map((f, i) => '<section class="section" id="' + f[0] + '" style="' + (i % 2 ? "background:var(--cream-100)" : "") + '"><div class="wrap grid g2" style="gap:64px;align-items:center"><div style="order:' + (i % 2) + '"><span class="ib">' + I(f[1]) + '</span><p class="eyebrow mt24">' + f[2] + '</p><h2 class="h2 mt16">' + f[3] + '</h2><p class="lead mt24">' + f[4] + '</p><ul style="list-style:none;padding:0;margin:28px 0 0;display:grid;gap:12px">' + f[5].map((x) => '<li class="row" style="align-items:flex-start">' + I("check").replace('class="ico ', 'style="color:var(--primary-text);margin-top:3px" class="ico ') + "<span>" + x + "</span></li>").join("") + "</ul></div>" +
+    '<div class="tile ' + f[7] + '" style="border-radius:36px;min-height:460px;display:grid;place-items:center;padding:40px;' + (f[7] === "light" ? "background:var(--sage-50)" : f[7] === "dark" ? "background:var(--sage-800)" : "background:#151411") + '"><div class="photo ' + f[6] + '" style="width:100%;max-width:420px;aspect-ratio:4/3;border-radius:28px;box-shadow:var(--shadow-3)" data-label="visuel"></div></div></div></section>').join("");
+</script>
+</body>
+</html>

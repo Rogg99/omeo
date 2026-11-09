@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Awa t'invite sur Nyam · 7 jours de Plus offerts</title>
+  <meta property="og:title" content="Awa t'invite sur Nyam">
+  <meta property="og:description" content="7 jours de Nyam Plus offerts avec le code AWA2026.">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<!-- Route réelle : /i/{code} — détecte la plateforme et redirige vers le bon store en conservant le code. -->
+<main class="section" style="padding-top:48px;background:var(--sage-800);color:#f4efe6;border-radius:0 0 48px 48px">
+  <div class="narrow center">
+    <span class="ib glass" style="width:80px;height:80px;border-radius:24px;margin:0 auto" data-i="gift"></span>
+    <h1 class="h1 mt24" style="font-size:clamp(40px,7vw,72px)">Awa t'offre<br><span class="serif" style="color:#f2a26b">7 jours de Plus.</span></h1>
+    <p class="lead mt24" style="color:#cdd4c4">Photographie tes repas, comprends ce que tu manges, avance à ton rythme. Avec ce code, ton essai dure 7 jours au lieu de 3.</p>
+    <div class="card mt32" style="background:#fffdf9;color:#151411;display:inline-flex;align-items:center;gap:20px;padding:18px 24px">
+      <div style="text-align:start"><div class="xs faint" style="font-weight:600;letter-spacing:.1em">TON CODE</div><div style="font:600 32px var(--font-display);letter-spacing:.08em">AWA2026</div></div>
+      <button class="btn sm ghost" data-i="copy"> Copier</button>
+    </div>
+    <div class="row wrapf mt32" style="justify-content:center" id="stores"></div>
+    <p class="small mt24" style="color:#a9b3a0">Sur Android, le code est rempli automatiquement. Sur iPhone, saisis-le à la création du compte.</p>
+  </div>
+</main>
+<section class="section tight">
+  <div class="wrap grid g3" id="why"></div>
+</section>
+<script src="web.js"></script>
+<script>
+  const I = window.icon, B = window.brandIcons;
+  stores.innerHTML = '<a class="store" href="#" style="background:#fffdf9;color:#151411">' + B.play + '<span><small>Disponible sur</small><b>Google Play</b></span></a><a class="store" href="#" style="background:#fffdf9;color:#151411">' + B.apple + '<span><small>Télécharger dans</small><b>l\'App Store</b></span></a>';
+  why.innerHTML = [["camera", "Une photo suffit", "Le plat, les portions, les apports."], ["footprints", "Ton activité, automatiquement", "Pas et séances depuis ton téléphone."], ["book", "Des plats de chez nous", "Recettes et plantes locales."]].map((x) => '<div class="card"><span class="ib">' + I(x[0]) + '</span><h3 class="h3 mt16">' + x[1] + '</h3><p class="muted mt8">' + x[2] + "</p></div>").join("");
+</script>
+</body>
+</html>

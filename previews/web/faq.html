@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FAQ · Nyam</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<main>
+  <section class="page-head center">
+    <div class="narrow">
+      <span class="eyebrow">Aide</span>
+      <h1 class="h1 mt16" style="font-size:clamp(40px,6vw,68px)">Questions <span class="serif">fréquentes.</span></h1>
+      <div class="in mt32" style="max-width:520px;margin-inline:auto"><span data-i="search"></span><span class="ph grow">Rechercher une question…</span></div>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap grid" style="grid-template-columns:240px minmax(0,1fr);gap:48px">
+      <nav class="toc hide-m" id="toc" aria-label="Thèmes"></nav>
+      <div id="faq"></div>
+    </div>
+  </section>
+  <section class="section tight">
+    <div class="narrow card soft center" style="padding:40px">
+      <h2 class="h3">Tu n'as pas trouvé ta réponse ?</h2>
+      <p class="muted mt8">Notre équipe répond sous 48 h.</p>
+      <a class="btn mt24" href="contact.html">Nous écrire</a>
+    </div>
+  </section>
+</main>
+<script src="web.js"></script>
+<script>
+  const I = window.icon;
+  const T = [
+    ["Analyses photo", [["Quels plats Nyam reconnaît-il ?", "Des centaines de plats d'Afrique de l'Ouest et centrale (ndolé, thiéboudienne, attiéké, garba, yassa, sauce gombo…) et de plus en plus de plats du monde. La base grandit chaque semaine grâce à vos avis."], ["L'analyse s'est trompée, que faire ?", "Corrige les ingrédients et les quantités avant d'enregistrer, puis donne ton avis (👎). L'équipe s'en sert pour améliorer la reconnaissance."], ["Une photo floue compte-t-elle dans mon quota ?", "Non. Une analyse qui échoue n'est jamais décomptée."]]],
+    ["Abonnement", [["Comment résilier ?", "Dans Google Play ou l'App Store si tu as payé dans l'app ; sur la page Mon abonnement si tu as payé sur le site."], ["Pourquoi payer sur le site ?", "Le site accepte la carte bancaire, Apple Pay et Google Pay. L'abonnement est reconnu dans l'app avec le même compte."]]],
+    ["Santé & activité", [["Quelles données Nyam lit-il ?", "Pas, distance, calories dépensées, séances et poids, si tu l'autorises. Nyam n'écrit jamais rien dans Health Connect ou Apple Health."], ["Mes pas ne se synchronisent pas", "Vérifie l'autorisation « Pas » dans Health Connect (Autorisations › Nyam), puis rouvre l'app."]]],
+    ["Compte & données", [["Comment supprimer mon compte ?", "Depuis l'app (Profil › Paramètres) ou sur la page Supprimer mon compte. Les données sont effacées sous 30 jours."], ["Puis-je exporter mes données ?", "Oui, depuis Paramètres › Confidentialité. Tu reçois un fichier par email."]]],
+  ];
+  toc.innerHTML = T.map((t, i) => '<a href="#t' + i + '" class="' + (i === 0 ? "on" : "") + '">' + t[0] + "</a>").join("");
+  faq.innerHTML = T.map((t, i) => '<div id="t' + i + '" style="margin-bottom:40px"><h2 class="h3">' + t[0] + "</h2>" + t[1].map((q, j) => "<details" + (i === 0 && j === 0 ? " open" : "") + "><summary>" + q[0] + I("plus") + "</summary><p>" + q[1] + "</p></details>").join("") + "</div>").join("");
+</script>
+</body>
+</html>

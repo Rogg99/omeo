@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nyam — Mange mieux. À ton rythme.</title>
+  <meta name="description" content="Photographie ton assiette : Nyam reconnaît le plat, estime les portions et calcule tes apports. Pensé pour les plats africains.">
+  <meta property="og:title" content="Nyam — Mange mieux. À ton rythme.">
+  <link rel="alternate" hreflang="en" href="/en/">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body data-cookie="1">
+<script src="../shared/icons.js"></script>
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="copy">
+        <span class="tag" style="background:rgba(255,255,255,.12);color:#e2e8da" data-i="sparkles"> Nouveau · analyse photo des plats africains</span>
+        <h1 class="h1 mt24">Mange mieux.<br><span class="serif" style="color:#f2a26b">À ton rythme.</span></h1>
+        <p class="lead mt24" style="max-width:520px">Photographie ton assiette : Nyam reconnaît le plat, estime les portions et te dit où tu en es. Ndolé, thiéboudienne, attiéké… on les connaît.</p>
+        <div class="row wrapf mt32" id="telecharger">
+          <a class="store" href="#" id="s1"></a>
+          <a class="store" href="#" id="s2"></a>
+          <div class="row hide-m" style="gap:14px;margin-inline-start:12px"><div id="qr1"></div><span class="small" style="color:#cdd4c4;max-width:110px">Scanne pour télécharger</span></div>
+        </div>
+        <p class="small mt24" style="color:#a9b3a0">Gratuit · 3 jours de Plus offerts · 7 avec un code d'invitation</p>
+      </div>
+      <div style="position:relative;display:grid;place-items:center;align-self:end">
+        <div class="phone" style="margin-bottom:-120px">
+          <div class="scr" id="phone1"></div>
+        </div>
+        <div class="float hide-m" style="left:-10px;top:120px"><span class="ib orange" data-i="camera"></span><div><b>Thiéboudienne</b><div class="xs faint">reconnu en 4 s</div></div></div>
+        <div class="float hide-m" style="right:-20px;top:300px"><span class="ib" data-i="flame"></span><div><b>890 kcal</b><div class="xs faint">restantes aujourd'hui</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight" style="padding-top:150px">
+    <div class="wrap">
+      <p class="center small faint">Ils mangent mieux avec Nyam à</p>
+      <div class="proof mt16"><span>Dakar</span><span>Abidjan</span><span>Yaoundé</span><span>Douala</span><span>Lomé</span><span>Cotonou</span><span>Paris</span></div>
+    </div>
+  </section>
+
+  <!-- Planche 01–06 -->
+  <section class="section" id="fonctionnalites" style="padding-top:40px">
+    <div class="wrap">
+      <span class="eyebrow">Comment ça marche</span>
+      <h2 class="h2 mt16" style="max-width:720px">Tout ce qui peut être automatique, <span class="serif">l'est.</span></h2>
+      <div class="board mt48" id="board"></div>
+    </div>
+  </section>
+
+  <!-- Sport & santé -->
+  <section class="section" style="background:var(--cream-100)">
+    <div class="wrap grid g2" style="align-items:center;gap:60px">
+      <div>
+        <span class="eyebrow">Sport & santé</span>
+        <h2 class="h2 mt16">Ce que tu manges,<br>face à ce que tu <span class="serif">dépenses.</span></h2>
+        <p class="lead mt24">Tes pas, tes séances et tes calories dépensées arrivent seuls depuis Health Connect ou Apple Health. Nyam calcule ta balance et ajuste ton objectif les jours actifs.</p>
+        <div class="grid mt32" style="gap:14px" id="sport-list"></div>
+      </div>
+      <div class="card black" style="padding:36px">
+        <div class="row" style="justify-content:space-between"><b style="font:600 18px var(--font-display)">Balance du jour</b><span class="tag" style="background:#b3c7a6;color:#151411">Objectif +135 kcal</span></div>
+        <div class="grid g3 mt32 center">
+          <div><div class="xs" style="opacity:.6">MANGÉ</div><div style="font:600 34px var(--font-display)">1 450</div></div>
+          <div><div class="xs" style="opacity:.6">DÉPENSÉ</div><div style="font:600 34px var(--font-display)">2 610</div></div>
+          <div><div class="xs" style="opacity:.6">ÉCART</div><div style="font:600 34px var(--font-display);color:#b3c7a6">−1 160</div></div>
+        </div>
+        <div class="row mt32" style="align-items:flex-end;gap:10px;height:140px" id="bars"></div>
+        <p class="xs mt24" style="opacity:.6">Nyam lit tes données, n'écrit jamais rien. Seuls des totaux par jour quittent ton téléphone.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contenus -->
+  <section class="section">
+    <div class="wrap">
+      <div class="row wrapf" style="align-items:flex-end"><div class="grow"><span class="eyebrow">Recettes & plantes</span><h2 class="h2 mt16">Les saveurs <span class="serif">de chez nous.</span></h2></div><p class="muted" style="max-width:400px">Recettes créées par notre équipe avec leurs apports calculés. Fiches plantes : usages traditionnels, bienfaits, précautions.</p></div>
+      <div class="grid g4 mt48" id="contents"></div>
+    </div>
+  </section>
+
+  <!-- Tarifs résumé -->
+  <section class="section" style="background:var(--sage-800);color:#f4efe6;border-radius:48px">
+    <div class="wrap center">
+      <span class="eyebrow" style="color:#f2a26b">Tarifs</span>
+      <h2 class="h2 mt16">Gratuit pour commencer.<br><span class="serif" style="color:#f2a26b">Plus</span> pour aller loin.</h2>
+      <div class="grid g3 mt48" style="text-align:start" id="plans-mini"></div>
+      <a class="btn white mt48" href="tarifs.html">Comparer les offres</a>
+    </div>
+  </section>
+
+  <!-- Témoignages -->
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">Témoignages</span>
+      <h2 class="h2 mt16">Ils en parlent <span class="serif">mieux que nous.</span></h2>
+      <div class="grid g3 mt48" id="quotes"></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" style="padding-top:0">
+    <div class="narrow">
+      <h2 class="h2 center">Questions fréquentes</h2>
+      <div class="mt32" id="faq"></div>
+      <p class="center mt32"><a class="btn ghost" href="faq.html">Toute la FAQ</a></p>
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="section tight">
+    <div class="wrap">
+      <div class="card black" style="padding:64px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;border-radius:40px">
+        <div><h2 class="h2">Ton prochain repas<br>peut être <span class="serif" style="color:#f2a26b">le premier.</span></h2><div class="row wrapf mt32"><a class="store" style="background:#2b2a26" href="#" id="s3"></a><a class="store" style="background:#2b2a26" href="#" id="s4"></a></div></div>
+        <div class="hide-m" id="qr2"></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="web.js"></script>
+<script>
+  const I = window.icon, B = window.brandIcons;
+  const store = (k) => k === "play" ? B.play + '<span><small>Disponible sur</small><b>Google Play</b></span>' : B.apple + '<span><small>Télécharger dans</small><b>l\'App Store</b></span>';
+  s1.innerHTML = store("play"); s2.innerHTML = store("apple"); s3.innerHTML = store("play"); s4.innerHTML = store("apple");
+  qr1.innerHTML = window.qr(); qr2.innerHTML = window.qr();
+
+  phone1.innerHTML = '<div class="row" style="justify-content:space-between">' + window.logo(22) + '<span class="xs">' + I("bell") + '</span></div><div style="margin-top:14px;font-size:10px;opacity:.6;letter-spacing:.1em">LUNDI 9 NOVEMBRE</div><b style="font:600 18px var(--font-display)">Bonjour, Awa</b>' +
+    '<div style="background:#fffdf9;border-radius:20px;padding:14px;margin-top:12px;border:1px solid var(--line)"><b style="font:600 13px var(--font-display)">Nutrition du jour</b><div class="row" style="margin-top:10px;gap:14px"><svg width="86" height="86" viewBox="0 0 86 86"><circle cx="43" cy="43" r="36" fill="none" stroke="var(--cream-200)" stroke-width="9"/><circle cx="43" cy="43" r="36" fill="none" stroke="var(--sage-700)" stroke-width="9" stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="86" transform="rotate(-90 43 43)"/><text x="43" y="47" text-anchor="middle" font-family="Space Grotesk" font-weight="600" font-size="18">890</text></svg>' +
+    '<div class="grow" style="display:grid;gap:8px">' + [["Protéines", 66, "#d0802f"], ["Glucides", 67, "#6f8a5e"], ["Lipides", 58, "#7a5638"]].map((m) => '<div><div style="font-size:10px;font-weight:600">' + m[0] + '</div><div style="height:5px;border-radius:3px;background:var(--cream-200);margin-top:3px"><i style="display:block;height:100%;width:' + m[1] + '%;background:' + m[2] + ';border-radius:3px"></i></div></div>').join("") + "</div></div></div>" +
+    '<div class="photo ph-thieb" style="height:150px;border-radius:20px;margin-top:12px"></div><div style="background:#151411;color:#fff;border-radius:20px;padding:14px;margin-top:12px"><b style="font:600 13px var(--font-display)">Photo du plat</b><div style="font-size:10px;opacity:.6">2 analyses restantes</div></div>';
+
+  const tiles = [
+    ["01", "dark", "Photographie<br><span class='serif'>ton assiette.</span>", "Le plat, les ingrédients et les portions, reconnus en quelques secondes.", '<div class="photo ph-thieb" style="height:150px;border-radius:16px"></div><div style="background:#151411;color:#fff;border-radius:999px;padding:10px;text-align:center;margin-top:10px;font-weight:600">Prendre une photo</div>'],
+    ["02", "light", "Des portions<br><span class='serif'>à ta mesure.</span>", "Ajuste les quantités en un geste. Les valeurs viennent de notre base, pas d'une estimation au hasard.", ["Riz brisé · 180 g", "Mérou · 150 g", "Chou · 60 g", "Carotte · 50 g"].map((x) => '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>✓ ' + x.split(" · ")[0] + "</span><b>" + x.split(" · ")[1] + "</b></div>").join("")],
+    ["03", "black", "Chaque repas<br><span class='serif'>compte.</span>", "Ton journal du jour : 4 repas, l'eau, et l'essentiel en un coup d'œil.", ["Petit-déjeuner · 640", "Déjeuner · 810", "Collation · —", "Dîner · —"].map((x) => '<div style="display:flex;justify-content:space-between;padding:10px;border-radius:12px;background:#fffdf9;margin-bottom:6px;border:1px solid var(--line)"><span>' + x.split(" · ")[0] + "</span><b>" + x.split(" · ")[1] + "</b></div>").join("")],
+    ["04", "light", "Tes progrès,<br><span class='serif'>jour après jour.</span>", "Calories, glucides, lipides, protéines, fibres et sel, en courbes simples.", '<svg viewBox="0 0 200 110" style="width:100%"><path d="M0 80 C30 70 50 90 80 60 S140 30 200 40" fill="none" stroke="var(--sage-700)" stroke-width="3"/><line x1="0" x2="200" y1="50" y2="50" stroke="var(--orange-500)" stroke-dasharray="4 4"/></svg>'],
+    ["05", "dark", "Bouge, <span class='serif'>on compte.</span>", "Pas et séances importés automatiquement. Exercices en vidéo et séances guidées.", '<div class="photo ph-sport" style="height:130px;border-radius:16px"></div><div style="margin-top:10px;font-weight:600">Cardio sans matériel · 20 min</div>'],
+    ["06", "black", "Programmes<br><span class='serif'>& challenges.</span>", "Des parcours de quelques semaines, des défis de 7 à 30 jours, des badges à gagner.", '<div style="background:#fffdf9;border-radius:14px;padding:12px;border:1px solid var(--line)"><b>2 L d\'eau par jour</b><div style="display:flex;gap:3px;margin-top:8px">' + Array.from({ length: 14 }, (_, i) => '<i style="flex:1;height:7px;border-radius:3px;background:' + (i < 5 ? "var(--sage-700)" : "var(--cream-200)") + '"></i>').join("") + "</div></div>"],
+  ];
+  board.innerHTML = tiles.map((t) => '<article class="tile ' + t[1] + '"><span class="num">' + t[0] + ' / 06</span><h3>' + t[2] + '</h3><p class="mt16" style="opacity:.75;font-size:15px">' + t[3] + '</p><div class="mini" style="margin-top:28px"><div>' + t[4] + "</div></div></article>").join("");
+
+  document.getElementById("sport-list").innerHTML = [["footprints", "Pas et distance, sans rien saisir"], ["pulse", "Séances importées avec leur fréquence cardiaque"], ["dumbbell", "Exercices en vidéo, sous-titrés dans ta langue"]].map((x) => '<div class="row"><span class="ib">' + I(x[0]) + '</span><b>' + x[1] + "</b></div>").join("");
+  bars.innerHTML = [[2100, 2500], [2480, 2300], [1950, 2600], [2290, 2450], [2640, 2900], [2210, 2700], [1450, 2610]].map((d, i) => '<div style="flex:1;display:flex;flex-direction:column;gap:6px;align-items:center;height:100%;justify-content:flex-end"><div style="display:flex;gap:3px;align-items:flex-end;height:100%;width:100%"><i style="flex:1;border-radius:5px;background:#c08e66;height:' + d[0] / 30 + '%"></i><i style="flex:1;border-radius:5px;background:#b3c7a6;height:' + d[1] / 30 + '%"></i></div><span class="xs" style="opacity:.6">' + "LMMJVSD"[i] + "</span></div>").join("");
+
+  contents.innerHTML = [["ph-ndole", "Ndolé allégé", "Cameroun · 430 kcal"], ["ph-yassa", "Poulet yassa", "Sénégal · 520 kcal"], ["ph-baobab", "Baobab", "Fibres, vitamine C"], ["ph-moringa", "Moringa", "Fer, protéines"]].map((x) => '<div class="card" style="padding:0;overflow:hidden"><div class="photo ' + x[0] + '" style="height:200px"></div><div style="padding:18px"><b style="font:600 18px var(--font-display)">' + x[1] + '</b><div class="small faint">' + x[2] + "</div></div></div>").join("");
+
+  document.getElementById("plans-mini").innerHTML = [["Free", "0 $", "3 analyses photo par jour, suivi complet, 1 challenge", 0], ["Plus annuel", "46,99 $ / an", "Soit 3,92 $ / mois. Tout Nyam, sans limite pratique.", 1], ["Plus mensuel", "4,49 $ / mois", "Sans engagement, résiliable à tout moment.", 0]].map((p) => '<div class="card" style="' + (p[3] ? "background:#f4efe6;color:#151411" : "background:rgba(255,255,255,.07);color:#f4efe6;border:0") + '">' + (p[3] ? '<span class="tag orange">Meilleure offre</span>' : '<span class="tag" style="background:rgba(255,255,255,.1);color:inherit">' + p[0] + "</span>") + '<div style="font:600 32px var(--font-display);margin-top:16px">' + p[1] + '</div><p class="small mt8" style="opacity:.75">' + (p[3] ? "<b>" + p[0] + "</b> · " : "") + p[2] + "</p></div>").join("");
+
+  quotes.innerHTML = [["« Je pensais que les applis ne connaissaient pas le ndolé. Nyam, si. Et je ne saisis presque plus rien. »", "Mireille, 34 ans", "Douala", "MN"], ["« En 2 mois j'ai réduit le sel de moitié. Les conseils sont simples et parlent de ce que je cuisine vraiment. »", "Ousmane, 51 ans", "Dakar", "OS"], ["« Le challenge 8 000 pas m'a remis en mouvement. Le téléphone compte tout seul. »", "Aya, 27 ans", "Abidjan", "AK"]].map((q) => '<figure class="card" style="margin:0"><div style="color:var(--orange-500);letter-spacing:2px">★★★★★</div><blockquote style="margin:16px 0 0;font:500 19px/1.45 var(--font-display);letter-spacing:-.01em">' + q[0] + '</blockquote><figcaption class="row mt24"><span class="ib" style="border-radius:50%;font:700 15px var(--font-display)">' + q[3] + '</span><div><b>' + q[1] + '</b><div class="small faint">' + q[2] + "</div></div></figcaption></figure>").join("");
+
+  faq.innerHTML = [["Nyam reconnaît-il vraiment les plats africains ?", "Oui : notre base contient des centaines de plats d'Afrique de l'Ouest et centrale, avec leurs noms locaux. Tu peux toujours corriger les ingrédients et les quantités, et ton avis nous aide à progresser."], ["Est-ce que c'est gratuit ?", "Oui. Free inclut 3 analyses photo par jour et tout le suivi. Plus débloque les analyses illimitées en pratique (140 / mois), la saisie vocale, les programmes et la progression longue durée."], ["Mes données de santé sont-elles partagées ?", "Non. Nyam lit tes données d'activité sans jamais rien écrire, et seuls des totaux par jour sont envoyés à nos serveurs. Tu peux exporter ou supprimer tes données à tout moment."]].map((f, i) => "<details" + (i === 0 ? " open" : "") + "><summary>" + f[0] + I("plus") + "</summary><p>" + f[1] + "</p></details>").join("");
+</script>
+</body>
+</html>

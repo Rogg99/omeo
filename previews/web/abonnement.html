@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mon abonnement · Nyam</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+  <style>
+    .states { position: fixed; z-index: 25; bottom: 18px; left: 50%; translate: -50% 0; display: flex; gap: 4px; background: #151411; padding: 6px; border-radius: 14px; box-shadow: var(--shadow-3); }
+    .states button { border: 0; background: transparent; color: #c9bfb1; padding: 8px 12px; border-radius: 9px; font: 600 13px var(--font-body); }
+    .states button.on { background: #f4efe6; color: #151411; }
+    .pay-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+    @media (max-width: 900px) { .pay-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<main class="section" style="padding-top:48px;min-height:70vh">
+  <div class="narrow" id="view" style="width:min(980px,100% - 40px)"></div>
+</main>
+<nav class="states" id="states" aria-label="États de la page (preview)"></nav>
+<script src="web.js"></script>
+<script>
+  const I = window.icon, B = window.brandIcons;
+  const steps = (n) => '<div class="steps">' + ["Connexion", "Offre", "Paiement"].map((s, i) => '<span class="' + (i < n ? "done" : i === n ? "on" : "") + '"><i>' + (i < n ? I("check") : i + 1) + "</i>" + s + "</span>" + (i < 2 ? '<span class="sep"></span>' : "")).join("") + "</div>";
+  const field = (l, v, o) => { o = o || {}; return '<div class="f"><label>' + l + '</label><div class="in ' + (o.focus ? "focus" : "") + '">' + (o.ic ? I(o.ic) : "") + '<span class="' + (o.ph ? "ph" : "") + ' grow">' + v + "</span>" + (o.r || "") + "</div></div>"; };
+  const summary = (annual) => '<div class="card" style="position:sticky;top:96px"><b style="font:600 18px var(--font-display)">Récapitulatif</b><div class="row mt24"><span class="ib">' + I("crown") + '</span><div class="grow"><b>Nyam Plus ' + (annual ? "annuel" : "mensuel") + '</b><div class="small faint">franck@exemple.com</div></div></div><hr style="border:0;border-top:1px solid var(--line);margin:20px 0">' +
+    '<div class="row"><span class="grow muted">' + (annual ? "12 mois" : "1 mois") + '</span><b>' + (annual ? "46,99 $" : "4,49 $") + "</b></div>" + (annual ? '<div class="row mt8"><span class="grow muted">Économie vs mensuel</span><b style="color:var(--primary-text)">−6,89 $</b></div>' : "") + '<div class="row mt8"><span class="grow muted">Taxes</span><span class="muted">calculées au paiement</span></div>' +
+    '<hr style="border:0;border-top:1px solid var(--line);margin:20px 0"><div class="row"><b class="grow" style="font:600 18px var(--font-display)">Total aujourd\'hui</b><b style="font:600 24px var(--font-display)">' + (annual ? "46,99 $" : "4,49 $") + '</b></div><p class="xs faint mt16">Renouvellement automatique ' + (annual ? "le 9 novembre 2027" : "le 9 décembre 2026") + ". Résiliable à tout moment depuis cette page. Montants en USD.</p></div>";
+
+  const V = {
+    login: () => '<div style="max-width:440px;margin:0 auto">' + steps(0) + '<h1 class="h2 mt32">Connecte-toi à ton compte Nyam</h1><p class="muted mt16">Le même compte que dans l\'app. Ton abonnement y sera rattaché.</p>' +
+      '<div class="grid mt32" style="gap:12px"><a class="btn ghost" href="#">' + B.google + ' Continuer avec Google</a><a class="btn ghost" href="#">' + B.apple + ' Continuer avec Apple</a></div><div class="row mt24 faint small"><hr class="grow" style="border:0;border-top:1px solid var(--line)">ou<hr class="grow" style="border:0;border-top:1px solid var(--line)"></div>' +
+      '<div class="grid mt24" style="gap:16px">' + field("Email", "franck@exemple.com", { ic: "mail" }) + field("Mot de passe", "••••••••••", { ic: "lock", focus: true, r: I("eye") }) + '<button class="btn">Se connecter</button><a class="small" style="text-align:center;color:var(--primary-text);font-weight:600">Mot de passe oublié ?</a></div>' +
+      '<p class="small faint mt32 center">Pas encore de compte ? Crée-le dans l\'app : il faut d\'abord répondre au questionnaire.</p></div>',
+    plan: () => '<div style="max-width:620px;margin:0 auto">' + steps(1) + '<h1 class="h2 mt32">Choisis ton offre</h1><div class="note info mt24">' + I("info") + '<span>Connecté en tant que <b>franck@exemple.com</b> · actuellement en <b>essai Plus</b> (2 jours restants). <a style="font-weight:600">Changer de compte</a></span></div>' +
+      '<div class="grid mt24" style="gap:12px"><div class="option on"><span class="radio on"></span><div class="grow"><div class="row" style="gap:8px"><b style="font:600 19px var(--font-display)">Annuel</b><span class="tag orange">−13 %</span></div><div class="small muted">3,92 $ / mois, facturé 46,99 $ par an</div></div><b style="font:600 24px var(--font-display)">46,99 $</b></div>' +
+      '<div class="option"><span class="radio"></span><div class="grow"><b style="font:600 19px var(--font-display)">Mensuel</b><div class="small muted">Sans engagement</div></div><b style="font:600 24px var(--font-display)">4,49 $</b></div></div>' +
+      '<div class="row mt24 small"><span class="grow faint">Un code promo ?</span><a style="font-weight:600;color:var(--primary-text)">Ajouter</a></div><button class="btn mt32" style="width:100%">Continuer vers le paiement</button></div>',
+    pay: () => steps(2) + '<div class="pay-grid mt32"><div><h1 class="h2">Paiement</h1><p class="muted mt16">Paiement sécurisé par notre prestataire. Nyam ne voit jamais ton numéro de carte.</p>' +
+      '<div class="grid g2 mt32" style="gap:12px"><button class="paybtn" style="background:#000;color:#fff;border:0">' + B.apple + ' Pay</button><button class="paybtn" style="background:#fff;border:1.5px solid var(--line-strong)">' + B.google + ' Pay</button></div><div class="row mt24 faint small"><hr class="grow" style="border:0;border-top:1px solid var(--line)">ou par carte<hr class="grow" style="border:0;border-top:1px solid var(--line)"></div>' +
+      '<div class="grid mt24" style="gap:16px">' + field("Numéro de carte", "4970 1012 3456 7890", { ic: "card", focus: true, r: '<span class="tag" style="background:#1a1f71;color:#fff">VISA</span>' }) + '<div class="grid g2" style="gap:16px">' + field("Expiration", "08 / 28") + field("Cryptogramme", "•••", { r: I("help") }) + "</div>" + field("Nom sur la carte", "FRANCK ETAPE") + field("Pays", "Cameroun", { ic: "globe" }) +
+      '<div class="row small"><span class="check on">' + I("check") + '</span><span>J\'accepte les <a style="font-weight:600">CGU</a> et le renouvellement automatique.</span></div><button class="btn green" style="width:100%">' + I("lock") + ' Payer 46,99 $</button><p class="xs faint center row" style="justify-content:center">' + I("shieldCheck") + " Paiement chiffré · 3-D Secure</p></div></div>" + summary(true) + "</div>",
+    success: () => '<div class="center" style="max-width:560px;margin:0 auto"><span class="ib" style="width:96px;height:96px;border-radius:50%;margin:0 auto;background:var(--primary);color:#fff">' + I("check").replace('class="ico ', 'style="width:44px;height:44px" class="ico ') + '</span><h1 class="h2 mt32">Bienvenue dans Nyam Plus !</h1><p class="lead mt16">Ton abonnement annuel est actif. Ouvre l\'app : tout est déjà débloqué.</p>' +
+      '<div class="card mt32" style="text-align:start"><div class="row"><span class="grow muted">Offre</span><b>Plus annuel · 46,99 $</b></div><div class="row mt8"><span class="grow muted">Prochain renouvellement</span><b>9 novembre 2027</b></div><div class="row mt8"><span class="grow muted">Reçu</span><b>envoyé à franck@exemple.com</b></div></div><div class="row mt32" style="justify-content:center"><a class="btn" href="#">Ouvrir l\'app</a><a class="btn ghost" href="#" data-s="manage">Gérer mon abonnement</a></div></div>',
+    manage: () => '<h1 class="h2">Mon abonnement</h1><p class="muted mt8">franck@exemple.com · <a style="font-weight:600;color:var(--primary-text)">Se déconnecter</a></p><div class="pay-grid mt32"><div class="grid" style="gap:20px">' +
+      '<div class="card black"><div class="row"><span class="tag" style="background:rgba(255,255,255,.12);color:#e2e8da">' + I("crown") + ' Plus annuel</span><span class="grow"></span><span class="tag" style="background:#b3c7a6;color:#151411">Actif</span></div><div style="font:600 34px var(--font-display);margin-top:20px">46,99 $ / an</div><p style="opacity:.7" class="mt8">Renouvellement le 9 novembre 2027 · Visa •••• 7890</p></div>' +
+      '<div class="card"><b style="font:600 18px var(--font-display)">Paiements</b>' + [["9 nov. 2026", "Plus annuel", "46,99 $"], ["9 oct. 2026", "Plus mensuel", "4,49 $"]].map((p) => '<div class="row" style="padding:14px 0;border-bottom:1px solid var(--line)"><span class="grow"><b>' + p[1] + '</b><div class="small faint">' + p[0] + "</div></span><b>" + p[2] + '</b><a class="small" style="font-weight:600;color:var(--primary-text);margin-inline-start:16px">Reçu</a></div>').join("") + "</div></div>" +
+      '<div class="grid" style="gap:12px"><div class="card"><b>Moyen de paiement</b><div class="row mt16"><span class="ib">' + I("card") + '</span><span class="grow">Visa •••• 7890<div class="small faint">Expire 08/28</div></span><a class="small" style="font-weight:600;color:var(--primary-text)">Modifier</a></div></div><div class="card"><b>Changer d\'offre</b><p class="small muted mt8">Passer au mensuel prendra effet au prochain renouvellement.</p><button class="btn ghost sm mt16">Passer au mensuel</button></div><div class="card"><b>Résilier</b><p class="small muted mt8">Plus reste actif jusqu\'au 9 novembre 2027. Tu ne seras plus débité.</p><button class="btn sm mt16" style="background:var(--danger-soft);color:var(--danger)">Résilier l\'abonnement</button></div></div></div>',
+    store: () => '<div style="max-width:560px;margin:0 auto" class="center"><span class="ib" style="width:80px;height:80px;margin:0 auto;border-radius:24px">' + B.play + '</span><h1 class="h2 mt24">Ton abonnement est géré par Google Play</h1><p class="lead mt16">Tu as souscrit Nyam Plus dans l\'app Android. Pour changer d\'offre ou résilier, passe par Google Play.</p><div class="card mt32" style="text-align:start"><div class="row"><span class="grow muted">Offre</span><b>Plus mensuel · 4,49 $</b></div><div class="row mt8"><span class="grow muted">État</span><b>Actif · renouvellement le 14 déc.</b></div></div><a class="btn mt32" href="#">Ouvrir Google Play ' + I("arrowUR") + "</a></div>",
+    failed: () => '<div style="max-width:560px;margin:0 auto">' + steps(2) + '<div class="note warn mt32">' + I("alert") + '<span><b>Paiement refusé par ta banque.</b> Aucun montant n\'a été débité. Vérifie les informations ou essaie un autre moyen de paiement.</span></div><div class="grid mt24" style="gap:16px">' + field("Numéro de carte", "4970 1012 3456 7890", { ic: "card" }) + '<button class="btn" style="width:100%">Réessayer</button><button class="btn ghost" style="width:100%">' + B.google + " Payer avec Google Pay</button></div></div>",
+  };
+  const NAMES = { login: "Connexion", plan: "Offre", pay: "Paiement", success: "Confirmation", manage: "Gestion", store: "Abonnement store", failed: "Échec" };
+  function render() { const s = location.hash.slice(1) || "login"; view.innerHTML = (V[s] || V.login)(); states.innerHTML = Object.keys(NAMES).map((k) => '<button data-s="' + k + '" class="' + (k === s ? "on" : "") + '">' + NAMES[k] + "</button>").join(""); }
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-s]"); if (b) { e.preventDefault(); location.hash = b.dataset.s; } });
+  addEventListener("hashchange", render); render();
+</script>
+</body>
+</html>

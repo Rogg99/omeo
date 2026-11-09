@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tarifs · Nyam</title>
+  <meta name="description" content="Free pour commencer, Nyam Plus à 4,49 $ / mois ou 46,99 $ / an. Prix en USD.">
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<main>
+  <section class="page-head center">
+    <div class="wrap">
+      <span class="eyebrow">Tarifs</span>
+      <h1 class="h1 mt16" style="font-size:clamp(40px,6vw,68px)">Simple, <span class="serif">sans surprise.</span></h1>
+      <p class="lead mt24" style="max-width:600px;margin-inline:auto">Commence gratuitement. Passe à Plus quand tu veux, résilie quand tu veux. Prix en dollars US ; les stores affichent le montant dans ta monnaie.</p>
+      <div class="row mt32" style="justify-content:center"><span class="tag" data-i="gift"> 3 jours de Plus offerts à l'inscription · 7 avec un code d'invitation</span></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:16px">
+    <div class="wrap">
+      <div class="plans" id="plans"></div>
+      <p class="center small faint mt24">Paiement dans l'app via Google Play ou l'App Store. Sur ce site : carte bancaire, Apple Pay ou Google Pay. Pas de Mobile Money pour l'instant.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="narrow">
+      <h2 class="h2 center">Comparer en détail</h2>
+      <div class="card mt32" style="padding:8px 8px 0;overflow-x:auto">
+        <table class="cmp" id="cmp"></table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="narrow">
+      <h2 class="h2 center">Questions sur l'abonnement</h2>
+      <div class="mt32" id="faq"></div>
+    </div>
+  </section>
+</main>
+<script src="web.js"></script>
+<script>
+  const I = window.icon;
+  const li = (t, no) => '<li class="' + (no ? "no" : "") + '">' + I(no ? "minus" : "check") + "<span>" + t + "</span></li>";
+  plans.innerHTML =
+    '<div class="plan"><span class="tag" style="align-self:flex-start;background:var(--surface-2);color:var(--text-2)">Free</span><div class="price">0 $</div><p class="muted mt8">Pour découvrir et suivre l\'essentiel.</p><ul>' + ["3 analyses photo par jour", "Catalogue de plats illimité", "Journal, hydratation, poids", "Progression sur 7 jours", "Une sélection de séances et recettes", "1 challenge à la fois"].map((t) => li(t)).join("") + li("Saisie vocale", 1) + li("Programmes", 1) + '</ul><a class="btn ghost" href="index.html#telecharger">Télécharger l\'app</a></div>' +
+    '<div class="plan feat"><span class="tag orange" style="position:absolute;top:-14px;left:30px">Meilleure offre · −13 %</span><span class="tag" style="align-self:flex-start;background:rgba(255,255,255,.12);color:#e2e8da">Plus annuel</span><div class="price">46,99 $<small> / an</small></div><p class="mt8" style="opacity:.7">Soit 3,92 $ par mois, facturés une fois par an.</p><ul>' + ["140 analyses photo par mois", "140 saisies vocales ou texte par mois", "Toutes les séances, hors connexion", "Programmes de plusieurs semaines", "Challenges illimités en parallèle", "Progression sur 30 j, 90 j et 1 an", "Analyses croisées et bilan hebdo", "Toutes les recettes"].map((t) => li(t)).join("") + '</ul><a class="btn white" href="abonnement.html">S\'abonner sur le site</a></div>' +
+    '<div class="plan"><span class="tag" style="align-self:flex-start;background:var(--surface-2);color:var(--text-2)">Plus mensuel</span><div class="price">4,49 $<small> / mois</small></div><p class="muted mt8">Tout Plus, sans engagement.</p><ul>' + ["Tout ce qu\'inclut Plus annuel", "Résiliable à tout moment", "Quotas remis à zéro chaque mois"].map((t) => li(t)).join("") + '</ul><a class="btn" href="abonnement.html">S\'abonner sur le site</a></div>';
+
+  const rows = [["Analyses photo", "3 / jour", "140 / mois"], ["Saisie vocale ou texte", "—", "140 / mois"], ["Plats du catalogue", "Illimité", "Illimité"], ["Suivi Health Connect / Apple Health", "✓", "✓"], ["Progression", "7 jours", "30 j · 90 j · 1 an"], ["Séances vidéo", "Sélection", "Toutes + hors connexion"], ["Programmes", "—", "✓"], ["Challenges en parallèle", "1", "Illimité"], ["Recettes", "Sélection", "Toutes"], ["Prévention", "Conseils de base", "Détaillés + bilan hebdo"], ["Jour de série couvert", "—", "1 / semaine"]];
+  cmp.innerHTML = "<thead><tr><th></th><th>Free</th><th>Plus</th></tr></thead><tbody>" + rows.map((r) => "<tr><td>" + r[0] + '</td><td class="muted">' + r[1] + "</td><td><b>" + r[2] + "</b></td></tr>").join("") + "</tbody>";
+
+  faq.innerHTML = [["Puis-je payer sur le site et utiliser Plus dans l\'app ?", "Oui. L\'abonnement est rattaché à ton compte Nyam : payé sur le site ou dans un store, il est reconnu partout."], ["Comment résilier ?", "Dans Google Play ou l\'App Store si tu as payé dans l\'app ; sur la page Mon abonnement si tu as payé sur le site. Plus reste actif jusqu\'à la fin de la période payée."], ["Que se passe-t-il à la fin de l\'essai ?", "Tu passes automatiquement en Free, sans être débité. Tu gardes toutes tes données."], ["Pourquoi les prix sont en dollars ?", "Pour un prix identique partout. Google Play et l\'App Store convertissent automatiquement dans ta monnaie."]].map((f) => "<details><summary>" + f[0] + I("plus") + "</summary><p>" + f[1] + "</p></details>").join("");
+</script>
+</body>
+</html>

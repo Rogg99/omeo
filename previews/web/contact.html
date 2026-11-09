@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact · Nyam</title>
+  <link rel="stylesheet" href="../shared/tokens.css">
+  <link rel="stylesheet" href="web.css">
+</head>
+<body>
+<script src="../shared/icons.js"></script>
+<main class="section" style="padding-top:64px">
+  <div class="wrap grid g2" style="gap:64px;align-items:start">
+    <div>
+      <span class="eyebrow">Contact</span>
+      <h1 class="h1 mt16" style="font-size:clamp(40px,6vw,64px)">Écris-nous.<br><span class="serif">On répond.</span></h1>
+      <p class="lead mt24">Une question, un souci, une idée de plat à ajouter ? Ton message crée une demande suivie par notre équipe. Réponse sous 48 h par email.</p>
+      <div class="grid mt32" style="gap:14px">
+        <div class="row"><span class="ib" data-i="help"></span><div><b>Une question rapide ?</b><div class="small muted"><a href="faq.html" style="color:var(--primary-text);font-weight:600">La FAQ</a> répond à la plupart.</div></div></div>
+        <div class="row"><span class="ib" data-i="phone"></span><div><b>Tu as l'app ?</b><div class="small muted">Profil › Aide & contact joint automatiquement ta version.</div></div></div>
+      </div>
+    </div>
+    <div class="card" style="padding:36px">
+      <div class="grid" style="gap:18px">
+        <div class="grid g2" style="gap:16px">
+          <div class="f"><label for="n">Nom</label><div class="in"><span>Franck Etape</span></div></div>
+          <div class="f"><label for="e">Email</label><div class="in"><span>franck@exemple.com</span></div></div>
+        </div>
+        <div class="f"><label>Catégorie</label><div class="chips"><span class="chip">Question</span><span class="chip on">Paiement</span><span class="chip">Problème technique</span><span class="chip">Suggestion</span><span class="chip">Données personnelles</span><span class="chip">Presse & partenariats</span></div></div>
+        <div class="f"><label>Sujet</label><div class="in"><span>Double débit sur ma carte</span></div></div>
+        <div class="f"><label>Message</label><div class="in area focus"><span>J'ai été débité deux fois le 9 novembre pour l'abonnement annuel.</span></div><span class="xs faint" style="text-align:end">74 / 2 000</span></div>
+        <div class="row small"><span class="check"></span><span class="muted">J'accepte que Nyam utilise ces informations pour traiter ma demande. <a href="legal.html#confidentialite" style="font-weight:600;color:var(--primary-text)">En savoir plus</a></span></div>
+        <button class="btn">Envoyer</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="web.js"></script>
+</body>
+</html>

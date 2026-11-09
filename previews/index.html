@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nyam · Previews</title>
+  <link rel="stylesheet" href="shared/tokens.css">
+  <style>
+    body { background: var(--cream-100); }
+    .wrap { width: min(1120px, 100% - 40px); margin: 0 auto; padding: 64px 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 40px; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    a.p { display: flex; flex-direction: column; gap: 14px; padding: 28px; border-radius: 28px; text-decoration: none; min-height: 300px; transition: translate .2s var(--ease); }
+    a.p:hover { translate: 0 -4px; }
+    a.p h2 { font-size: 30px; margin-top: auto; }
+    a.p ul { margin: 0; padding-inline-start: 18px; font-size: 14px; opacity: .8; line-height: 1.7; }
+    .ib { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: rgba(255,255,255,.14); }
+    .ib .ico { width: 24px; height: 24px; }
+    .sw { display: flex; gap: 10px; margin-top: 48px; flex-wrap: wrap; }
+    .sw div { width: 120px; } .sw i { display: block; height: 64px; border-radius: 14px; } .sw span { font-size: 12px; color: var(--text-2); display: block; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="logo"></div>
+    <h1 style="font-size:56px;margin-top:28px;letter-spacing:-.04em">Previews <span class="serif" style="color:var(--accent-text)">Nyam</span></h1>
+    <p style="color:var(--text-2);max-width:640px;margin-top:12px;font-size:18px">Maquettes HTML haute fidélité des trois plateformes, construites sur les mêmes design tokens (<code>shared/tokens.css</code>). Ouvre-les directement dans un navigateur, sans serveur.</p>
+    <div class="grid">
+      <a class="p" href="mobile/index.html" style="background:var(--sage-800);color:#f4efe6"><span class="ib" id="i1"></span><h2>Mobile</h2><ul><li>Plus de 120 écrans, rangés par module</li><li>Thèmes clair et sombre, et arabe (RTL)</li><li>Zoom écran par écran avec les flèches</li></ul></a>
+      <a class="p" href="admin/index.html" style="background:#151411;color:#f4efe6"><span class="ib" id="i2"></span><h2>Admin</h2><ul><li>Connexion et 2FA, tableau de bord</li><li>Utilisateurs, support, contenus, avis IA</li><li>Revenus, campagnes, réglages, audit</li><li>Menu filtré selon le rôle</li></ul></a>
+      <a class="p" href="web/index.html" style="background:#fffdf9;color:#151411;border:1px solid var(--line)"><span class="ib" id="i3" style="background:var(--primary-soft);color:var(--primary-text)"></span><h2>Site web</h2><ul><li>Landing, fonctionnalités, tarifs</li><li>Abonnement : connexion, offre, paiement, gestion</li><li>FAQ, contact, légal, suppression, invitation</li></ul></a>
+    </div>
+    <div class="sw" id="sw"></div>
+  </div>
+  <script src="shared/icons.js"></script>
+  <script>
+    logo.innerHTML = window.logo(40);
+    i1.innerHTML = icon("phone"); i2.innerHTML = icon("dashboard"); i3.innerHTML = icon("globe");
+    sw.innerHTML = [["--cream-100", "Crème"], ["--brown-700", "Brun"], ["--orange-500", "Orange (accent)"], ["--sage-700", "Sauge (vert)"], ["--sage-800", "Kaki profond"], ["--ink-950", "Noir"]].map((c) => '<div><i style="background:var(' + c[0] + ');border:1px solid var(--line)"></i><span>' + c[1] + "<br><code>" + c[0] + "</code></span></div>").join("");
+  </script>
+</body>
+</html>

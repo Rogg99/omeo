@@ -16,23 +16,28 @@ Application de suivi nutritionnel et sportif. La documentation produit est dans 
 
 ## Démarrage local
 
+Tout tourne dans Docker sauf le mobile. nginx sert de point d'entrée unique :
+
+| URL | Service |
+|---|---|
+| http://localhost | Site web |
+| http://admin.localhost | Back-office |
+| http://api.localhost | API, pour le dev et le mobile (doc sur `/api/v1/docs/`). Le web et l'admin ne l'exposent jamais : ils relaient `/api/...` côté serveur |
+| http://10.0.2.2 | API depuis l'émulateur Android |
+
 ```bash
-# Base de données et Redis
-docker compose up -d
+cp api/.env.example api/.env
+docker compose up -d --build        # les migrations s'appliquent au démarrage de l'api
+docker compose logs -f api          # suivre les logs d'un service
 
-# API (http://localhost:8000, documentation de l'API sur /api/v1/docs/)
-cd api
-python -m venv .venv && .venv/Scripts/pip install -r requirements.txt
-cp .env.example .env
-.venv/Scripts/python manage.py migrate
-.venv/Scripts/python manage.py runserver
+# Commandes Django
+docker compose exec api python manage.py makemigrations
+docker compose exec api python manage.py createsuperuser
+docker compose exec api python manage.py shell
 
-# Mobile
+# Après ajout d'une dépendance (requirements.txt ou package.json)
+docker compose up -d --build api worker beat   # ou admin / web
+
+# Mobile (hors Docker)
 cd mobile && fvm flutter pub get && fvm flutter run
-
-# Admin (http://localhost:3001)
-cd admin && pnpm install && pnpm dev
-
-# Site web (http://localhost:3000)
-cd web && pnpm install && pnpm dev
 ```

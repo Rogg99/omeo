@@ -1,0 +1,201 @@
+/**
+ * Généré par shared/build-tokens.mjs depuis shared/tokens. Ne pas modifier à la main.
+ */
+
+:root {
+  --cream-50: #fbf8f2;
+  --cream-100: #f6f1e7;
+  --cream-200: #ede5d6;
+  --cream-300: #ddd2bf;
+  --sand-500: #a39581;
+  --brown-600: #7a5638;
+  --brown-700: #5b3f2c;
+  --brown-900: #2b1f17;
+  --ink-950: #151411;
+  --sage-50: #f0f3ec;
+  --sage-100: #e2e8da;
+  --sage-200: #c8d3bc;
+  --sage-400: #8a9d7c;
+  --sage-600: #56694d;
+  --sage-700: #43553c;
+  --sage-800: #33422f;
+  --sage-900: #242f22;
+  --orange-50: #fdf0e4;
+  --orange-100: #fadfc7;
+  --orange-500: #e2742b;
+  --orange-600: #c75f1c;
+  --red-50: #fbe9e5;
+  --red-600: #b9422e;
+  --amber-50: #f9efd9;
+  --amber-600: #a8730f;
+  --blue-50: #e5eef3;
+  --blue-600: #3c6a86;
+  --surface: #fffdf9;
+  --surface-sunk: #f1ebdf;
+  --line: #e7dfd1;
+  --text-2: #5f5549;
+  --text-3: #8d8274;
+  --text-inv: #fffdf9;
+  --on-primary: #fffdf9;
+  --on-contrast: #fbf8f2;
+  --data-protein: #d0802f;
+  --data-carbs: #6f8a5e;
+  --data-fat: #7a5638;
+  --data-fiber: #8d8a3e;
+  --data-salt: #557a92;
+  --data-water: #4f86a8;
+  --font-display: "Space Grotesk", "IBM Plex Sans Arabic", system-ui, sans-serif; /** Titres et chiffres */
+  --font-body: "DM Sans", "IBM Plex Sans Arabic", system-ui, sans-serif; /** Texte courant */
+  --font-accent: "Instrument Serif", Georgia, serif; /** Accents éditoriaux, italique */
+  --font-arabic: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: 36px;
+  --text-4xl: 48px;
+  --text-5xl: 64px;
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --size-touch-target: 44px; /** Cible tactile minimale */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --shadow-1: 0 1px 2px rgba(43, 31, 23, 0.05), 0 1px 1px rgba(43, 31, 23, 0.03); /** Ombre CSS (convertie par plateforme) */
+  --shadow-2: 0 6px 20px -8px rgba(43, 31, 23, 0.16), 0 2px 6px -2px rgba(43, 31, 23, 0.06); /** Ombre CSS (convertie par plateforme) */
+  --shadow-3: 0 24px 48px -16px rgba(43, 31, 23, 0.28); /** Ombre CSS (convertie par plateforme) */
+  --bg: var(--cream-100);
+  --bg-elev: var(--cream-50);
+  --surface-2: var(--cream-200);
+  --line-strong: var(--cream-300);
+  --text: var(--ink-950);
+  --primary: var(--sage-700);
+  --primary-hover: var(--sage-800);
+  --primary-soft: var(--sage-100);
+  --primary-text: var(--sage-700);
+  --contrast: var(--ink-950);
+  --accent: var(--orange-500);
+  --accent-soft: var(--orange-50);
+  --accent-text: var(--orange-600);
+  --danger: var(--red-600);
+  --danger-soft: var(--red-50);
+  --warning: var(--amber-600);
+  --warning-soft: var(--amber-50);
+  --info: var(--blue-600);
+  --info-soft: var(--blue-50);
+  --success: var(--sage-700);
+  --success-soft: var(--sage-100);
+  --data-kcal: var(--sage-700);
+  --focus-color: var(--orange-500); /** Anneau de focus (45 % d'opacité) */
+}
+
+[data-theme="dark"] {
+  --bg: #12110e;
+  --bg-elev: #171613;
+  --surface: #1c1b17;
+  --surface-2: #26241f;
+  --surface-sunk: #151410;
+  --line: #2e2b25;
+  --line-strong: #3b372f;
+  --text: #f4efe6;
+  --text-2: #bdb3a5;
+  --text-3: #8c8376;
+  --text-inv: #151411;
+  --primary: #9fb592;
+  --primary-hover: #b3c7a6;
+  --primary-soft: #26301f;
+  --primary-text: #b0c5a3;
+  --on-primary: #12170f;
+  --contrast: #f4efe6;
+  --on-contrast: #151411;
+  --accent: #ee8a45;
+  --accent-soft: #3a2517;
+  --accent-text: #f2a26b;
+  --danger: #e57a65;
+  --danger-soft: #3a1d17;
+  --warning: #e0ac4a;
+  --warning-soft: #33280f;
+  --info: #7fb0cf;
+  --info-soft: #172631;
+  --success: #9fb592;
+  --success-soft: #26301f;
+  --data-kcal: #9fb592;
+  --data-protein: #e79a52;
+  --data-carbs: #94b082;
+  --data-fat: #c08e66;
+  --data-fiber: #bdb862;
+  --data-salt: #84aac2;
+  --data-water: #4f86a8;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); /** Ombre CSS (convertie par plateforme) */
+  --shadow-2: 0 8px 24px -10px rgba(0, 0, 0, 0.6); /** Ombre CSS (convertie par plateforme) */
+  --shadow-3: 0 24px 48px -16px rgba(0, 0, 0, 0.7); /** Ombre CSS (convertie par plateforme) */
+  --focus-color: var(--orange-500); /** Anneau de focus (45 % d'opacité) */
+}
+
+/* Thème « système » : appliqué quand aucun data-theme n'est forcé */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12110e;
+    --bg-elev: #171613;
+    --surface: #1c1b17;
+    --surface-2: #26241f;
+    --surface-sunk: #151410;
+    --line: #2e2b25;
+    --line-strong: #3b372f;
+    --text: #f4efe6;
+    --text-2: #bdb3a5;
+    --text-3: #8c8376;
+    --text-inv: #151411;
+    --primary: #9fb592;
+    --primary-hover: #b3c7a6;
+    --primary-soft: #26301f;
+    --primary-text: #b0c5a3;
+    --on-primary: #12170f;
+    --contrast: #f4efe6;
+    --on-contrast: #151411;
+    --accent: #ee8a45;
+    --accent-soft: #3a2517;
+    --accent-text: #f2a26b;
+    --danger: #e57a65;
+    --danger-soft: #3a1d17;
+    --warning: #e0ac4a;
+    --warning-soft: #33280f;
+    --info: #7fb0cf;
+    --info-soft: #172631;
+    --success: #9fb592;
+    --success-soft: #26301f;
+    --data-kcal: #9fb592;
+    --data-protein: #e79a52;
+    --data-carbs: #94b082;
+    --data-fat: #c08e66;
+    --data-fiber: #bdb862;
+    --data-salt: #84aac2;
+    --data-water: #4f86a8;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); /** Ombre CSS (convertie par plateforme) */
+    --shadow-2: 0 8px 24px -10px rgba(0, 0, 0, 0.6); /** Ombre CSS (convertie par plateforme) */
+    --shadow-3: 0 24px 48px -16px rgba(0, 0, 0, 0.7); /** Ombre CSS (convertie par plateforme) */
+    --focus-color: var(--orange-500); /** Anneau de focus (45 % d'opacité) */
+  }
+}

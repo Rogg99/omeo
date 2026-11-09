@@ -1,0 +1,17 @@
+{
+  "name": "omeo-shared",
+  "private": true,
+  "type": "module",
+  "description": "Sources uniques partagées : design tokens (W3C DTCG) et traductions (ICU). Génèrent les fichiers des apps.",
+  "scripts": {
+    "build": "pnpm build:tokens && pnpm build:i18n",
+    "build:tokens": "node build-tokens.mjs",
+    "build:i18n": "node build-i18n.mjs",
+    "check": "node build-tokens.mjs && node build-i18n.mjs --strict"
+  },
+  "devDependencies": {
+    "@formatjs/icu-messageformat-parser": "^3.5.23",
+    "style-dictionary": "^5.0.0"
+  },
+  "packageManager": "pnpm@11.10.0"
+}

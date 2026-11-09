@@ -30,7 +30,17 @@ AUTHENTIFICATION :
   à télécharger).
 - Pas d'inscription publique : les comptes sont créés par invitation.
 
-AUTORISATIONS :
+AUTORISATIONS (docs/technique/controle-acces.md) :
+- Ne réimplémente JAMAIS la matrice rôles → permissions. Utilise uniquement la liste `permissions`
+  renvoyée par GET /admin/me.
+- Step-up : sur 401 step_up_required, ouvre une fenêtre pour saisir le code TOTP, appelle
+  POST /auth/mfa/step-up, puis rejoue automatiquement l'action. Affiche aussi le temps restant
+  (mfa_verified_until).
+- Quatre yeux : une réponse 202 avec ApprovalRequest affiche « En attente de validation par une autre
+  personne ». Vue « Validations » : demandes à traiter (avec la différence avant/après) et demandes
+  émises, avec un badge pour celles en attente. Le bouton « Publier » est masqué ou désactivé sur ses
+  propres contenus, avec une explication.
+- Motif obligatoire et confirmation forte, comme décrit dans le document.
 - GET /admin/me fournit les rôles et les permissions. Un helper `can(permission)` est partagé entre
   serveur et client.
 - Le menu, les pages, les boutons et les actions sont filtrés par permission. Le serveur revérifie
@@ -42,8 +52,8 @@ STACK :
 - Données : Server Components pour les lectures, Server Actions pour les mutations, avec validation
   zod en entrée. TanStack Query uniquement pour les vues très interactives (filtres en direct,
   interrogation périodique).
-- UI : composants maison sur Radix UI (accessibles), avec les design tokens de previews/shared/tokens.css
-  repris en variables CSS et thème Tailwind. Tables avec TanStack Table (tri, filtres et pagination
+- UI : composants maison sur Radix UI (accessibles), avec src/styles/tokens.css (généré depuis shared/tokens)
+  branché sur le thème Tailwind 4. Tables avec TanStack Table (tri, filtres et pagination
   côté serveur, état dans l'URL). Formulaires avec react-hook-form et zod.
 - Graphiques du tableau de bord : Recharts ou visx, accessibles, cohérents en clair et en sombre.
 - Éditeur multilingue :
@@ -53,7 +63,8 @@ STACK :
   - aperçu en arabe, de droite à gauche.
 - Médias : téléversement direct vers une URL présignée (POST /admin/media), avec progression, aperçu
   et sous-titres VTT par langue.
-- Langue de l'interface admin : français (next-intl), structure prête pour l'anglais.
+- Langue de l'interface admin : français (next-intl, messages/<lang>.json générés depuis shared/i18n),
+  structure prête pour l'anglais.
 
 MODULES (parité complète avec les maquettes) :
 - Tableau de bord, avec filtres de période, pays, langue et plateforme. Les blocs non autorisés sont

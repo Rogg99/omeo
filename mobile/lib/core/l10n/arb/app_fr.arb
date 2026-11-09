@@ -1,0 +1,140 @@
+{
+  "@@locale": "fr",
+  "commonActionContinue": "Continuer",
+  "@commonActionContinue": {},
+  "commonActionBack": "Retour",
+  "@commonActionBack": {},
+  "commonActionCancel": "Annuler",
+  "@commonActionCancel": {},
+  "commonActionSave": "Enregistrer",
+  "@commonActionSave": {},
+  "commonActionDelete": "Supprimer",
+  "@commonActionDelete": {},
+  "commonActionRetry": "Réessayer",
+  "@commonActionRetry": {},
+  "commonActionClose": "Fermer",
+  "@commonActionClose": {},
+  "commonActionConfirm": "Confirmer",
+  "@commonActionConfirm": {},
+  "commonStateLoading": "Chargement…",
+  "@commonStateLoading": {},
+  "commonStateOffline": "Pas de connexion. Tes données seront envoyées au retour du réseau.",
+  "@commonStateOffline": {},
+  "commonStatePendingSync": "En cours de calcul",
+  "@commonStatePendingSync": {},
+  "commonStateEmpty": "Rien pour l'instant",
+  "@commonStateEmpty": {},
+  "commonUnitKcal": "{value} kcal",
+  "@commonUnitKcal": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "commonUnitGrams": "{value} g",
+  "@commonUnitGrams": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "commonUnitMinutes": "{count, plural, one {# minute} other {# minutes}}",
+  "@commonUnitMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonUnitDays": "{count, plural, one {# jour} other {# jours}}",
+  "@commonUnitDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "commonPlusName": "Omeo Plus",
+  "@commonPlusName": {},
+  "commonPlusDiscover": "Découvrir Omeo Plus",
+  "@commonPlusDiscover": {},
+  "errorsValidationError": "Certaines informations sont invalides.",
+  "@errorsValidationError": {},
+  "errorsInvalidCredentials": "Email ou mot de passe incorrect.",
+  "@errorsInvalidCredentials": {},
+  "errorsTokenExpired": "Ta session a expiré. Reconnecte-toi.",
+  "@errorsTokenExpired": {},
+  "errorsNotAuthenticated": "Connecte-toi pour continuer.",
+  "@errorsNotAuthenticated": {},
+  "errorsPlanRequired": "Cette fonctionnalité fait partie d'Omeo Plus.",
+  "@errorsPlanRequired": {},
+  "errorsQuotaExceeded": "Tu as atteint ta limite. Elle se réinitialise {resetsAt}.",
+  "@errorsQuotaExceeded": {
+    "placeholders": {
+      "resetsAt": {
+        "type": "String"
+      }
+    }
+  },
+  "errorsEmailNotVerified": "Vérifie ton email pour continuer.",
+  "@errorsEmailNotVerified": {},
+  "errorsAccountSuspended": "Ton compte est suspendu. Contacte le support.",
+  "@errorsAccountSuspended": {},
+  "errorsUpgradeRequired": "Une nouvelle version d'Omeo est nécessaire.",
+  "@errorsUpgradeRequired": {},
+  "errorsRateLimited": "Trop de tentatives. Réessaie dans quelques instants.",
+  "@errorsRateLimited": {},
+  "errorsAnalysisRejected": "Impossible de reconnaître le plat. Essaie avec une photo plus nette.",
+  "@errorsAnalysisRejected": {},
+  "errorsServerError": "Un problème est survenu de notre côté. Réessaie.",
+  "@errorsServerError": {},
+  "errorsStepUpRequired": "Saisis ton code d'authentification pour confirmer.",
+  "@errorsStepUpRequired": {},
+  "errorsSelfApprovalForbidden": "Une autre personne doit valider cette action.",
+  "@errorsSelfApprovalForbidden": {},
+  "appOnboardingStep": "{current} / {total}",
+  "@appOnboardingStep": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingNameTitle": "Comment tu t'appelles ?",
+  "@appOnboardingNameTitle": {},
+  "appOnboardingTargetWeightWarningLose": "Ton poids cible est plus élevé que ton poids actuel alors que tu veux perdre du poids.",
+  "@appOnboardingTargetWeightWarningLose": {},
+  "appHomeGreeting": "Bonjour, {firstName}",
+  "@appHomeGreeting": {
+    "placeholders": {
+      "firstName": {
+        "type": "String"
+      }
+    }
+  },
+  "appHomeKcalRemaining": "kcal restantes",
+  "@appHomeKcalRemaining": {},
+  "appMealTypeName": "{type, select, breakfast {Petit-déjeuner} lunch {Déjeuner} snack {Collation} dinner {Dîner} other {Repas}}",
+  "@appMealTypeName": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealAnalysesLeft": "{count, plural, =0 {Plus d'analyse aujourd'hui} one {# analyse restante} other {# analyses restantes}}",
+  "@appMealAnalysesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

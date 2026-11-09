@@ -1,0 +1,174 @@
+{
+  "color": {
+    "role": {
+      "bg": {
+        "$type": "color",
+        "$value": "#12110e"
+      },
+      "bg-elev": {
+        "$type": "color",
+        "$value": "#171613"
+      },
+      "surface": {
+        "$type": "color",
+        "$value": "#1c1b17"
+      },
+      "surface-2": {
+        "$type": "color",
+        "$value": "#26241f"
+      },
+      "surface-sunk": {
+        "$type": "color",
+        "$value": "#151410"
+      },
+      "line": {
+        "$type": "color",
+        "$value": "#2e2b25"
+      },
+      "line-strong": {
+        "$type": "color",
+        "$value": "#3b372f"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "#f4efe6"
+      },
+      "text-2": {
+        "$type": "color",
+        "$value": "#bdb3a5"
+      },
+      "text-3": {
+        "$type": "color",
+        "$value": "#8c8376"
+      },
+      "text-inv": {
+        "$type": "color",
+        "$value": "#151411"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "#9fb592"
+      },
+      "primary-hover": {
+        "$type": "color",
+        "$value": "#b3c7a6"
+      },
+      "primary-soft": {
+        "$type": "color",
+        "$value": "#26301f"
+      },
+      "primary-text": {
+        "$type": "color",
+        "$value": "#b0c5a3"
+      },
+      "on-primary": {
+        "$type": "color",
+        "$value": "#12170f"
+      },
+      "contrast": {
+        "$type": "color",
+        "$value": "#f4efe6"
+      },
+      "on-contrast": {
+        "$type": "color",
+        "$value": "#151411"
+      },
+      "accent": {
+        "$type": "color",
+        "$value": "#ee8a45"
+      },
+      "accent-soft": {
+        "$type": "color",
+        "$value": "#3a2517"
+      },
+      "accent-text": {
+        "$type": "color",
+        "$value": "#f2a26b"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "#e57a65"
+      },
+      "danger-soft": {
+        "$type": "color",
+        "$value": "#3a1d17"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "#e0ac4a"
+      },
+      "warning-soft": {
+        "$type": "color",
+        "$value": "#33280f"
+      },
+      "info": {
+        "$type": "color",
+        "$value": "#7fb0cf"
+      },
+      "info-soft": {
+        "$type": "color",
+        "$value": "#172631"
+      },
+      "success": {
+        "$type": "color",
+        "$value": "#9fb592"
+      },
+      "success-soft": {
+        "$type": "color",
+        "$value": "#26301f"
+      }
+    },
+    "data": {
+      "kcal": {
+        "$type": "color",
+        "$value": "#9fb592"
+      },
+      "protein": {
+        "$type": "color",
+        "$value": "#e79a52"
+      },
+      "carbs": {
+        "$type": "color",
+        "$value": "#94b082"
+      },
+      "fat": {
+        "$type": "color",
+        "$value": "#c08e66"
+      },
+      "fiber": {
+        "$type": "color",
+        "$value": "#bdb862"
+      },
+      "salt": {
+        "$type": "color",
+        "$value": "#84aac2"
+      },
+      "water": {
+        "$type": "color",
+        "$value": "#4f86a8"
+      }
+    },
+    "focus": {
+      "$type": "color",
+      "$value": "{color.palette.orange.500}",
+      "$description": "Anneau de focus (45 % d'opacité)"
+    }
+  },
+  "shadow": {
+    "1": {
+      "$type": "shadow",
+      "$value": "0 1px 2px rgba(0, 0, 0, 0.4)",
+      "$description": "Ombre CSS (convertie par plateforme)"
+    },
+    "2": {
+      "$type": "shadow",
+      "$value": "0 8px 24px -10px rgba(0, 0, 0, 0.6)",
+      "$description": "Ombre CSS (convertie par plateforme)"
+    },
+    "3": {
+      "$type": "shadow",
+      "$value": "0 24px 48px -16px rgba(0, 0, 0, 0.7)",
+      "$description": "Ombre CSS (convertie par plateforme)"
+    }
+  }
+}

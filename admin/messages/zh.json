@@ -1,0 +1,56 @@
+{
+  "common": {
+    "action": {
+      "continue": "Continue",
+      "back": "Back",
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete",
+      "retry": "Retry",
+      "close": "Close",
+      "confirm": "Confirm"
+    },
+    "state": {
+      "loading": "Loading…",
+      "offline": "No connection. Your data will be sent when you're back online.",
+      "pending_sync": "Calculating",
+      "empty": "Nothing yet"
+    },
+    "unit": {
+      "kcal": "{value, number} kcal",
+      "grams": "{value, number} g",
+      "minutes": "{count, plural, one {# minute} other {# minutes}}",
+      "days": "{count, plural, one {# day} other {# days}}"
+    },
+    "plus": {
+      "name": "Omeo Plus",
+      "discover": "Discover Omeo Plus"
+    }
+  },
+  "errors": {
+    "validation_error": "Some information is invalid.",
+    "invalid_credentials": "Incorrect email or password.",
+    "token_expired": "Your session has expired. Please sign in again.",
+    "not_authenticated": "Sign in to continue.",
+    "plan_required": "This feature is part of Omeo Plus.",
+    "quota_exceeded": "You've reached your limit. It resets {resetsAt}.",
+    "email_not_verified": "Verify your email to continue.",
+    "account_suspended": "Your account is suspended. Please contact support.",
+    "upgrade_required": "A new version of Omeo is required.",
+    "rate_limited": "Too many attempts. Try again in a moment.",
+    "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
+    "server_error": "Something went wrong on our side. Please try again.",
+    "step_up_required": "Enter your authentication code to confirm.",
+    "self_approval_forbidden": "Someone else must approve this action."
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "approvals": "Approvals"
+    },
+    "approval": {
+      "pending": "Waiting for approval by someone else."
+    }
+  }
+}

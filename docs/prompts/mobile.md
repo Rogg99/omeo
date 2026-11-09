@@ -8,7 +8,8 @@ C'est le produit principal.
 
 RÉFÉRENCE VISUELLE : previews/mobile/ (127 écrans, avec thème sombre et arabe).
 - Reproduis fidèlement chaque écran et chaque état.
-- previews/shared/tokens.css devient le ThemeData : couleurs claires et sombres, typographies
+- lib/core/theme/tokens.g.dart (généré depuis shared/tokens, ne pas le modifier) devient le ThemeData via une
+  ThemeExtension : couleurs claires et sombres, typographies
   (Space Grotesk, DM Sans, Instrument Serif et IBM Plex Sans Arabic, embarquées dans l'app, sans
   Google Fonts au runtime), rayons, ombres, espacements.
 - Les composants de previews/mobile/components.js (ring, bar, sheet, macro, tabbar, appbar…) deviennent
@@ -33,7 +34,7 @@ STACK :
 - Médias : camera ou image_picker et image (compression), video_player avec chewie ou media_kit
   (HLS et sous-titres VTT).
 - Saisie vocale : speech_to_text, transcription sur l'appareil (D24).
-- Langues : flutter_localizations avec des fichiers ARB pour les 8 langues (intl). Arabe de droite à
+- Langues : flutter_localizations et gen-l10n (mobile/l10n.yaml). Les ARB sont générés depuis shared/i18n. Arabe de droite à
   gauche avec Directionality.
 - Qualité : very_good_analysis (lint strict), tests unitaires, de widgets et golden (alchemist),
   et integration_test.

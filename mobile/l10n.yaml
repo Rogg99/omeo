@@ -1,0 +1,6 @@
+# Les ARB sont générés depuis shared/i18n (pnpm --dir shared build:i18n). Ne pas les modifier à la main.
+arb-dir: lib/core/l10n/arb
+template-arb-file: app_fr.arb
+output-localization-file: app_localizations.dart
+output-dir: lib/core/l10n/gen
+nullable-getter: false

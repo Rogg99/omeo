@@ -8,7 +8,12 @@ info:
     Modèle de données : docs/technique/modele-donnees.md.
 
     Règle absolue : l'API fait tous les calculs. Les réponses de lecture sont prêtes à afficher.
-    Les rôles requis sur /admin/* sont indiqués par l'extension `x-roles`.
+    Contrôle d'accès (docs/technique/controle-acces.md) :
+    - `x-permission` : permission atomique requise (/admin/*). Les rôles ne sont que des regroupements.
+    - `x-step-up` : TOTP de moins de 15 min requis, sinon 401 `step_up_required`.
+    - `x-four-eyes` : l'action crée une ApprovalRequest (202) à valider par une autre personne.
+    - `x-entitlement` / `x-quota` : droit Plus (403 `plan_required`) ou quota (429 `quota_exceeded`).
+    - `x-email-verified` : email vérifié requis (403 `email_not_verified`).
 servers:
   - url: http://api.localhost/api/v1
     description: Développement (nginx)
@@ -166,6 +171,33 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AuthResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "429": { $ref: "#/components/responses/RateLimited" }
+  /auth/mfa/step-up:
+    post:
+      tags: [auth]
+      operationId: stepUpMfa
+      summary: Revalide le TOTP de la session staff (actions sensibles, valable 15 min)
+      x-permission: authenticated_staff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string, pattern: "^[0-9A-Za-z-]{6,12}$" }
+      responses:
+        "200":
+          description: Session revalidée
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [mfa_verified_until]
+                properties:
+                  mfa_verified_until: { type: string, format: date-time }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "429": { $ref: "#/components/responses/RateLimited" }
   /auth/refresh:
@@ -383,6 +415,7 @@ paths:
     post:
       tags: [account]
       operationId: changeEmail
+      x-email-verified: true
       summary: Change l'email (lien de confirmation envoyé à la nouvelle adresse)
       requestBody:
         required: true
@@ -492,6 +525,7 @@ paths:
     post:
       tags: [account]
       operationId: requestDataExport
+      x-email-verified: true
       summary: Demande un export de toutes ses données (lien envoyé par email et notification)
       responses:
         "202":
@@ -624,6 +658,8 @@ paths:
     post:
       tags: [meals]
       operationId: createAnalysis
+      x-entitlement: { feature: text_analysis, when: "kind = text" }
+      x-quota: photo_analysis | text_analysis
       summary: Lance une analyse IA (photo ou texte)
       description: |
         Décompte le quota dans la même transaction (remboursé si l'analyse échoue).
@@ -928,6 +964,7 @@ paths:
     get:
       tags: [tracking]
       operationId: getProgress
+      x-entitlement: { feature: progress_long_range, when: "range != 7d" }
       summary: Courbe d'un nutriment (7 j en Free ; 30 j, 90 j, 1 an en Plus)
       parameters:
         - name: metric
@@ -1159,6 +1196,7 @@ paths:
     get:
       tags: [activity]
       operationId: listInsights
+      x-entitlement: { feature: insights }
       summary: Analyses croisées nutrition × activité (Plus)
       parameters: [{ $ref: "#/components/parameters/Cursor" }]
       responses:
@@ -1201,6 +1239,7 @@ paths:
     get:
       tags: [training]
       operationId: getExercise
+      x-entitlement: { feature: full_catalog, when: "contenu non gratuit" }
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1235,6 +1274,7 @@ paths:
     get:
       tags: [training]
       operationId: getWorkout
+      x-entitlement: { feature: full_catalog, when: "contenu non gratuit" }
       summary: Séance complète avec ses étapes (vidéos HLS + sous-titres)
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -1248,6 +1288,7 @@ paths:
     get:
       tags: [training]
       operationId: getWorkoutDownload
+      x-entitlement: { feature: offline_workouts }
       summary: URL signées des médias MP4 pour usage hors connexion (Plus)
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -1332,6 +1373,7 @@ paths:
     post:
       tags: [programs]
       operationId: enrollProgram
+      x-entitlement: { feature: programs }
       summary: Commence un programme (Plus). `replace=true` requis si un autre est actif
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -1370,6 +1412,7 @@ paths:
     put:
       tags: [programs]
       operationId: checkProgramTask
+      x-entitlement: { feature: programs }
       summary: Coche ou décoche une tâche manuelle du jour
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -1421,6 +1464,7 @@ paths:
     post:
       tags: [challenges]
       operationId: joinChallenge
+      x-quota: challenges_active
       summary: "Rejoint un challenge (Free : 1 actif — 429 `quota_exceeded`)"
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -1560,6 +1604,7 @@ paths:
     get:
       tags: [content]
       operationId: getRecipe
+      x-entitlement: { feature: full_catalog, when: "contenu non gratuit" }
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1789,6 +1834,7 @@ paths:
     post:
       tags: [billing]
       operationId: createWebCheckout
+      x-email-verified: true
       summary: Session de paiement web (carte, Apple Pay, Google Pay via l'agrégateur)
       description: Refusé (409) si un abonnement store est actif. Le site redirige vers `checkout_url`.
       parameters: [{ $ref: "#/components/parameters/IdempotencyKey" }]
@@ -1848,6 +1894,7 @@ paths:
     post:
       tags: [billing]
       operationId: createBillingPortal
+      x-email-verified: true
       summary: Lien vers le portail de l'agrégateur (moyen de paiement, résiliation) — abonnement web
       requestBody:
         required: true
@@ -2068,8 +2115,8 @@ paths:
     get:
       tags: [admin-team]
       operationId: adminGetMe
+      x-permission: authenticated_staff
       summary: Membre de l'équipe connecté, rôles et permissions (pour filtrer le menu)
-      x-roles: [any]
       responses:
         "200":
           description: OK
@@ -2080,8 +2127,9 @@ paths:
     get:
       tags: [admin-dashboard]
       operationId: adminDashboard
+      x-permission: dashboard.product
+      x-access-note: "Blocs filtrés par permission : dashboard.finance (revenus, MRR, conversion, coût IA), dashboard.support."
       summary: Indicateurs (inscriptions, actifs, rétention, conversion, revenus par canal, IA, avis, support)
-      x-roles: [superadmin, finance, content, support, moderation]
       parameters:
         - { name: from, in: query, required: true, schema: { type: string, format: date } }
         - { name: to, in: query, required: true, schema: { type: string, format: date } }
@@ -2100,7 +2148,7 @@ paths:
     get:
       tags: [admin-users]
       operationId: adminListUsers
-      x-roles: [superadmin, support, finance]
+      x-permission: users.view
       parameters:
         - { name: q, in: query, schema: { type: string, description: "email, nom ou id" } }
         - { name: plan, in: query, schema: { $ref: "#/components/schemas/PlanTier" } }
@@ -2124,8 +2172,8 @@ paths:
     get:
       tags: [admin-users]
       operationId: adminGetUser
+      x-permission: users.view
       summary: Fiche utilisateur (données santé masquées)
-      x-roles: [superadmin, support, finance]
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -2137,8 +2185,9 @@ paths:
     get:
       tags: [admin-users]
       operationId: adminRevealUserHealth
+      x-permission: users.view_health
+      x-step-up: true
       summary: Révèle les données de santé (consultation journalisée, motif obligatoire)
-      x-roles: [superadmin, support]
       parameters:
         - { $ref: "#/components/parameters/Id" }
         - { name: reason, in: query, required: true, schema: { type: string, minLength: 5, maxLength: 200 } }
@@ -2152,8 +2201,9 @@ paths:
     post:
       tags: [admin-users]
       operationId: adminUserAction
+      x-permission: users.<action>
+      x-access-note: "Permission = users.<action> (ex. users.suspend). Step-up pour suspend, reactivate, grant_plus_days, export_data, delete_data."
       summary: Action sur un compte (journalisée)
-      x-roles: [superadmin, support, finance]
       description: |
         Rôles par action — support : resend_verification, send_password_reset, extend_trial ;
         finance : grant_plus_days, reset_quota ; superadmin : tout, dont suspend, reactivate, export_data, delete_data.
@@ -2176,7 +2226,7 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminListContent
-      x-roles: [superadmin, content]
+      x-permission: content.view
       parameters:
         - { $ref: "#/components/parameters/ContentType" }
         - { name: q, in: query, schema: { type: string } }
@@ -2199,8 +2249,8 @@ paths:
     post:
       tags: [admin-content]
       operationId: adminCreateContent
+      x-permission: content.edit
       summary: Crée un contenu en brouillon
-      x-roles: [superadmin, content]
       parameters: [{ $ref: "#/components/parameters/ContentType" }]
       requestBody:
         required: true
@@ -2218,7 +2268,7 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminGetContent
-      x-roles: [superadmin, content]
+      x-permission: content.view
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -2229,8 +2279,8 @@ paths:
     patch:
       tags: [admin-content]
       operationId: adminUpdateContent
+      x-permission: content.edit
       summary: Modifie (verrou optimiste via `version`)
-      x-roles: [superadmin, content]
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2247,8 +2297,8 @@ paths:
     delete:
       tags: [admin-content]
       operationId: adminDeleteContent
+      x-permission: content.edit
       summary: Supprime un brouillon jamais publié (sinon archiver)
-      x-roles: [superadmin, content]
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       responses:
         "204": { description: Supprimé }
@@ -2257,8 +2307,9 @@ paths:
     post:
       tags: [admin-content]
       operationId: adminTransitionContent
+      x-permission: content.edit
+      x-access-note: "Vers `published` : content.publish (contenu d'une autre personne) ; l'auteur ne peut pas publier son propre contenu (403 self_approval_forbidden) sauf content.publish_own avec `comment` obligatoire."
       summary: brouillon → relecture → publié → archivé
-      x-roles: [superadmin, content]
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2271,6 +2322,11 @@ paths:
                 to: { $ref: "#/components/schemas/ContentStatus" }
                 comment: { type: string, maxLength: 500 }
       responses:
+        "202":
+          description: Validation par une autre personne requise (ApprovalRequest créée)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
         "200":
           description: OK
           content:
@@ -2281,7 +2337,7 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminListRevisions
-      x-roles: [superadmin, content]
+      x-permission: content.view
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -2302,8 +2358,8 @@ paths:
     post:
       tags: [admin-content]
       operationId: adminMachineTranslate
+      x-permission: content.translate
       summary: Propose une traduction IA des champs manquants (à relire, non publiée)
-      x-roles: [superadmin, content]
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2324,8 +2380,8 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminTranslationCoverage
+      x-permission: content.view
       summary: Couverture des traductions par type de contenu et langue
-      x-roles: [superadmin, content]
       responses:
         "200":
           description: OK
@@ -2346,8 +2402,8 @@ paths:
     post:
       tags: [admin-content]
       operationId: adminCreateMediaUpload
+      x-permission: content.edit
       summary: URL présignée pour image, vidéo (transcodée en HLS par une tâche) ou sous-titres VTT
-      x-roles: [superadmin, content]
       requestBody:
         required: true
         content:
@@ -2371,7 +2427,7 @@ paths:
     get:
       tags: [admin-feedback]
       operationId: adminListFeedback
-      x-roles: [superadmin, moderation]
+      x-permission: feedback.view
       parameters:
         - { name: rating, in: query, schema: { type: string, enum: [up, down] } }
         - { name: reason, in: query, schema: { $ref: "#/components/schemas/FeedbackReason" } }
@@ -2398,8 +2454,8 @@ paths:
     get:
       tags: [admin-feedback]
       operationId: adminGetFeedback
+      x-permission: feedback.view
       summary: Photo, réponse IA d'origine, version corrigée, commentaire
-      x-roles: [superadmin, moderation]
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -2411,7 +2467,7 @@ paths:
     post:
       tags: [admin-feedback]
       operationId: adminResolveFeedback
-      x-roles: [superadmin, moderation]
+      x-permission: feedback.resolve
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2440,8 +2496,8 @@ paths:
     get:
       tags: [admin-feedback]
       operationId: adminFeedbackStats
+      x-permission: feedback.view
       summary: Fiabilité perçue par plat et par pays, plats les plus contestés
-      x-roles: [superadmin, moderation]
       parameters:
         - { name: from, in: query, schema: { type: string, format: date } }
         - { name: to, in: query, schema: { type: string, format: date } }
@@ -2457,7 +2513,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListPlans
-      x-roles: [superadmin, finance]
+      x-permission: billing.view
       responses:
         "200":
           description: OK
@@ -2468,7 +2524,8 @@ paths:
     patch:
       tags: [admin-billing]
       operationId: adminUpdatePlan
-      x-roles: [superadmin, finance]
+      x-permission: billing.plans_edit
+      x-four-eyes: "always"
       parameters:
         - { name: code, in: path, required: true, schema: { type: string } }
       requestBody:
@@ -2477,6 +2534,11 @@ paths:
           application/json:
             schema: { $ref: "#/components/schemas/AdminPlan" }
       responses:
+        "202":
+          description: Validation par une autre personne requise (ApprovalRequest créée)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
         "200":
           description: OK
           content:
@@ -2486,7 +2548,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListQuotaRules
-      x-roles: [superadmin, finance]
+      x-permission: billing.view
       responses:
         "200":
           description: OK
@@ -2496,13 +2558,19 @@ paths:
     put:
       tags: [admin-billing]
       operationId: adminReplaceQuotaRules
-      x-roles: [superadmin, finance]
+      x-permission: billing.quotas_edit
+      x-four-eyes: "always"
       requestBody:
         required: true
         content:
           application/json:
             schema: { type: array, items: { $ref: "#/components/schemas/QuotaRule" } }
       responses:
+        "202":
+          description: Validation par une autre personne requise (ApprovalRequest créée)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
         "200":
           description: OK
           content:
@@ -2512,7 +2580,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListSubscriptions
-      x-roles: [superadmin, finance]
+      x-permission: billing.view
       parameters:
         - { name: status, in: query, schema: { $ref: "#/components/schemas/SubscriptionStatus" } }
         - { name: channel, in: query, schema: { $ref: "#/components/schemas/Channel" } }
@@ -2534,7 +2602,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListPayments
-      x-roles: [superadmin, finance]
+      x-permission: billing.view
       parameters:
         - { name: status, in: query, schema: { type: string, enum: [succeeded, failed, refunded, pending] } }
         - { name: channel, in: query, schema: { $ref: "#/components/schemas/Channel" } }
@@ -2557,8 +2625,10 @@ paths:
     post:
       tags: [admin-billing]
       operationId: adminRefundPayment
+      x-permission: billing.refund
+      x-step-up: true
+      x-four-eyes: "amount > billing.refund_approval_threshold_usd"
       summary: Rembourse un paiement web (les stores remboursent eux-mêmes)
-      x-roles: [superadmin, finance]
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2569,8 +2639,14 @@ paths:
               required: [reason]
               properties:
                 amount_cents: { type: integer, minimum: 1, description: "Défaut : total" }
+                confirm: { type: string, description: "Email de l'utilisateur, pour un remboursement complet" }
                 reason: { type: string, minLength: 3, maxLength: 500 }
       responses:
+        "202":
+          description: Validation par une autre personne requise (ApprovalRequest créée)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
         "200":
           description: OK
           content:
@@ -2581,7 +2657,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListPromoCodes
-      x-roles: [superadmin, finance]
+      x-permission: billing.view
       parameters: [{ $ref: "#/components/parameters/Page" }, { $ref: "#/components/parameters/PageSize" }]
       responses:
         "200":
@@ -2597,7 +2673,7 @@ paths:
     post:
       tags: [admin-billing]
       operationId: adminCreatePromoCode
-      x-roles: [superadmin, finance]
+      x-permission: billing.promo_manage
       requestBody:
         required: true
         content:
@@ -2613,7 +2689,7 @@ paths:
     patch:
       tags: [admin-billing]
       operationId: adminUpdatePromoCode
-      x-roles: [superadmin, finance]
+      x-permission: billing.promo_manage
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2632,7 +2708,7 @@ paths:
     get:
       tags: [admin-support]
       operationId: adminListTickets
-      x-roles: [superadmin, support]
+      x-permission: support.view
       parameters:
         - { name: status, in: query, schema: { $ref: "#/components/schemas/TicketStatus" } }
         - { name: category, in: query, schema: { $ref: "#/components/schemas/TicketCategory" } }
@@ -2655,7 +2731,7 @@ paths:
     get:
       tags: [admin-support]
       operationId: adminGetTicket
-      x-roles: [superadmin, support]
+      x-permission: support.view
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -2666,7 +2742,7 @@ paths:
     patch:
       tags: [admin-support]
       operationId: adminUpdateTicket
-      x-roles: [superadmin, support]
+      x-permission: support.reply
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2689,8 +2765,8 @@ paths:
     post:
       tags: [admin-support]
       operationId: adminReplyTicket
+      x-permission: support.reply
       summary: Réponse (email + notification in-app) ou note interne
-      x-roles: [superadmin, support]
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2714,7 +2790,7 @@ paths:
     get:
       tags: [admin-support]
       operationId: adminListReplyTemplates
-      x-roles: [superadmin, support]
+      x-permission: support.view
       responses:
         "200":
           description: OK
@@ -2736,7 +2812,7 @@ paths:
     get:
       tags: [admin-campaigns]
       operationId: adminListCampaigns
-      x-roles: [superadmin, content]
+      x-permission: campaigns.view
       parameters: [{ $ref: "#/components/parameters/Page" }, { $ref: "#/components/parameters/PageSize" }]
       responses:
         "200":
@@ -2752,7 +2828,7 @@ paths:
     post:
       tags: [admin-campaigns]
       operationId: adminCreateCampaign
-      x-roles: [superadmin, content]
+      x-permission: campaigns.edit
       requestBody:
         required: true
         content:
@@ -2768,8 +2844,8 @@ paths:
     post:
       tags: [admin-campaigns]
       operationId: adminEstimateAudience
+      x-permission: campaigns.edit
       summary: Nombre de destinataires d'un segment (consentement marketing inclus)
-      x-roles: [superadmin, content]
       requestBody:
         required: true
         content:
@@ -2789,7 +2865,7 @@ paths:
     get:
       tags: [admin-campaigns]
       operationId: adminGetCampaign
-      x-roles: [superadmin, content]
+      x-permission: campaigns.view
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -2800,7 +2876,7 @@ paths:
     patch:
       tags: [admin-campaigns]
       operationId: adminUpdateCampaign
-      x-roles: [superadmin, content]
+      x-permission: campaigns.edit
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2818,11 +2894,17 @@ paths:
     post:
       tags: [admin-campaigns]
       operationId: adminCampaignAction
-      x-roles: [superadmin, content]
+      x-permission: campaigns.<action>
+      x-access-note: "schedule|cancel : campaigns.schedule + step-up, interdit sur sa propre campagne ; send_test : campaigns.edit (envoi à soi-même uniquement)."
       parameters:
         - { $ref: "#/components/parameters/Id" }
         - { name: action, in: path, required: true, schema: { type: string, enum: [schedule, cancel, send_test] } }
       responses:
+        "202":
+          description: Validation par une autre personne requise (ApprovalRequest créée)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
         "200":
           description: OK
           content:
@@ -2835,7 +2917,7 @@ paths:
     get:
       tags: [admin-settings]
       operationId: adminGetSettings
-      x-roles: [superadmin]
+      x-permission: settings.view
       responses:
         "200":
           description: OK
@@ -2845,13 +2927,20 @@ paths:
     patch:
       tags: [admin-settings]
       operationId: adminUpdateSettings
-      x-roles: [superadmin]
+      x-permission: settings.edit
+      x-step-up: true
+      x-four-eyes: "nutrition.* modifié"
       requestBody:
         required: true
         content:
           application/json:
             schema: { $ref: "#/components/schemas/Settings" }
       responses:
+        "202":
+          description: Validation par une autre personne requise (ApprovalRequest créée)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
         "200":
           description: OK
           content:
@@ -2864,7 +2953,8 @@ paths:
     get:
       tags: [admin-team]
       operationId: adminListTeam
-      x-roles: [superadmin]
+      x-permission: team.manage
+      x-step-up: true
       responses:
         "200":
           description: OK
@@ -2874,8 +2964,9 @@ paths:
     post:
       tags: [admin-team]
       operationId: adminInviteStaff
+      x-permission: team.manage
+      x-step-up: true
       summary: Invite un membre (email d'invitation, 2FA à configurer à la première connexion)
-      x-roles: [superadmin]
       requestBody:
         required: true
         content:
@@ -2896,7 +2987,8 @@ paths:
     patch:
       tags: [admin-team]
       operationId: adminUpdateStaff
-      x-roles: [superadmin]
+      x-permission: team.manage
+      x-step-up: true
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -2918,8 +3010,8 @@ paths:
     post:
       tags: [admin-team]
       operationId: adminSetupMfa
+      x-permission: authenticated_staff
       summary: Génère le secret TOTP (QR) puis le confirme avec un code
-      x-roles: [any]
       requestBody:
         content:
           application/json:
@@ -2938,11 +3030,73 @@ paths:
                   otpauth_uri: { type: string }
                   recovery_codes: { type: array, items: { type: string } }
                   confirmed: { type: boolean }
+  # ── Validation à quatre yeux
+  /admin/approvals:
+    get:
+      tags: [admin-team]
+      operationId: adminListApprovals
+      summary: Demandes à valider (filtrées sur les domaines de la personne) et demandes émises
+      x-permission: approvals.decide
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, approved, rejected, expired, canceled] } }
+        - { name: mine, in: query, schema: { type: boolean }, description: "Demandes que j'ai émises" }
+        - { $ref: "#/components/parameters/Page" }
+        - { $ref: "#/components/parameters/PageSize" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PageMeta"
+                  - type: object
+                    properties:
+                      results: { type: array, items: { $ref: "#/components/schemas/ApprovalRequest" } }
+  /admin/approvals/{id}/decision:
+    post:
+      tags: [admin-team]
+      operationId: adminDecideApproval
+      summary: Approuve (applique l'action) ou rejette — jamais sa propre demande
+      x-permission: approvals.decide
+      x-step-up: true
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approve, reject] }
+                comment: { type: string, maxLength: 500 }
+      responses:
+        "200":
+          description: Décision enregistrée
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /admin/approvals/{id}/cancel:
+    post:
+      tags: [admin-team]
+      operationId: adminCancelApproval
+      summary: Annule sa propre demande en attente
+      x-permission: authenticated_staff
+      parameters: [{ $ref: "#/components/parameters/Id" }]
+      responses:
+        "200":
+          description: Annulée
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ApprovalRequest" }
   /admin/audit:
     get:
       tags: [admin-team]
       operationId: adminListAudit
-      x-roles: [superadmin]
+      x-permission: audit.view
       parameters:
         - { name: actor_id, in: query, schema: { type: string, format: uuid } }
         - { name: action, in: query, schema: { type: string } }
@@ -4246,7 +4400,9 @@ components:
         email: { type: string }
         name: { type: string }
         roles: { type: array, items: { $ref: "#/components/schemas/StaffRole" } }
-        permissions: { type: array, items: { type: string }, description: "Ex. users.view, users.suspend, content.publish" }
+        permissions: { type: array, items: { type: string }, description: "Permissions effectives (docs/technique/controle-acces.md), ex. users.view, billing.refund" }
+        mfa_verified_until: { type: [string, "null"], format: date-time, description: "Fin de validité du step-up" }
+        pending_approvals: { type: integer, description: "Demandes en attente que la personne peut valider" }
         mfa_enabled: { type: boolean }
         active: { type: boolean }
         last_login_at: { type: [string, "null"], format: date-time }
@@ -4686,6 +4842,18 @@ components:
     Settings:
       type: object
       properties:
+        reason: { type: string, minLength: 3, maxLength: 500, writeOnly: true, description: "Motif (obligatoire en écriture, audité)" }
+        four_eyes:
+          type: object
+          description: "Désactivation temporaire par domaine (équipe < 2 personnes) — superadmin, step-up, alerte au tableau de bord"
+          properties:
+            content: { type: boolean }
+            finance: { type: boolean }
+            settings: { type: boolean }
+        billing:
+          type: object
+          properties:
+            refund_approval_threshold_usd: { type: number, default: 50 }
         nutrition:
           type: object
           properties:
@@ -4740,6 +4908,25 @@ components:
             max_push_per_day: { type: integer }
             default_quiet_start: { type: string }
             default_quiet_end: { type: string }
+    ApprovalRequest:
+      type: object
+      required: [id, kind, domain, status, summary, requested_by, created_at, expires_at]
+      properties:
+        id: { type: string, format: uuid }
+        kind: { type: string, enum: [content_publish, campaign_schedule, plan_update, quota_update, refund, settings_nutrition] }
+        domain: { type: string, enum: [content, finance, settings] }
+        status: { type: string, enum: [pending, approved, rejected, expired, canceled] }
+        summary: { type: string, description: "Résumé lisible de l'action demandée" }
+        target_type: { type: string }
+        target_id: { type: string }
+        diff: { type: object, additionalProperties: true, description: "Avant / après proposés" }
+        reason: { type: [string, "null"] }
+        requested_by: { type: string }
+        decided_by: { type: [string, "null"] }
+        decision_comment: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+        decided_at: { type: [string, "null"], format: date-time }
+        expires_at: { type: string, format: date-time }
     AuditEntry:
       type: object
       required: [id, action, created_at]

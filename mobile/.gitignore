@@ -59,3 +59,6 @@ migrate_working_dir/
 # Symbolication / obfuscation
 app.*.symbols
 app.*.map.json
+
+# Généré par flutter gen-l10n (depuis les ARB, eux-mêmes générés depuis shared/i18n)
+lib/core/l10n/gen/

@@ -34,3 +34,7 @@ next-env.d.ts
 .vercel/
 
 # --- Mobile : voir mobile/.gitignore ---
+
+# --- Shared (tokens, i18n) ---
+shared/node_modules/
+shared/.build/

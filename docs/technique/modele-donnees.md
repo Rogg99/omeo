@@ -62,7 +62,7 @@ Légende : **PK** clé primaire, **FK** clé étrangère, **U** unique, **I** in
 `id`, `name` (I18nText), `country` char(2), `timezone`, `is_suggested` (bool, pour Dakar, Abidjan, Lomé, Yaoundé…). Liste gérée dans l'admin.
 
 ### Session (appareil connecté)
-`id`, `user` FK, `refresh_jti` U, `device_name`, `platform` (`android`, `ios`, `web`, `admin`), `app_version`, `ip`, `last_used_at`, `revoked_at?`. Permet de « déconnecter cet appareil » ou « tous les appareils ».
+`id`, `user` FK, `refresh_jti` U, `mfa_verified_at?` (staff), `device_name`, `platform` (`android`, `ios`, `web`, `admin`), `app_version`, `ip`, `last_used_at`, `revoked_at?`. Permet de « déconnecter cet appareil » ou « tous les appareils ».
 
 ### LegalDocument
 `id`, `kind` (`terms`, `privacy`, `cookies`, `legal_notice`), `version` int, `body` (I18nText, en Markdown), `published_at?`, `requires_reaccept` bool. Unicité sur (`kind`, `version`).
@@ -80,7 +80,13 @@ Légende : **PK** clé primaire, **FK** clé étrangère, **U** unique, **I** in
 `id`, `user` FK, `hash` I (empreinte hachée de l'appareil, anti-fraude du parrainage), `first_seen_at`.
 
 ### StaffRole
-`user` FK, `role` (`superadmin`, `content`, `support`, `finance`, `moderation`). Une personne peut avoir plusieurs rôles. Un compte staff a la double authentification obligatoire : `TOTPDevice` (`user`, `secret` chiffré, `confirmed_at`) et des `RecoveryCode` hachés.
+`user` FK, `role` (`superadmin`, `content`, `support`, `finance`, `moderation`). Une personne peut avoir plusieurs rôles. Les **permissions** ne sont pas en base : la correspondance rôle → permissions est une constante du code (`apps/accounts/permissions.py`, voir [controle-acces.md](controle-acces.md)). Un compte staff a la double authentification obligatoire : `TOTPDevice` (`user`, `secret` chiffré, `confirmed_at`) et des `RecoveryCode` hachés. `Session.mfa_verified_at` sert au step-up (TOTP de moins de 15 min).
+
+### ApprovalRequest (validation à quatre yeux)
+`id`, `kind` (`content_publish`, `campaign_schedule`, `plan_update`, `quota_update`, `refund`, `settings_nutrition`), `domain` (`content`, `finance`, `settings`), `payload` jsonb (action à rejouer), `diff` jsonb, `target_type`, `target_id`, `reason`, `requested_by` FK, `status` (`pending`, `approved`, `rejected`, `expired`, `canceled`), `decided_by` FK?, `decision_comment`, `decided_at?`, `expires_at` (J+7).
+- Contrainte : `decided_by` est différent de `requested_by`.
+- Une seule demande `pending` à la fois par cible (`target_type`, `target_id`, `kind`).
+- À l'approbation, l'action est appliquée dans la même transaction, puis une entrée d'audit est écrite.
 
 ### AuditLog
 `id`, `actor` FK User?, `action` (str, par exemple `user.suspend`), `target_type`, `target_id`, `before` jsonb, `after` jsonb, `ip`, `created_at`. En ajout seul. Inclut les consultations de données de santé dans l'admin (`health.view`).

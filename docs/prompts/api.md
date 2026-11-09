@@ -35,6 +35,26 @@ ARCHITECTURE (à respecter strictement) :
   DayRecomputed), jamais en important les vues ou les sérialiseurs d'une autre app.
 - Typage strict avec mypy et django-stubs. Lint avec ruff (règles strictes) et formatage ruff.
 
+CONTRÔLE D'ACCÈS (docs/technique/controle-acces.md, à appliquer à la lettre) :
+- apps/accounts/permissions.py contient le catalogue des permissions et la correspondance avec les
+  rôles (constante typée).
+- Classes DRF dans apps/core/permissions.py :
+  - HasPermission : lit `required_permission` sur la vue (ou `permission_map` par action) ;
+  - RequiresStepUp : 401 step_up_required ;
+  - RequiresVerifiedEmail ;
+  - RequiresFeature : entitlement recalculé à chaque requête, jamais lu dans le JWT.
+- Quatre yeux : un service ApprovalService (create, approve, reject, expire) avec une contrainte en
+  base : celui qui décide n'est jamais celui qui demande. L'action est rejouée dans la transaction
+  d'approbation. Réponse 202 avec ApprovalRequest.
+- Les marqueurs x-permission, x-step-up, x-four-eyes, x-entitlement, x-quota et x-email-verified du
+  contrat sont la spécification. Un test lit contracts/openapi.yaml et vérifie, pour CHAQUE
+  opération, que la vue applique le marqueur correspondant :
+  - pour x-permission, un test paramétré par rôle refusé ;
+  - pour x-entitlement, un test avec un compte Free ;
+  - pour x-step-up, un test sans step-up.
+- Test d'accès par objet : pour chaque route /me/*, un utilisateur B obtient 404 sur la ressource de A.
+- Un compte suspendu est refusé partout (403 account_suspended), sessions révoquées.
+
 SÉCURITÉ :
 - Mots de passe hachés avec Argon2. Mot de passe : au moins 10 caractères, avec une minuscule,
   une majuscule, un chiffre et un caractère spécial.

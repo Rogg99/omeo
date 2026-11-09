@@ -23,7 +23,8 @@ irréprochable. Pas de raccourcis, pas de TODO laissés dans le code livré, pas
 SOURCES DE VÉRITÉ (lis-les avant d'écrire du code) :
 - Produit : docs/produit/ (vision, catalogue des features, offres et quotas, règles métier, décisions D1 à D25,
   features/01 à 10, admin.md, site-vitrine.md)
-- Technique : docs/technique/conventions-api.md, docs/technique/modele-donnees.md
+- Technique : docs/technique/conventions-api.md, docs/technique/modele-donnees.md,
+  docs/technique/controle-acces.md, docs/technique/design-tokens.md, docs/technique/i18n.md
 - Contrat : contracts/openapi.yaml (contrat cible, écrit avant le code)
 - Maquettes : previews/ (shared/tokens.css, mobile/, admin/, web/). C'est la référence visuelle : textes,
   hiérarchie, états vides, de chargement, d'erreur, hors connexion et de quota épuisé.
@@ -40,6 +41,10 @@ RÈGLES NON NÉGOCIABLES :
 4. Aucun secret dans le code ni dans git. Les configurations passent par l'environnement, et chaque
    variable est documentée dans .env.example.
 5. Langues : fr, en, es, pt, ar (de droite à gauche), zh, ja, de. Aucune chaîne d'interface en dur.
+   Les textes d'interface s'ajoutent uniquement dans shared/i18n/fr.json (ICU), puis on lance
+   `pnpm --dir shared build:i18n` (voir docs/technique/i18n.md).
+   Les couleurs, rayons et espacements viennent uniquement des tokens générés depuis shared/tokens
+   (docs/technique/design-tokens.md). On ne modifie jamais les fichiers générés.
 6. Accessibilité : contrastes AA, cibles tactiles d'au moins 44 px, libellés pour les lecteurs d'écran,
    prise en charge de la taille de texte du système, mouvements réduits respectés.
 7. Tests : chaque règle métier et chaque cas limite est testé. La CI doit être verte avant tout commit.

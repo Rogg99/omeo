@@ -1,0 +1,54 @@
+{
+  "common": {
+    "action": {
+      "continue": "Continuer",
+      "back": "Retour",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "delete": "Supprimer",
+      "retry": "Réessayer",
+      "close": "Fermer",
+      "confirm": "Confirmer"
+    },
+    "state": {
+      "loading": "Chargement…",
+      "offline": "Pas de connexion. Tes données seront envoyées au retour du réseau.",
+      "pending_sync": "En cours de calcul",
+      "empty": "Rien pour l'instant"
+    },
+    "unit": {
+      "kcal": "{value, number} kcal",
+      "grams": "{value, number} g",
+      "minutes": "{count, plural, one {# minute} other {# minutes}}",
+      "days": "{count, plural, one {# jour} other {# jours}}"
+    },
+    "plus": {
+      "name": "Omeo Plus",
+      "discover": "Découvrir Omeo Plus"
+    }
+  },
+  "errors": {
+    "validation_error": "Certaines informations sont invalides.",
+    "invalid_credentials": "Email ou mot de passe incorrect.",
+    "token_expired": "Ta session a expiré. Reconnecte-toi.",
+    "not_authenticated": "Connecte-toi pour continuer.",
+    "plan_required": "Cette fonctionnalité fait partie d'Omeo Plus.",
+    "quota_exceeded": "Tu as atteint ta limite. Elle se réinitialise {resetsAt}.",
+    "email_not_verified": "Vérifie ton email pour continuer.",
+    "account_suspended": "Ton compte est suspendu. Contacte le support.",
+    "upgrade_required": "Une nouvelle version d'Omeo est nécessaire.",
+    "rate_limited": "Trop de tentatives. Réessaie dans quelques instants.",
+    "analysis_rejected": "Impossible de reconnaître le plat. Essaie avec une photo plus nette.",
+    "server_error": "Un problème est survenu de notre côté. Réessaie.",
+    "step_up_required": "Saisis ton code d'authentification pour confirmer.",
+    "self_approval_forbidden": "Une autre personne doit valider cette action."
+  },
+  "web": {
+    "hero": {
+      "title": "Mange mieux. À ton rythme."
+    },
+    "invite": {
+      "title": "{firstName} t'offre {days, plural, one {# jour} other {# jours}} de Plus."
+    }
+  }
+}

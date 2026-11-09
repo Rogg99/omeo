@@ -32,7 +32,7 @@ SÉCURITÉ :
   ne transite par le site.
 
 LANGUES ET RÉFÉRENCEMENT :
-- 8 langues avec une adresse par langue (/fr, /en, /es, /pt, /ar, /zh, /ja, /de), via next-intl.
+- 8 langues avec une adresse par langue (/fr, /en, /es, /pt, /ar, /zh, /ja, /de), via next-intl (messages/<lang>.json générés depuis shared/i18n).
   Langue détectée par Accept-Language à la première visite, puis mémorisée dans un cookie.
 - Arabe affiché de droite à gauche (dir="rtl", propriétés CSS logiques partout).
 - Pages statiques ou ISR : la FAQ, les pages légales et les tarifs sont revalidés toutes les 10 min
@@ -77,7 +77,7 @@ PAGES :
      abonnement.
 
 UI :
-- Design tokens de previews/shared/tokens.css repris en variables CSS et thème Tailwind. Thèmes clair
+- src/styles/tokens.css (généré depuis shared/tokens) branché sur le thème Tailwind 4. Thèmes clair
   et sombre (prefers-color-scheme).
 - Composants accessibles (Radix UI quand c'est utile). Navigation au clavier, focus visible,
   contrastes AA, prefers-reduced-motion respecté.

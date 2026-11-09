@@ -21,7 +21,7 @@ Ces règles s'appliquent à tous les endpoints de [contracts/openapi.yaml](../..
 | Admin | Même principe que le web, avec la double authentification (TOTP) obligatoire : `/auth/login` renvoie `mfa_required` et un `mfa_token`, puis `/auth/mfa/verify`. Jeton d'accès de 10 min, session de 12 h maximum, déconnexion après 30 min d'inactivité |
 
 - `Authorization: Bearer <access>` sur tous les appels authentifiés.
-- Les endpoints `/admin/*` exigent `is_staff` et le rôle requis, indiqué dans chaque opération par `x-roles`. Un refus renvoie `403 forbidden_role`.
+- Autorisations : voir [controle-acces.md](controle-acces.md). Chaque opération `/admin/*` déclare une permission atomique (`x-permission`), et éventuellement `x-step-up` ou `x-four-eyes`. Côté app, les marqueurs sont `x-entitlement`, `x-quota` et `x-email-verified`. Un refus renvoie `403 forbidden_role`.
 
 ## En-têtes
 
@@ -63,10 +63,11 @@ Ces règles s'appliquent à tous les endpoints de [contracts/openapi.yaml](../..
 | HTTP | `code` |
 |---|---|
 | 400 | `validation_error` (détail par champ dans `errors`), `invalid_invite_code` |
-| 401 | `not_authenticated`, `token_expired`, `invalid_credentials`, `mfa_required` |
-| 403 | `forbidden`, `forbidden_role`, `plan_required` (fonction réservée à Plus ; `meta.feature`), `email_not_verified`, `consent_required` (`meta.documents`), `account_suspended` |
+| 401 | `not_authenticated`, `token_expired`, `invalid_credentials`, `mfa_required`, `step_up_required` (TOTP de plus de 15 min, action sensible) |
+| 403 | `forbidden`, `forbidden_role`, `plan_required` (fonction réservée à Plus ; `meta.feature`), `email_not_verified`, `consent_required` (`meta.documents`), `account_suspended` (`meta.support_url`), `self_approval_forbidden` |
 | 404 | `not_found` |
-| 409 | `conflict`, `already_enrolled`, `idempotency_conflict` |
+| 202 | (succès) action à quatre yeux : renvoie une `ApprovalRequest` en attente de validation |
+| 409 | `conflict`, `already_enrolled`, `idempotency_conflict`, `approval_pending` (une demande identique est déjà en attente) |
 | 422 | `analysis_rejected` (`meta.reason` : `blurry` ou `no_food`) |
 | 426 | `upgrade_required` (version de l'app inférieure au minimum fixé dans l'admin) |
 | 429 | `quota_exceeded` (`meta.resets_at`, `meta.upgrade`), `rate_limited` (`Retry-After`) |

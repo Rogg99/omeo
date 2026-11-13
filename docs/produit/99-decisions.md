@@ -40,6 +40,7 @@
 | D34 | Seeders | Trois niveaux : référence (toujours, idempotent), catalogue (WAFCT 2019 et contenus en brouillon), démo (dev uniquement, déterministe). Voir [seeders.md](../technique/seeders.md) |
 | D35 | Images | Pas de photo pour les aliments (une icône par catégorie). Vraies photos obligatoires pour les plats et recettes publiés, pas d'image générée par IA pour un vrai plat |
 | D36 | Textes légaux | Version 1 rédigée (CGU, confidentialité, cookies, mentions légales), à faire valider par un·e juriste. Publication refusée en production tant que l'identité de l'éditeur n'est pas complétée |
+| D37 | Scan des repas, V1 | Pas de modèle entraîné. Un modèle de vision via OpenRouter, orienté par le pays de l'utilisateur, des fiches de plats locaux et les corrections validées des utilisateurs (consensus d'au moins 3 utilisateurs distincts, ou un validateur de confiance). Moteur dans `apps/foodscan`, voir [foodscan.md](../technique/foodscan.md). L'entraînement d'un modèle spécialisé viendra ensuite (10 novembre 2026) |
 
 ## Questions ouvertes
 1. Prix en USD : 4,49 $ et 46,99 $, ou 4,99 $ et 49,99 $ ?
@@ -52,3 +53,4 @@
 8. Validation des calculs nutritionnels par un ou une nutritionniste.
 9. ~~Noms des niveaux.~~ Réglé (D33).
 10. Modèles OpenRouter retenus et budget d'IA par utilisateur.
+11. Plat corrigé dans l'avis d'analyse (`corrected_dish_label` dans le contrat), consentement à la conservation des photos des avis, choix des validateurs de confiance. Voir [foodscan.md](../technique/foodscan.md#questions-ouvertes).

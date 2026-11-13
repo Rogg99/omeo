@@ -39,6 +39,7 @@ LOCAL_APPS = [
     "apps.accounts",       # comptes, profils, consentements, parrainage
     "apps.nutrition",      # aliments, plats, objectifs, calculs nutritionnels
     "apps.meals",          # repas, analyses IA (OpenRouter), avis d'analyse
+    "apps.foodscan",       # moteur de scan des repas : IA guidée par les avis validés
     "apps.activity",       # données santé, activités, poids, exercices, séances
     "apps.programs",       # programmes et challenges
     "apps.gamification",   # points, niveaux, badges, séries
@@ -182,6 +183,17 @@ CELERY_TIMEZONE = "UTC"
 OPENROUTER_API_KEY = env("OPENROUTER_API_KEY", default="")
 OPENROUTER_VISION_MODEL = env("OPENROUTER_VISION_MODEL", default="")
 OPENROUTER_TEXT_MODEL = env("OPENROUTER_TEXT_MODEL", default="")
+OPENROUTER_BASE_URL = env("OPENROUTER_BASE_URL", default="https://openrouter.ai/api/v1")
+
+# Scan des repas (apps/foodscan, voir docs/technique/foodscan.md)
+FOODSCAN_VISION_MODEL = env("FOODSCAN_VISION_MODEL", default=OPENROUTER_VISION_MODEL)
+FOODSCAN_TIMEOUT_S = env.float("FOODSCAN_TIMEOUT_S", default=30.0)
+FOODSCAN_LOW_CONFIDENCE = env.float("FOODSCAN_LOW_CONFIDENCE", default=0.6)
+FOODSCAN_MAX_DISH_HINTS = env.int("FOODSCAN_MAX_DISH_HINTS", default=40)
+FOODSCAN_MAX_RULES = env.int("FOODSCAN_MAX_RULES", default=20)
+# Une correction devient règle quand assez d'utilisateurs DISTINCTS l'ont faite
+FOODSCAN_CONSENSUS_MIN_USERS = env.int("FOODSCAN_CONSENSUS_MIN_USERS", default=3)
+FOODSCAN_CONSENSUS_MIN_AGREEMENT = env.float("FOODSCAN_CONSENSUS_MIN_AGREEMENT", default=0.6)
 
 # Derrière nginx et les proxys Next (web/admin) : liens générés sur le domaine d'origine
 USE_X_FORWARDED_HOST = True

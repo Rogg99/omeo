@@ -45,6 +45,7 @@
 - Stack retenue : API **Django** (Django REST Framework, PostgreSQL, Celery + Redis), mobile **Flutter**, admin **Next.js**, site **Next.js**. Structure du dépôt : [README racine](../README.md).
 - [Conventions de l'API](technique/conventions-api.md) : authentification, erreurs, pagination, idempotence, sécurité
 - [Modèle de données](technique/modele-donnees.md)
+- [Scan des repas](technique/foodscan.md) : moteur IA orienté par le pays et les avis validés (`apps/foodscan`)
 - [Contrôle d'accès](technique/controle-acces.md) : permissions, step-up, validation à quatre yeux, droits Plus
 - [Seeders](technique/seeders.md) : données de référence, catalogue d'aliments, données de démo
 - [Design tokens](technique/design-tokens.md) et [traductions](technique/i18n.md) : sources uniques dans [shared/](../shared/)

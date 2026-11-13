@@ -183,6 +183,21 @@ Recalculé de façon idempotente par `nutrition.services.recompute_day(user, dat
 
 ---
 
+## foodscan — moteur de scan, base de connaissances des avis
+
+Détail et règles de validation : [foodscan.md](foodscan.md). `Analysis` et `AnalysisFeedback` restent dans `meals`.
+
+### DishKnowledge (fiche visuelle d'un plat)
+`id`, `key` (slug), `name`, `aliases` (liste), `scope` (`country`, `region`), `country` char(2)?, `region`, `visual_description`, `distinguishing_tips`, `origin` (`editorial`, `review`), `is_active`. U(`key`, `country`, `region`).
+
+### ScanReview (correction proposée par un utilisateur)
+`id`, `user` FK?, `analysis_id` uuid? (analyse de `meals`, sans FK), `country`, `predicted_key`, `predicted_label`, `correct_key`, `correct_label`, `photo_key` (si consentement), `status` (`proposed`, `validated`, `rejected`), `decided_by?`, `decided_at?`. U(`user`, `analysis_id`).
+
+### ConfusionRule (correction devenue règle)
+`id`, `country`, `predicted_key`, `predicted_label`, `correct_key`, `correct_label`, `support` (utilisateurs distincts), `agreement`, `hint` (indice rédigé par l'équipe), `origin` (`consensus`, `moderator`), `status` (`active`, `disabled`). U(`country`, `predicted_key`, `correct_key`). Seules les règles `active` sont injectées dans le prompt.
+
+---
+
 ## activity — santé, activités, poids, exercices, séances
 
 ### HealthConnection

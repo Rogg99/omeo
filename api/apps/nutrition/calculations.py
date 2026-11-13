@@ -213,3 +213,82 @@ def gauge(*, value: float, target: float, c: NutritionConstants | None = None, u
         "percent": percent,
         "status": status,
     }
+
+
+# ───────────────────────── Nutriments ─────────────────────────
+
+NUTRIENT_KEYS: Final[tuple[str, ...]] = (
+    "kcal",
+    "protein_g",
+    "carbs_g",
+    "sugars_g",
+    "fat_g",
+    "saturated_fat_g",
+    "fiber_g",
+    "salt_g",
+)
+
+
+def scale_nutrients(per_100g: Mapping[str, float | Decimal], grams: float | Decimal) -> dict[str, float]:
+    """Nutriments d'une portion à partir des valeurs pour 100 g (non arrondis)."""
+    factor = float(grams) / 100
+    return {key: float(per_100g.get(key, 0) or 0) * factor for key in NUTRIENT_KEYS}
+
+
+def sum_nutrients(parts: Sequence[Mapping[str, float]]) -> dict[str, float]:
+    total = dict.fromkeys(NUTRIENT_KEYS, 0.0)
+    for part in parts:
+        for key in NUTRIENT_KEYS:
+            total[key] += float(part.get(key, 0) or 0)
+    return total
+
+
+def per_100g(total: Mapping[str, float], grams: float) -> dict[str, float]:
+    if grams <= 0:
+        return dict.fromkeys(NUTRIENT_KEYS, 0.0)
+    return {key: float(total.get(key, 0)) * 100 / grams for key in NUTRIENT_KEYS}
+
+
+def display_nutrients(values: Mapping[str, float]) -> dict[str, int | float]:
+    """Arrondi d'affichage : kcal entiers, grammes à 0,1 près."""
+    return {key: round_int(values.get(key, 0)) if key == "kcal" else round_1(values.get(key, 0)) for key in NUTRIENT_KEYS}
+
+
+# ───────────────────────── Journée ─────────────────────────
+
+MEALS_FOR_COMPLETE_DAY: Final = 3
+BALANCE_TOLERANCE_KCAL: Final = 100
+
+
+def day_status(*, meals_count: int, consumed_kcal: int, target_kcal: int, c: NutritionConstants) -> str:
+    """État d'un jour pour le calendrier et la semaine : empty, partial, on_target, over, under."""
+    if meals_count == 0:
+        return "empty"
+    if meals_count < MEALS_FOR_COMPLETE_DAY:
+        return "partial"
+    if kcal_within_target(consumed=consumed_kcal, target=target_kcal, c=c):
+        return "on_target"
+    return "over" if consumed_kcal > target_kcal else "under"
+
+
+def balance(*, consumed_kcal: int, burned_kcal: int | None) -> dict[str, Any] | None:
+    """Balance énergétique du jour ; None sans donnée de dépense importée."""
+    if burned_kcal is None:
+        return None
+    difference = consumed_kcal - burned_kcal
+    if abs(difference) <= BALANCE_TOLERANCE_KCAL:
+        status = "balanced"
+    else:
+        status = "surplus" if difference > 0 else "deficit"
+    return {
+        "consumed_kcal": consumed_kcal,
+        "burned_kcal": burned_kcal,
+        "difference_kcal": difference,
+        "status": status,
+    }
+
+
+def delta_percent(today: float, yesterday: float) -> int | None:
+    if yesterday == 0:
+        return None
+    return round_int((today - yesterday) / yesterday * 100)

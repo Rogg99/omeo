@@ -15,9 +15,12 @@ import base64
 import hashlib
 import random
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
+from decimal import Decimal
+from pathlib import Path
 from typing import Any, Final
 
+import yaml
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError, CommandParser
 from django.db import transaction
@@ -27,8 +30,15 @@ from apps.accounts import mfa
 from apps.accounts import services as accounts
 from apps.accounts.models import City, Role, StaffRole, User
 from apps.core.audit import RequestMeta
+from apps.core.localtime import local_today
+from apps.core.models import ContentStatus
+from apps.nutrition import services as nutrition
+from apps.nutrition.calculations import NUTRIENT_KEYS
+from apps.nutrition.models import Dish, DishComponent, Food
 
 DEMO_DOMAIN: Final = "demo.omeo.app"
+DEMO_SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "demo"
+HISTORY_DAYS: Final = 60
 DEMO_PASSWORD: Final = "Demo-Omeo-2026!"
 DEMO_META: Final = RequestMeta(ip=None, user_agent="seed_demo")
 ALL_CONSENTS: Final = [
@@ -112,8 +122,10 @@ class Command(BaseCommand):
             if User.objects.filter(email__endswith=f"@{DEMO_DOMAIN}").exists():
                 self.stdout.write("Données de démo déjà présentes (utiliser --reset pour les recréer).")
                 return
+            self.seed_catalog()
             users = self.seed_accounts()
             self.seed_staff()
+            self.seed_water(users)
         self.stdout.write(self.style.SUCCESS(f"seed_demo : {len(users)} comptes et {len(STAFF)} membres du staff."))
 
     def reset(self) -> None:
@@ -157,6 +169,47 @@ class Command(BaseCommand):
                 accounts.suspend_user(user=user, actor=None, reason="Compte de démonstration suspendu")
             users[demo.slug] = user
         return users
+
+    def seed_catalog(self) -> None:
+        """Mini-catalogue publié (source `demo`), créé une fois puis conservé entre deux `--reset`."""
+        foods: dict[str, Food] = {}
+        for key, row in yaml.safe_load((DEMO_SEED_DIR / "foods.yaml").read_text(encoding="utf-8")).items():
+            name_fr, name_en, category, *values, portion, aliases = row
+            food = Food.objects.filter(source="demo", source_ref=key).first() or Food(source="demo", source_ref=key)
+            food.name = {"fr": name_fr, "en": name_en}
+            food.category = category
+            food.aliases = list(aliases)
+            food.default_portion_g = Decimal(str(portion))
+            food.status = ContentStatus.PUBLISHED
+            for field, value in zip(NUTRIENT_KEYS, values, strict=True):
+                setattr(food, field, Decimal(str(value)))
+            foods[key] = nutrition.save_food(food=food)
+        for row in yaml.safe_load((DEMO_SEED_DIR / "dishes.yaml").read_text(encoding="utf-8")).values():
+            if Dish.objects.filter(name__fr=row["name"]["fr"]).exists():
+                continue
+            components = row["components"]
+            dish = Dish.objects.create(
+                name=row["name"],
+                aliases=row["aliases"],
+                country=row["country"],
+                standard_portion_g=Decimal(sum(components.values())),
+                status=ContentStatus.PUBLISHED,
+            )
+            DishComponent.objects.bulk_create(
+                DishComponent(dish=dish, food=foods[key], grams=Decimal(str(grams))) for key, grams in components.items()
+            )
+            nutrition.refresh_dish(dish=dish)
+
+    def seed_water(self, users: dict[str, User]) -> None:
+        """60 jours d'hydratation variée (comptes actifs), par `add_water` : la projection est recalculée."""
+        for slug, user in users.items():
+            if slug in ("nouveau", "suspendu"):
+                continue
+            today = local_today(user)
+            for offset in range(HISTORY_DAYS, -1, -1):
+                glasses = self.rng.choice((0, 3, 5, 6, 8, 10))
+                if glasses:
+                    nutrition.add_water(user=user, amount_ml=glasses * 250, day=today - timedelta(days=offset))
 
     def seed_staff(self) -> None:
         self.stdout.write("Staff de démo (mot de passe commun, TOTP ci-dessous) :")

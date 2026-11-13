@@ -1,0 +1,51 @@
+# Plats de démo : composition type pour une portion standard (grammes par aliment de foods.yaml).
+ndole:
+  name: { fr: Ndolé, en: Ndole }
+  country: CM
+  aliases: [ndole, ndolè]
+  components: { feuilles_ndole: 150, arachide_pate: 40, crevettes: 40, boeuf: 60, huile_arachide: 15, plantain_mur: 150 }
+attieke_poisson:
+  name: { fr: Attiéké poisson braisé, en: Attieke with grilled fish }
+  country: CI
+  aliases: [garba, attieke poisson]
+  components: { attieke: 250, poisson_braise: 150, tomate: 40, oignon: 30, huile_arachide: 10 }
+thieboudienne:
+  name: { fr: Thiéboudienne, en: Thieboudienne }
+  country: SN
+  aliases: [tiep, ceebu jen, thieb]
+  components: { riz_blanc: 250, thiof: 150, chou: 60, carotte: 50, aubergine: 40, tomate: 40, huile_arachide: 20, bouillon_cube: 4 }
+mafe:
+  name: { fr: Mafé, en: Peanut stew (mafe) }
+  country: ML
+  aliases: [maafe, tigadèguèna, sauce arachide]
+  components: { riz_blanc: 200, boeuf: 100, arachide_pate: 45, tomate: 40, carotte: 40, huile_arachide: 10, bouillon_cube: 4 }
+yassa_poulet:
+  name: { fr: Poulet yassa, en: Chicken yassa }
+  country: SN
+  aliases: [yassa]
+  components: { riz_blanc: 220, poulet: 150, moutarde_citron: 150, huile_arachide: 10 }
+alloco_poisson:
+  name: { fr: Alloco poisson, en: Fried plantain with fish }
+  country: CI
+  aliases: [aloco poisson]
+  components: { plantain_frit: 200, poisson_braise: 120, tomate: 30, oignon: 20 }
+foutou_sauce_graine:
+  name: { fr: Foutou sauce graine, en: Fufu with palm nut sauce }
+  country: CI
+  aliases: [foufou sauce graine]
+  components: { foutou_banane: 300, graine_palme: 180, poisson_braise: 80 }
+eru:
+  name: { fr: Eru, en: Eru }
+  country: CM
+  aliases: [okok]
+  components: { eru: 150, huile_palme: 25, crevettes: 30, boeuf: 60, manioc: 200 }
+kedjenou:
+  name: { fr: Kedjenou de poulet, en: Chicken kedjenou }
+  country: CI
+  aliases: [kédjénou]
+  components: { poulet: 180, tomate: 80, oignon: 50, aubergine: 50, attieke: 200 }
+riz_niebe:
+  name: { fr: Riz au niébé, en: Rice and cowpeas }
+  country: SN
+  aliases: [thiébou niébé, waakye]
+  components: { riz_blanc: 180, niebe: 120, huile_arachide: 8 }

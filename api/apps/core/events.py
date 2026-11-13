@@ -54,6 +54,12 @@ class DayRecomputed(DomainEvent):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class WaterLogged(DomainEvent):
+    entry_id: uuid.UUID
+    day: date
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class WeightLogged(DomainEvent):
     entry_id: uuid.UUID
     day: date

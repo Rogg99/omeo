@@ -3,7 +3,8 @@ import { randomUUID } from "node:crypto";
 import type { Locale } from "@/i18n/routing";
 
 import type { Payment, PlanCode, SubscriptionState } from "../types";
-import { accountById, initialPayments, initialSubscription, planName, planPrice, webSubscription, type AccountFixture } from "./fixtures/accounts";
+import { accountById, initialPayments, PROMO_CODES, initialSubscription, planName, planPrice, webSubscription, type AccountFixture } from "./fixtures/accounts";
+import { usd } from "./money";
 
 /**
  * État simulé, conservé en mémoire pendant la session (une session par connexion) : les écritures
@@ -21,7 +22,7 @@ type Session = {
   accountId: string;
   usedRefresh: Set<string>;
   webPlan?: WebPlan;
-  pending?: { plan: PlanCode; activatesAt: number };
+  pending?: { plan: PlanCode; activatesAt: number; amountCents?: number };
   extraPayments: { id: string; plan: PlanCode; paidAt: string; amountCents?: number }[];
 };
 
@@ -39,6 +40,7 @@ type Store = {
   sessions: Map<string, Session>;
   checkouts: Map<string, Checkout>;
   deletionTokens: Set<string>;
+  lastDeletionToken?: string;
   ticketCount: number;
 };
 
@@ -82,7 +84,7 @@ function settlePending(s: Session, now: number): void {
   if (!s.pending || now < s.pending.activatesAt) return;
   const paidAt = new Date(s.pending.activatesAt);
   s.webPlan = { plan: s.pending.plan, periodEnd: addPeriod(s.pending.plan, paidAt), autoRenew: true };
-  s.extraPayments.unshift({ id: randomUUID(), plan: s.pending.plan, paidAt: paidAt.toISOString() });
+  s.extraPayments.unshift({ id: randomUUID(), plan: s.pending.plan, paidAt: paidAt.toISOString(), amountCents: s.pending.amountCents });
   s.pending = undefined;
 }
 
@@ -106,7 +108,7 @@ export function paymentsOf(s: Session, locale: Locale): Payment[] {
     id: p.id,
     channel: "web",
     description: planName(p.plan, locale),
-    amount: planPrice(p.plan, locale),
+    amount: p.amountCents === undefined ? planPrice(p.plan, locale) : usd(p.amountCents, locale),
     status: "succeeded",
     paid_at: p.paidAt,
     receipt_url: `https://example.com/receipts/${p.id}`,
@@ -140,7 +142,8 @@ export function completeCheckout(c: Checkout, outcome: "success" | "failure" | "
   store.checkouts.delete(c.id);
   if (outcome === "success") {
     const s = session(c.sessionId);
-    if (s) s.pending = { plan: c.plan, activatesAt: Date.now() + ACTIVATION_DELAY_MS };
+    const discounted = c.promoCode ? PROMO_CODES[c.promoCode]?.[c.plan] : undefined;
+    if (s) s.pending = { plan: c.plan, activatesAt: Date.now() + ACTIVATION_DELAY_MS, amountCents: discounted };
     return c.successUrl;
   }
   const url = new URL(c.cancelUrl);
@@ -151,6 +154,7 @@ export function completeCheckout(c: Checkout, outcome: "success" | "failure" | "
 export function issueDeletionToken(): string {
   const token = randomUUID();
   store.deletionTokens.add(token);
+  store.lastDeletionToken = token;
   return token;
 }
 
@@ -161,4 +165,8 @@ export function consumeDeletionToken(token: string): boolean {
 export function nextTicketNumber(): string {
   store.ticketCount += 1;
   return `NY-${store.ticketCount}`;
+}
+
+export function lastDeletionToken(): string | undefined {
+  return store.lastDeletionToken;
 }

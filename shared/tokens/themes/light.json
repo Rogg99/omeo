@@ -73,6 +73,21 @@
         "$type": "color",
         "$value": "#fbf8f2"
       },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.palette.sage.800}",
+        "$description": "Surfaces de marque vertes (bandeaux, hero), identiques dans les deux thèmes"
+      },
+      "ink": {
+        "$type": "color",
+        "$value": "{color.palette.ink.950}",
+        "$description": "Surfaces de marque noires (cartes, pied de page), identiques dans les deux thèmes"
+      },
+      "on-brand": {
+        "$type": "color",
+        "$value": "#f4efe6",
+        "$description": "Texte sur brand et ink"
+      },
       "accent": {
         "$type": "color",
         "$value": "{color.palette.orange.500}"

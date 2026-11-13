@@ -38,6 +38,7 @@
   --text-inv: #fffdf9;
   --on-primary: #fffdf9;
   --on-contrast: #fbf8f2;
+  --on-brand: #f4efe6; /** Texte sur brand et ink */
   --data-protein: #d0802f;
   --data-carbs: #6f8a5e;
   --data-fat: #7a5638;
@@ -96,6 +97,8 @@
   --primary-soft: var(--sage-100);
   --primary-text: var(--sage-700);
   --contrast: var(--ink-950);
+  --brand: var(--sage-800); /** Surfaces de marque vertes (bandeaux, hero), identiques dans les deux thèmes */
+  --ink: var(--ink-950); /** Surfaces de marque noires (cartes, pied de page), identiques dans les deux thèmes */
   --accent: var(--orange-500);
   --accent-soft: var(--orange-50);
   --accent-text: var(--orange-600);
@@ -130,6 +133,7 @@
   --on-primary: #12170f;
   --contrast: #f4efe6;
   --on-contrast: #151411;
+  --on-brand: #f4efe6; /** Texte sur brand et ink */
   --accent: #ee8a45;
   --accent-soft: #3a2517;
   --accent-text: #f2a26b;
@@ -151,6 +155,8 @@
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); /** Ombre CSS (convertie par plateforme) */
   --shadow-2: 0 8px 24px -10px rgba(0, 0, 0, 0.6); /** Ombre CSS (convertie par plateforme) */
   --shadow-3: 0 24px 48px -16px rgba(0, 0, 0, 0.7); /** Ombre CSS (convertie par plateforme) */
+  --brand: var(--sage-800); /** Surfaces de marque vertes (bandeaux, hero), identiques dans les deux thèmes */
+  --ink: var(--ink-950); /** Surfaces de marque noires (cartes, pied de page), identiques dans les deux thèmes */
   --focus-color: var(--orange-500); /** Anneau de focus (45 % d'opacité) */
 }
 
@@ -175,6 +181,7 @@
     --on-primary: #12170f;
     --contrast: #f4efe6;
     --on-contrast: #151411;
+    --on-brand: #f4efe6; /** Texte sur brand et ink */
     --accent: #ee8a45;
     --accent-soft: #3a2517;
     --accent-text: #f2a26b;
@@ -196,6 +203,8 @@
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4); /** Ombre CSS (convertie par plateforme) */
     --shadow-2: 0 8px 24px -10px rgba(0, 0, 0, 0.6); /** Ombre CSS (convertie par plateforme) */
     --shadow-3: 0 24px 48px -16px rgba(0, 0, 0, 0.7); /** Ombre CSS (convertie par plateforme) */
+    --brand: var(--sage-800); /** Surfaces de marque vertes (bandeaux, hero), identiques dans les deux thèmes */
+    --ink: var(--ink-950); /** Surfaces de marque noires (cartes, pied de page), identiques dans les deux thèmes */
     --focus-color: var(--orange-500); /** Anneau de focus (45 % d'opacité) */
   }
 }

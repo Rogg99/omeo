@@ -18,6 +18,7 @@ from apps.core.errors import ForbiddenRole, NotFound, ValidationFailed
 from apps.core.models import ApprovalKind, ApprovalRequest, AuditLog
 from apps.core.pagination import apply_ordering, page_body, page_paginate
 from apps.core.permissions import AUTHENTICATED_STAFF, HasPermission, RequiresStepUp
+from apps.core.presenters import approval_out, staff_name
 from apps.core.views import AdminAPIView, validated
 
 SETTING_SECTIONS: Final = (
@@ -32,30 +33,6 @@ SETTING_SECTIONS: Final = (
     "notifications",
 )
 SUPERADMIN_ONLY_SECTIONS: Final = frozenset({"four_eyes"})
-
-
-def _name(user: Any) -> str | None:
-    return user.email if user is not None else None
-
-
-def approval_out(approval: ApprovalRequest) -> dict[str, Any]:
-    return {
-        "id": approval.id,
-        "kind": approval.kind,
-        "domain": approval.domain,
-        "status": approval.status,
-        "summary": f"{approval.kind} {approval.target_type}:{approval.target_id}",
-        "target_type": approval.target_type,
-        "target_id": approval.target_id,
-        "diff": approval.diff,
-        "reason": approval.reason or None,
-        "requested_by": _name(approval.requested_by),
-        "decided_by": _name(approval.decided_by),
-        "decision_comment": approval.decision_comment or None,
-        "created_at": approval.created_at,
-        "decided_at": approval.decided_at,
-        "expires_at": approval.expires_at,
-    }
 
 
 class ApprovalFilterSerializer(serializers.Serializer[Any]):
@@ -152,7 +129,7 @@ class AuditView(AdminAPIView):
                 [
                     {
                         "id": e.id,
-                        "actor": _name(e.actor),
+                        "actor": staff_name(e.actor),
                         "action": e.action,
                         "target_type": e.target_type,
                         "target_id": e.target_id,

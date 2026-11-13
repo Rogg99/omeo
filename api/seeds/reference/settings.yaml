@@ -34,3 +34,7 @@ challenges: { default_success_threshold: 0.8 }
 notifications: { max_push_per_day: 3, default_quiet_start: "22:00", default_quiet_end: "07:00" }
 billing: { refund_approval_threshold_usd: 50 }
 four_eyes: { content: true, finance: true, settings: true }
+meals:
+  meal_type_starts: { breakfast: "05:00", lunch: "10:30", snack: "15:30", dinner: "18:30" }
+  analysis_poll_seconds: 2             # Retry-After renvoyé pendant une analyse
+  food_match_threshold: 0.45           # similarité trigram minimale pour rapprocher un ingrédient de Food

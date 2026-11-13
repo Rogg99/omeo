@@ -66,6 +66,20 @@ class QuotaRule(BaseModel):
         ]
 
 
+class QuotaUsage(BaseModel):
+    """Consommation d'un quota sur une période. Verrouillée (`SELECT … FOR UPDATE`) à chaque décompte."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="quota_usages")
+    feature = models.CharField(max_length=20, choices=QuotaFeature.choices)
+    period_start = models.DateField()
+    used = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(fields=["user", "feature", "period_start"], name="quota_usage_uniq"),
+        ]
+
+
 class TrialSource(models.TextChoices):
     SIGNUP = "signup"
     REFERRAL = "referral"

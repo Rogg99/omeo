@@ -12,6 +12,7 @@ api_v1 = [
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path("", include("apps.accounts.api.urls")),
     path("", include("apps.nutrition.api.urls")),
+    path("", include("apps.meals.api.urls")),
 ]
 
 urlpatterns = [path("api/v1/", include(api_v1))]

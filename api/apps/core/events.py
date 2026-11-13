@@ -49,6 +49,12 @@ class MealLogged(DomainEvent):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class FeedbackGiven(DomainEvent):
+    analysis_id: uuid.UUID
+    rating: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class DayRecomputed(DomainEvent):
     day: date
 

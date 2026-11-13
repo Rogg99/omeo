@@ -253,6 +253,10 @@ GOOGLE_PUBSUB_SERVICE_ACCOUNT = env("GOOGLE_PUBSUB_SERVICE_ACCOUNT", default="")
 APPLE_BUNDLE_ID = env("APPLE_BUNDLE_ID", default="app.omeo")
 APPLE_ROOT_CA_PEM = env("APPLE_ROOT_CA_PEM", default="").replace("\\n", "\n")
 
+# ───────────────────────── Push ─────────────────────────
+# Compte de service Firebase (JSON sur une ligne) pour FCM HTTP v1 ; vide = push désactivées (dev)
+FIREBASE_CREDENTIALS_JSON = env("FIREBASE_CREDENTIALS_JSON", default="")
+
 # ───────────────────────── Emails ─────────────────────────
 WEB_BASE_URL = env("WEB_BASE_URL", default="http://localhost")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Omeo <no-reply@omeo.app>")

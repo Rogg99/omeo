@@ -51,9 +51,7 @@ def scrub(value: Any, depth: int = 0) -> Any:
     if depth > 8:
         return REDACTED
     if isinstance(value, Mapping):
-        return {
-            k: (REDACTED if str(k).lower() in SENSITIVE_KEYS else scrub(v, depth + 1)) for k, v in value.items()
-        }
+        return {k: (REDACTED if str(k).lower() in SENSITIVE_KEYS else scrub(v, depth + 1)) for k, v in value.items()}
     if isinstance(value, list | tuple):
         return [scrub(v, depth + 1) for v in value]
     if isinstance(value, str):

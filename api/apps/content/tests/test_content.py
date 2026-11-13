@@ -43,7 +43,9 @@ class TestPreventionRules:
 
     def test_activity_metric_ignores_meals(self) -> None:
         trigger = {"metric": "steps", "op": "lte", "value": 3000, "consecutive_days": 2}
-        assert prevention.trigger_matches(trigger, [day(1, meals=0, steps=100), day(2, meals=0, steps=200)], today=TODAY)
+        assert prevention.trigger_matches(
+            trigger, [day(1, meals=0, steps=100), day(2, meals=0, steps=200)], today=TODAY
+        )
 
     def test_enough_data(self) -> None:
         assert not prevention.has_enough_data([day(1), day(2)], today=TODAY)
@@ -62,7 +64,9 @@ class TestPreventionRules:
 @pytest.fixture
 def recipes(db: Any) -> dict[str, Recipe]:
     rice = save_food(food=Food(name={"fr": "Riz"}, kcal=130, protein_g=2.7, status=ContentStatus.PUBLISHED))
-    free = Recipe.objects.create(name={"fr": "Riz simple"}, servings=2, is_free=True, status="published", tags=["quick"])
+    free = Recipe.objects.create(
+        name={"fr": "Riz simple"}, servings=2, is_free=True, status="published", tags=["quick"]
+    )
     paid = Recipe.objects.create(name={"fr": "Riz premium"}, servings=1, status="published")
     for recipe in (free, paid):
         RecipeIngredient.objects.create(recipe=recipe, food=rice, grams=Decimal(400), display={"fr": "Riz"}, order=1)
@@ -128,14 +132,19 @@ class TestRecipes:
 class TestPlantsAndPublic:
     def test_plant_detail_disclaimer(self, api: APIClient) -> None:
         plant = Plant.objects.create(
-            common_name={"fr": "Moringa"}, scientific_name="Moringa oleifera", contraindications=["pregnancy"], status="published"
+            common_name={"fr": "Moringa"},
+            scientific_name="Moringa oleifera",
+            contraindications=["pregnancy"],
+            status="published",
         )
         body = api.get(f"/api/v1/plants/{plant.pk}").json()
         assert body["disclaimer"]
         assert body["contraindications"] == [{"code": "pregnancy", "label": "Grossesse"}]
 
     def test_faq_public_grouped(self, anon: APIClient, reference: None) -> None:
-        FaqItem.objects.create(category={"fr": "Compte"}, question={"fr": "Q1"}, answer={"fr": "R1"}, status="published")
+        FaqItem.objects.create(
+            category={"fr": "Compte"}, question={"fr": "Q1"}, answer={"fr": "R1"}, status="published"
+        )
         FaqItem.objects.create(
             category={"fr": "Compte"}, question={"fr": "Q2"}, answer={"fr": "R2"}, status="published", audience="web"
         )
@@ -154,14 +163,21 @@ class TestPrevention:
     def _salty_days(self, user: User) -> None:
         today = local_today(user)
         for offset in range(1, 4):
-            DailySummary.objects.create(user=user, date=today - timedelta(days=offset), salt_g=Decimal(6), meals_count=3)
+            DailySummary.objects.create(
+                user=user, date=today - timedelta(days=offset), salt_g=Decimal(6), meals_count=3
+            )
 
     def test_not_enough_data(self, api: APIClient) -> None:
         assert api.get("/api/v1/me/prevention").json()["state"] == "not_enough_data"
 
     def test_trigger_once_per_day_and_dismiss(self, api: APIClient, user: User) -> None:
         PreventionTip.objects.create(
-            code="salt", topic="salt", title={"fr": "Sel"}, body={"fr": "Moins de sel"}, trigger=SALT, status="published"
+            code="salt",
+            topic="salt",
+            title={"fr": "Sel"},
+            body={"fr": "Moins de sel"},
+            trigger=SALT,
+            status="published",
         )
         self._salty_days(user)
         assert len(services.evaluate_prevention(user=user)) == 1
@@ -175,7 +191,13 @@ class TestPrevention:
 
     def test_plus_tip_locked_for_free(self, api: APIClient, user: User) -> None:
         PreventionTip.objects.create(
-            code="salt", topic="salt", title={"fr": "Sel"}, body={"fr": "Détail"}, trigger=SALT, tier="plus", status="published"
+            code="salt",
+            topic="salt",
+            title={"fr": "Sel"},
+            body={"fr": "Détail"},
+            trigger=SALT,
+            tier="plus",
+            status="published",
         )
         self._salty_days(user)
         services.evaluate_prevention(user=user)

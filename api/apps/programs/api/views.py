@@ -32,9 +32,7 @@ def enrollment_body(enrollment: Enrollment, *, user: Any, today: date) -> dict[s
     week_start = ((index - 1) // WEEK_DAYS) * WEEK_DAYS + 1
     indexes = list(range(week_start, min(week_start + WEEK_DAYS, total + 1)))
     start = enrollment.started_on + timedelta(days=week_start - 1)
-    done_days = (
-        TaskCompletion.objects.filter(enrollment=enrollment, done=True).values("date").distinct().count()
-    )
+    done_days = TaskCompletion.objects.filter(enrollment=enrollment, done=True).values("date").distinct().count()
     return s.enrollment_out(
         enrollment,
         today=today,
@@ -86,7 +84,9 @@ class ProgramDetailView(AppAPIView):
             rewards["badge"] = badge_ref(program.badge)
         return Response(
             {
-                **s.program_summary_out(program, locked=locked, is_active=bool(active and active.program_id == program.pk)),
+                **s.program_summary_out(
+                    program, locked=locked, is_active=bool(active and active.program_id == program.pk)
+                ),
                 "days_preview": preview,
                 "rewards": rewards,
             }
@@ -188,4 +188,6 @@ class ChallengeDayView(AppAPIView):
         with collect_rewards() as rewards:
             services.check_challenge_day(user=request.user, participation_id=id, day=date, done=data["done"])
         row = selectors.participations(user=request.user, status=None).get(pk=id)
-        return Response({"participation": s.participation_out(row, today=local_today(request.user)), "rewards": rewards.as_dict()})
+        return Response(
+            {"participation": s.participation_out(row, today=local_today(request.user)), "rewards": rewards.as_dict()}
+        )

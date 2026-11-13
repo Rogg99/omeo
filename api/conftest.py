@@ -18,7 +18,7 @@ from apps.accounts.models import Role, StaffRole, User
 from apps.accounts.tokens import open_session
 from apps.core.audit import RequestMeta
 
-PASSWORD = "Sup3r-Secret!"
+PASSWORD = "Sup3r-Secret!"  # noqa: S105 - mot de passe de test
 META = RequestMeta(ip="127.0.0.1", user_agent="pytest")
 CONSENTS = [
     {"kind": "terms", "granted": True},

@@ -261,15 +261,24 @@ class TestPasswordReset:
     def test_reset_revokes_sessions(self, anon: APIClient, user: User) -> None:
         client = login_client(user)
         token = one_time_tokens.issue(user=user, purpose=OneTimeTokenPurpose.PASSWORD_RESET)
-        response = anon.post("/api/v1/auth/password/reset", {"token": token, "password": "N0uveau-Secret"}, format="json")
+        response = anon.post(
+            "/api/v1/auth/password/reset", {"token": token, "password": "N0uveau-Secret"}, format="json"
+        )
         assert response.status_code == 204
         assert client.get("/api/v1/me").status_code == 401
-        assert anon.post("/api/v1/auth/password/reset", {"token": token, "password": "Autre-S3cret!"}, format="json").status_code == 400
+        assert (
+            anon.post(
+                "/api/v1/auth/password/reset", {"token": token, "password": "Autre-S3cret!"}, format="json"
+            ).status_code
+            == 400
+        )
 
     def test_reset_token_expires(self, anon: APIClient, user: User) -> None:
         token = one_time_tokens.issue(user=user, purpose=OneTimeTokenPurpose.PASSWORD_RESET)
         with freeze_time(timedelta(hours=2)):
-            response = anon.post("/api/v1/auth/password/reset", {"token": token, "password": "N0uveau-Secret"}, format="json")
+            response = anon.post(
+                "/api/v1/auth/password/reset", {"token": token, "password": "N0uveau-Secret"}, format="json"
+            )
         assert response.status_code == 400
 
 
@@ -288,7 +297,10 @@ class TestEmailVerification:
         assert response.json()["code"] == "email_not_verified"
 
     def test_change_email_flow(self, api: APIClient, user: User, anon: APIClient) -> None:
-        assert api.post("/api/v1/me/email", {"email": "new@example.com", "password": PASSWORD}, format="json").status_code == 202
+        assert (
+            api.post("/api/v1/me/email", {"email": "new@example.com", "password": PASSWORD}, format="json").status_code
+            == 202
+        )
         token = one_time_tokens.issue(
             user=user, purpose=OneTimeTokenPurpose.EMAIL_CHANGE, payload={"new_email": "new@example.com"}
         )

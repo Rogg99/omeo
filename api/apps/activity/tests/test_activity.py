@@ -23,7 +23,10 @@ from apps.nutrition.calculations import round_int
 from apps.nutrition.models import DailySummary, NutritionTarget
 from conftest import login_client
 
-TABLE = {"walking": {"light": 2.8, "moderate": 3.5, "vigorous": 5.0}, "other": {"light": 3, "moderate": 4.5, "vigorous": 6}}
+TABLE = {
+    "walking": {"light": 2.8, "moderate": 3.5, "vigorous": 5.0},
+    "other": {"light": 3, "moderate": 4.5, "vigorous": 6},
+}
 
 
 def idem() -> dict[str, str]:
@@ -51,7 +54,9 @@ class TestPure:
         assert not met.overlaps(0, 3600, 3300, 7200)
 
     def test_trend(self) -> None:
-        points = [trends.WeightPoint(day=date(2026, 10, 1) + timedelta(days=7 * i), weight_kg=80 - 0.5 * i) for i in range(4)]
+        points = [
+            trends.WeightPoint(day=date(2026, 10, 1) + timedelta(days=7 * i), weight_kg=80 - 0.5 * i) for i in range(4)
+        ]
         slope = trends.kg_per_week(points)
         assert slope == -0.5
         assert trends.trend_label(slope, stable_threshold=0.1) == "down"
@@ -69,7 +74,6 @@ class TestPure:
         draft = trends.active_vs_rest_intake(days, steps_goal=8000)
         assert draft is not None
         assert draft.data["difference_kcal"] == 300
-
 
 
 @pytest.mark.django_db
@@ -135,7 +139,13 @@ class TestHealthSync:
             "source": "health_connect",
             "days": [{"date": today, "steps": 9500, "active_kcal": 320, "total_burned_kcal": 2300}],
             "workouts": [
-                {"external_id": "hc-1", "type": "running", "started_at": timezone.now().isoformat(), "duration_s": 1800, "kcal": 300}
+                {
+                    "external_id": "hc-1",
+                    "type": "running",
+                    "started_at": timezone.now().isoformat(),
+                    "duration_s": 1800,
+                    "kcal": 300,
+                }
             ],
         }
         for _ in range(2):
@@ -152,7 +162,10 @@ class TestHealthSync:
     def test_too_old_rejected(self, api: APIClient, user: User) -> None:
         old = str(local_today(user) - timedelta(days=40))
         response = api.post(
-            "/api/v1/me/health/sync", {"source": "health_connect", "days": [{"date": old, "steps": 1}]}, format="json", **idem()
+            "/api/v1/me/health/sync",
+            {"source": "health_connect", "days": [{"date": old, "steps": 1}]},
+            format="json",
+            **idem(),
         )
         assert response.status_code == 400
 
@@ -169,14 +182,18 @@ class TestHealthSync:
             {
                 "source": "health_connect",
                 "days": [],
-                "workouts": [{"external_id": "hc-2", "type": "running", "started_at": start.isoformat(), "duration_s": 1700}],
+                "workouts": [
+                    {"external_id": "hc-2", "type": "running", "started_at": start.isoformat(), "duration_s": 1700}
+                ],
             },
             format="json",
             **idem(),
         ).json()
         suggestion = sync["merge_suggestions"][0]
         assert suggestion["manual_id"] == manual["id"]
-        merged = api.post(f"/api/v1/me/activities/{manual['id']}/merge", {"into_id": suggestion["imported_id"]}, format="json")
+        merged = api.post(
+            f"/api/v1/me/activities/{manual['id']}/merge", {"into_id": suggestion["imported_id"]}, format="json"
+        )
         assert merged.status_code == 200
         assert Activity.objects.get(pk=manual["id"]).merged_into_id is not None
 
@@ -185,7 +202,10 @@ class TestHealthSync:
 class TestActivities:
     def test_manual_kcal_estimated(self, api: APIClient, user: User) -> None:
         body = api.post(
-            "/api/v1/me/activities", {"type": "walking", "duration_s": 3600, "intensity": "moderate"}, format="json", **idem()
+            "/api/v1/me/activities",
+            {"type": "walking", "duration_s": 3600, "intensity": "moderate"},
+            format="json",
+            **idem(),
         ).json()
         assert body["activity"]["kcal"] == 274  # 3,5 MET × 78,4 kg × 1 h
         assert body["activity"]["editable"] is True
@@ -201,7 +221,9 @@ class TestActivities:
         )
         imported = Activity.objects.get(user=user)
         response = api.patch(
-            f"/api/v1/me/activities/{imported.pk}", {"type": "walking", "duration_s": 600, "intensity": "light"}, format="json"
+            f"/api/v1/me/activities/{imported.pk}",
+            {"type": "walking", "duration_s": 600, "intensity": "light"},
+            format="json",
         )
         assert response.status_code == 409
 
@@ -215,11 +237,15 @@ class TestActivities:
 
 @pytest.fixture
 def workout(db: Any) -> Workout:
-    free = Exercise.objects.create(name={"fr": "Squat"}, instructions={"fr": "…"}, met=5, is_free=True, status="published")
+    free = Exercise.objects.create(
+        name={"fr": "Squat"}, instructions={"fr": "…"}, met=5, is_free=True, status="published"
+    )
     paid = Exercise.objects.create(
         name={"fr": "Burpee"}, instructions={"fr": "…"}, met=8, status="published", download_key="x/burpee.mp4"
     )
-    item = Workout.objects.create(name={"fr": "Cardio 10"}, description={"fr": ""}, goal="cardio", duration_s=600, status="published")
+    item = Workout.objects.create(
+        name={"fr": "Cardio 10"}, description={"fr": ""}, goal="cardio", duration_s=600, status="published"
+    )
     WorkoutStep.objects.create(workout=item, order=1, exercise=free, mode="time", duration_s=300)
     WorkoutStep.objects.create(workout=item, order=2, exercise=paid, mode="time", duration_s=300)
     return item
@@ -261,7 +287,12 @@ class TestTraining:
         start = timezone.now() - timedelta(minutes=5)
         body = api.post(
             "/api/v1/me/workout-sessions",
-            {"workout_id": str(workout.pk), "started_at": start.isoformat(), "ended_at": timezone.now().isoformat(), "completed_steps": 1},
+            {
+                "workout_id": str(workout.pk),
+                "started_at": start.isoformat(),
+                "ended_at": timezone.now().isoformat(),
+                "completed_steps": 1,
+            },
             format="json",
             **idem(),
         ).json()
@@ -286,4 +317,3 @@ def test_weekly_insights_idempotent(user: User) -> None:
     assert [i.pk for i in first] == [i.pk for i in second]
     assert "300" in first[0].message["fr"]
     assert first[0].message["en"]
-

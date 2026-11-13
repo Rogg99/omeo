@@ -200,9 +200,9 @@ def _on_day_recomputed(event: events.DayRecomputed) -> None:
     ref = event.day.isoformat()
     if summary.is_complete:
         award(user=user, action="day_complete", ref_type="day", ref_id=ref, day=event.day)
-    if summary.target_water_ml and summary.water_ml >= summary.target_water_ml:
-        if award(user=user, action="water_goal", ref_type="day", ref_id=ref, day=event.day):
-            bump(user=user, metric="water_goal_days")
+    water_reached = bool(summary.target_water_ml) and summary.water_ml >= summary.target_water_ml
+    if water_reached and award(user=user, action="water_goal", ref_type="day", ref_id=ref, day=event.day):
+        bump(user=user, metric="water_goal_days")
     steps_goal = _steps_goal()
     if summary.steps >= steps_goal and award(user=user, action="steps_goal", ref_type="day", ref_id=ref, day=event.day):
         bump(user=user, metric="steps_goal_days")

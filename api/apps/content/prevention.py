@@ -15,7 +15,9 @@ from typing import Any, Final
 
 from apps.nutrition.calculations import round_1, round_int
 
-NUTRITION_METRICS: Final = frozenset({"consumed_kcal", "salt_g", "sugars_g", "fiber_g", "protein_g", "fat_g", "water_ml"})
+NUTRITION_METRICS: Final = frozenset(
+    {"consumed_kcal", "salt_g", "sugars_g", "fiber_g", "protein_g", "fat_g", "water_ml"}
+)
 MIN_LOGGED_DAYS: Final = 3
 WINDOW_DAYS: Final = 7
 

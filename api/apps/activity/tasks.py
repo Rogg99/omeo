@@ -16,9 +16,11 @@ from apps.core.localtime import local_today
 def weekly_insights() -> int:
     """Chaque lundi : analyses croisées de la semaine écoulée (comptes ayant le droit `insights`)."""
     count = 0
-    for user in User.objects.filter(is_active=True, is_staff=False, deletion_scheduled_at__isnull=True).select_related(
-        "profile"
-    ).iterator():
+    for user in (
+        User.objects.filter(is_active=True, is_staff=False, deletion_scheduled_at__isnull=True)
+        .select_related("profile")
+        .iterator()
+    ):
         if not entitlement_for(user).allows("insights"):
             continue
         today = local_today(user)

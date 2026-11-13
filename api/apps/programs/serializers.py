@@ -8,14 +8,22 @@ from typing import Any
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 
-from apps.activity.serializers import workout_summary_out
-from apps.content.serializers import recipe_summary_out
+from apps.activity.presenters import workout_summary_out
+from apps.content.presenters import recipe_summary_out
 from apps.core.i18n import resolve
 from apps.core.storage import public_url
 from apps.gamification.services import badge_ref
 from apps.nutrition.calculations import round_int
 from apps.programs import rules
-from apps.programs.models import Challenge, ChallengeParticipation, Enrollment, Program, ProgramDay, Rule, TaskCompletion
+from apps.programs.models import (
+    Challenge,
+    ChallengeParticipation,
+    Enrollment,
+    Program,
+    ProgramDay,
+    Rule,
+    TaskCompletion,
+)
 
 WEEK_DAYS = 7
 

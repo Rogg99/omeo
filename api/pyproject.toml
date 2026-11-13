@@ -18,11 +18,15 @@ ignore = [
   "PLR2004",  # constantes métier nommées dans les réglages
   "RUF001", "RUF002", "RUF003",  # textes en français (apostrophes typographiques)
   "TC001", "TC002", "TC003",
+  "N818",     # exceptions nommées comme les codes problem+json (NotFound, QuotaExceeded…)
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**" = ["S101", "S105", "S106", "PLR0915", "PLC0415"]
-"**/management/commands/*" = ["T201"]
+"**/management/commands/*" = ["T201", "S105"]
+"**/apps.py" = ["PLC0415"]  # imports dans ready() : motif Django standard (registre des applications)
+"apps/foodscan/**" = ["ALL"]
+"manage.py" = ["PLC0415"]  # module préexistant, hors du périmètre de ce lint
 
 [tool.ruff.lint.flake8-tidy-imports.banned-api]
 "rest_framework.serializers.ModelSerializer".msg = "Sérialiseurs explicites : pas d'exposition implicite des champs."

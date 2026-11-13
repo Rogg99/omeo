@@ -189,7 +189,9 @@ def kcal_within_target(*, consumed: float, target: float, c: NutritionConstants)
     return abs(consumed - target) <= target * c.kcal_target_tolerance
 
 
-def gauge(*, value: float, target: float, c: NutritionConstants | None = None, upper_bound: bool = False) -> dict[str, Any]:
+def gauge(
+    *, value: float, target: float, c: NutritionConstants | None = None, upper_bound: bool = False
+) -> dict[str, Any]:
     """Jauge prête à afficher : restant borné à 0, pourcentage entier, statut.
 
     `upper_bound` : la cible est un maximum (sel) — dépasser est `over`, rester dessous est `on_target`.
@@ -251,7 +253,9 @@ def per_100g(total: Mapping[str, float], grams: float) -> dict[str, float]:
 
 def display_nutrients(values: Mapping[str, float]) -> dict[str, int | float]:
     """Arrondi d'affichage : kcal entiers, grammes à 0,1 près."""
-    return {key: round_int(values.get(key, 0)) if key == "kcal" else round_1(values.get(key, 0)) for key in NUTRIENT_KEYS}
+    return {
+        key: round_int(values.get(key, 0)) if key == "kcal" else round_1(values.get(key, 0)) for key in NUTRIENT_KEYS
+    }
 
 
 # ───────────────────────── Journée ─────────────────────────
@@ -276,10 +280,7 @@ def balance(*, consumed_kcal: int, burned_kcal: int | None) -> dict[str, Any] | 
     if burned_kcal is None:
         return None
     difference = consumed_kcal - burned_kcal
-    if abs(difference) <= BALANCE_TOLERANCE_KCAL:
-        status = "balanced"
-    else:
-        status = "surplus" if difference > 0 else "deficit"
+    status = "balanced" if abs(difference) <= BALANCE_TOLERANCE_KCAL else ("surplus" if difference > 0 else "deficit")
     return {
         "consumed_kcal": consumed_kcal,
         "burned_kcal": burned_kcal,

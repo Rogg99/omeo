@@ -154,9 +154,7 @@ class Command(BaseCommand):
         for row in _load("cities.yaml"):
             if (row["country"], row["name"]["fr"]) in existing:
                 continue
-            City.objects.create(
-                name=row["name"], country=row["country"], timezone=row["timezone"], is_suggested=True
-            )
+            City.objects.create(name=row["name"], country=row["country"], timezone=row["timezone"], is_suggested=True)
             self._mark(f"city {row['country']} {row['name']['fr']}")
 
     def seed_legal(self) -> None:

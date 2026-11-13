@@ -125,7 +125,9 @@ def food_values(food: Food) -> dict[str, Decimal]:
     return {key: getattr(food, key) for key in NUTRIENT_KEYS}
 
 
-def item_payload(food: Food, grams: Decimal, *, label: str | None = None, confidence: float | None = None) -> dict[str, Any]:
+def item_payload(
+    food: Food, grams: Decimal, *, label: str | None = None, confidence: float | None = None
+) -> dict[str, Any]:
     payload: dict[str, Any] = {"food_id": str(food.pk), "label": label or resolve(food.name), "grams": float(grams)}
     if confidence is not None:
         payload["confidence"] = round(confidence, 2)
@@ -173,7 +175,10 @@ def _claim(analysis_id: Any) -> Analysis | None:
     """Passe l'analyse de `queued` à `processing` (une seule fois, même si la tâche est rejouée)."""
     with transaction.atomic():
         analysis = (
-            Analysis.objects.select_for_update().select_related("user__profile", "upload").filter(pk=analysis_id).first()
+            Analysis.objects.select_for_update()
+            .select_related("user__profile", "upload")
+            .filter(pk=analysis_id)
+            .first()
         )
         if analysis is None or analysis.status != AnalysisStatus.QUEUED:
             return None
@@ -227,10 +232,15 @@ def run_analysis(*, analysis_id: Any) -> Analysis | None:
         return None
     try:
         result = _scan(analysis)
-    except Exception:  # noqa: BLE001 - le moteur ne lève pas ; filet de sécurité pour rendre le quota
+    except Exception:
         logger.exception("foodscan raised", extra={"analysis_id": str(analysis_id)})
         result = foodscan.ScanResult(
-            succeeded=False, failure_reason="provider_error", output=None, low_confidence=False, model="", prompt_version=""
+            succeeded=False,
+            failure_reason="provider_error",
+            output=None,
+            low_confidence=False,
+            model="",
+            prompt_version="",
         )
     return _store_result(analysis_id=analysis.pk, result=result)
 
@@ -343,7 +353,13 @@ def _record_feedback(
 
 @transaction.atomic
 def submit_feedback(
-    *, user: Any, analysis_id: Any, rating: str, reason: str | None, corrected_dish_label: str | None, comment: str | None
+    *,
+    user: Any,
+    analysis_id: Any,
+    rating: str,
+    reason: str | None,
+    corrected_dish_label: str | None,
+    comment: str | None,
 ) -> AnalysisFeedback:
     analysis = _own_analysis(user=user, analysis_id=analysis_id, for_update=True)
     if analysis.status != AnalysisStatus.SUCCEEDED:
@@ -384,7 +400,9 @@ def _resolve_moment(*, user: Any, day: date | None, eaten_at: datetime | None) -
     return day, eaten_at
 
 
-def _items_from_input(items: Sequence[dict[str, Any]], *, labels: dict[str, str] | None = None) -> list[tuple[Food, Decimal, str]]:
+def _items_from_input(
+    items: Sequence[dict[str, Any]], *, labels: dict[str, str] | None = None
+) -> list[tuple[Food, Decimal, str]]:
     if not items:
         raise ValidationFailed(errors={"items": [{"code": "required", "message": "at least one item"}]})
     foods = _published_foods([i["food_id"] for i in items])
@@ -392,7 +410,9 @@ def _items_from_input(items: Sequence[dict[str, Any]], *, labels: dict[str, str]
     for index, item in enumerate(items):
         food = foods.get(str(item["food_id"]))
         if food is None:
-            raise ValidationFailed(errors={f"items.{index}.food_id": [{"code": "not_found", "message": "unknown food"}]})
+            raise ValidationFailed(
+                errors={f"items.{index}.food_id": [{"code": "not_found", "message": "unknown food"}]}
+            )
         label = (labels or {}).get(str(food.pk)) or resolve(food.name)
         resolved.append((food, Decimal(str(item["grams"])), label))
     return resolved
@@ -462,7 +482,9 @@ def create_meal(
         meal.analysis = analysis
         meal.dish = analysis.dish_guess
         meal.photo = analysis.upload if keep_photo else None
-        meal.title = (analysis.corrected_dish_label or analysis.dish_label or rules.meal_title([r[2] for r in rows], fallback="—"))[:120]
+        meal.title = (
+            analysis.corrected_dish_label or analysis.dish_label or rules.meal_title([r[2] for r in rows], fallback="—")
+        )[:120]
     elif source == MealSource.DISH:
         if not dish_id:
             raise ValidationFailed(errors={"dish_id": [{"code": "required", "message": "required"}]})
@@ -608,4 +630,3 @@ def recent_dish_ids(user: Any, limit: int) -> list[Any]:
         .values_list("dish_id", flat=True)[: limit * 3]
     )
     return list(dict.fromkeys(ids))[:limit]
-

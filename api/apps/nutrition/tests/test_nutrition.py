@@ -228,7 +228,6 @@ class TestCalendarAndProgress:
 
 
 class TestPureDayHelpers:
-
     def test_day_status(self, reference: None) -> None:
         c = services.nutrition_constants()
         assert calc.day_status(meals_count=0, consumed_kcal=0, target_kcal=1800, c=c) == "empty"

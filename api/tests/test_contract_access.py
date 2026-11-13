@@ -142,9 +142,7 @@ def test_markers_applied(op: Operation) -> None:
         else:
             assert f"RequiresFeature[{feature}]" in names, f"{op}: RequiresFeature[{feature}]"
 
-    wants_idempotency = any(
-        p.get("$ref", "").endswith("/IdempotencyKey") for p in op.spec.get("parameters", [])
-    )
+    wants_idempotency = any(p.get("$ref", "").endswith("/IdempotencyKey") for p in op.spec.get("parameters", []))
     method = getattr(view, op.method)
     assert bool(getattr(method, "idempotent", False)) is wants_idempotency, f"{op}: Idempotency-Key"
 

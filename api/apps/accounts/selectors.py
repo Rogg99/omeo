@@ -20,8 +20,8 @@ from apps.accounts.models import (
 from apps.billing.models import QuotaRule
 from apps.billing.services import entitlement_for
 from apps.core import settings_store
-from apps.gamification.services import rewards_summary
 from apps.core.localtime import local_today
+from apps.gamification.services import rewards_summary
 from apps.nutrition.calculations import age_on
 from apps.nutrition.selectors import target_on
 
@@ -81,12 +81,7 @@ def latest_published_documents() -> dict[str, LegalDocument]:
 
 def latest_consents(user: User) -> dict[str, Consent]:
     """Dernier enregistrement par `kind` (table en ajout seul)."""
-    rows = (
-        Consent.objects.filter(user=user)
-        .select_related("document")
-        .order_by("kind", "-created_at")
-        .distinct("kind")
-    )
+    rows = Consent.objects.filter(user=user).select_related("document").order_by("kind", "-created_at").distinct("kind")
     return {row.kind: row for row in rows}
 
 

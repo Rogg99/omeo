@@ -21,6 +21,7 @@ from typing import TYPE_CHECKING, Literal
 
 import boto3
 from botocore.config import Config
+from botocore.exceptions import ClientError
 from django.conf import settings
 
 if TYPE_CHECKING:
@@ -123,8 +124,6 @@ def public_url(key: str) -> str:
 
 def head(*, key: str, bucket: Bucket = "private") -> dict[str, object] | None:
     """Métadonnées d'un objet (taille, type), ou None s'il n'existe pas encore."""
-    from botocore.exceptions import ClientError
-
     try:
         response = internal_client().head_object(Bucket=_bucket_name(bucket), Key=key)
     except ClientError as exc:

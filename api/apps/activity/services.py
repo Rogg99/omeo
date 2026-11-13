@@ -37,7 +37,11 @@ from apps.core.models import ContentStatus
 from apps.nutrition import services as nutrition
 from apps.nutrition.models import DailySummary
 
-MANUAL_WINS: Final[tuple[str, ...]] = (ActivitySource.MANUAL, ActivitySource.HEALTH_CONNECT, ActivitySource.APPLE_HEALTH)
+MANUAL_WINS: Final[tuple[str, ...]] = (
+    ActivitySource.MANUAL,
+    ActivitySource.HEALTH_CONNECT,
+    ActivitySource.APPLE_HEALTH,
+)
 
 
 def _met_table() -> dict[str, dict[str, float]]:
@@ -184,7 +188,9 @@ def sync_health(
         activity_type = _activity_type(row["type"])
         kcal = row.get("kcal")
         if kcal is None:
-            kcal = met.kcal(met=met.met_for(table, activity_type, None), weight_kg=weight_kg, duration_s=row["duration_s"])
+            kcal = met.kcal(
+                met=met.met_for(table, activity_type, None), weight_kg=weight_kg, duration_s=row["duration_s"]
+            )
         activity, _created = Activity.objects.update_or_create(
             user=user,
             source=source,
@@ -321,7 +327,9 @@ def merge_activity(*, user: Any, activity_id: Any, into_id: Any) -> ActivityWrit
     if target is None:
         raise NotFound()
     if manual.source != ActivitySource.MANUAL or target.source in (ActivitySource.MANUAL, ActivitySource.WORKOUT):
-        raise ValidationFailed(errors={"into_id": [{"code": "invalid", "message": "merge a manual entry into an import"}]})
+        raise ValidationFailed(
+            errors={"into_id": [{"code": "invalid", "message": "merge a manual entry into an import"}]}
+        )
     manual.merged_into = target
     manual.save(update_fields=["merged_into", "updated_at"])
     if not target.label and manual.label:

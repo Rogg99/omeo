@@ -66,7 +66,9 @@ def water_rule(db: Any) -> Rule:
 
 @pytest.fixture
 def program(water_rule: Rule) -> Program:
-    item = Program.objects.create(name={"fr": "Équilibre"}, description={"fr": ""}, goal="eat_balanced", weeks=1, points=300, status="published")
+    item = Program.objects.create(
+        name={"fr": "Équilibre"}, description={"fr": ""}, goal="eat_balanced", weeks=1, points=300, status="published"
+    )
     for index in range(1, 8):
         day = ProgramDay.objects.create(program=item, day_index=index, tip={"fr": f"Conseil {index}"})
         ProgramTask.objects.create(day=day, label={"fr": "Boire 2 L"}, rule=water_rule, order=1)
@@ -89,7 +91,9 @@ class TestPrograms:
         assert api.get("/api/v1/programs").json()[0]["locked"] is True
 
     def test_enroll_conflict_and_replace(self, api: APIClient, user: User, program: Program) -> None:
-        other = Program.objects.create(name={"fr": "Autre"}, description={}, goal="lose_weight", weeks=2, status="published")
+        other = Program.objects.create(
+            name={"fr": "Autre"}, description={}, goal="lose_weight", weeks=2, status="published"
+        )
         assert api.post(f"/api/v1/programs/{program.pk}/enroll", {}, format="json").status_code == 201
         conflict = api.post(f"/api/v1/programs/{other.pk}/enroll", {}, format="json")
         assert conflict.status_code == 409
@@ -185,7 +189,9 @@ class TestChallenges:
         )
         assert late.status_code == 400
 
-    def test_auto_challenge_cannot_be_checked(self, api: APIClient, user: User, challenges: dict[str, Challenge]) -> None:
+    def test_auto_challenge_cannot_be_checked(
+        self, api: APIClient, user: User, challenges: dict[str, Challenge]
+    ) -> None:
         participation_id = api.post(f"/api/v1/challenges/{challenges['water'].pk}/join").json()["id"]
         response = api.put(
             f"/api/v1/me/challenges/{participation_id}/days/{local_today(user)}", {"done": True}, format="json"
@@ -198,7 +204,9 @@ class TestChallenges:
         ChallengeParticipation.objects.filter(pk=participation.pk).update(started_on=start)
         participation.refresh_from_db()
         for offset in range(6):
-            ChallengeDay.objects.create(participation=participation, date=start + timedelta(days=offset), status="success")
+            ChallengeDay.objects.create(
+                participation=participation, date=start + timedelta(days=offset), status="success"
+            )
         services.close_day(user=user, day=start + timedelta(days=6))
         participation.refresh_from_db()
         assert ChallengeDay.objects.get(participation=participation, date=start + timedelta(days=6)).status == "failed"

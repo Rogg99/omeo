@@ -80,7 +80,9 @@ def enroll(*, user: Any, program_id: Any, replace: bool) -> Enrollment:
         if active.program_id == program.pk:
             raise Conflict(code="already_enrolled", detail="program already active")
         if not replace:
-            raise Conflict(code="already_enrolled", detail="another program is active", meta={"active_id": str(active.pk)})
+            raise Conflict(
+                code="already_enrolled", detail="another program is active", meta={"active_id": str(active.pk)}
+            )
         active.status = EnrollmentStatus.REPLACED
         active.ended_at = timezone.now()
         active.save(update_fields=["status", "ended_at", "updated_at"])
@@ -221,7 +223,9 @@ def _ends_on(participation: ChallengeParticipation) -> date:
     return participation.started_on + timedelta(days=participation.challenge.duration_days - 1)
 
 
-def _set_day(participation: ChallengeParticipation, day: date, *, status: str, value: float | None, source: str) -> None:
+def _set_day(
+    participation: ChallengeParticipation, day: date, *, status: str, value: float | None, source: str
+) -> None:
     current = ChallengeDay.objects.filter(participation=participation, date=day).first()
     ChallengeDay.objects.update_or_create(
         participation=participation,
@@ -295,7 +299,9 @@ def _on_day_recomputed(event: events.DayRecomputed) -> None:
         if participation.challenge.rule.metric != Metric.MANUAL:
             _evaluate_participation(participation, event.day, values)
     enrollment = (
-        Enrollment.objects.filter(user_id=event.user_id, status=EnrollmentStatus.ACTIVE).select_related("program").first()
+        Enrollment.objects.filter(user_id=event.user_id, status=EnrollmentStatus.ACTIVE)
+        .select_related("program")
+        .first()
     )
     if enrollment is not None:
         _evaluate_enrollment(enrollment, event.day, values)
@@ -305,9 +311,11 @@ def _on_day_recomputed(event: events.DayRecomputed) -> None:
 def close_day(*, user: Any, day: date) -> None:
     """Fin de journée locale : les jours encore en attente échouent, les participations échues sont clôturées."""
     today = day + timedelta(days=1)
-    for participation in ChallengeParticipation.objects.select_for_update().filter(
-        user=user, status=ParticipationStatus.ACTIVE
-    ).select_related("challenge__rule", "user"):
+    for participation in (
+        ChallengeParticipation.objects.select_for_update()
+        .filter(user=user, status=ParticipationStatus.ACTIVE)
+        .select_related("challenge__rule", "user")
+    ):
         if participation.started_on <= day <= _ends_on(participation):
             current = ChallengeDay.objects.filter(participation=participation, date=day).first()
             if current is None or current.status == ChallengeDayStatus.PENDING:

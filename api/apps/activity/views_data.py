@@ -8,11 +8,12 @@ from typing import Any, Final
 from apps.activity import met, selectors, trends
 from apps.activity import serializers as s
 from apps.activity.models import Workout
+from apps.activity.presenters import workout_summary_out
 from apps.core import settings_store
 from apps.nutrition import calculations
 from apps.nutrition import selectors as nutrition_selectors
 from apps.nutrition.calculations import NutritionConstants
-from apps.nutrition.serializers import BALANCE_LABELS
+from apps.nutrition.presenters import BALANCE_LABELS
 
 WEIGHT_RANGES: Final[dict[str, int | None]] = {"30d": 30, "90d": 90, "1y": 365, "all": None}
 
@@ -27,7 +28,9 @@ def weight_overview(*, user: Any, range_key: str, today: date) -> dict[str, Any]
 
     window = int(settings_store.get("activity.weight_trend_days", 28))
     recent = [
-        trends.WeightPoint(day=e.date, weight_kg=float(e.weight_kg)) for e in entries if e.date > today - timedelta(days=window)
+        trends.WeightPoint(day=e.date, weight_kg=float(e.weight_kg))
+        for e in entries
+        if e.date > today - timedelta(days=window)
     ]
     slope = trends.kg_per_week(recent)
     return {
@@ -35,12 +38,12 @@ def weight_overview(*, user: Any, range_key: str, today: date) -> dict[str, Any]
         "target_kg": target,
         "remaining_kg": calculations.round_1(abs(current - target)) if current is not None else None,
         "start_kg": float(entries[0].weight_kg) if entries else None,
-        "trend": trends.trend_label(slope, stable_threshold=float(settings_store.get("activity.weight_stable_kg_per_week", 0.1))),
+        "trend": trends.trend_label(
+            slope, stable_threshold=float(settings_store.get("activity.weight_stable_kg_per_week", 0.1))
+        ),
         "trend_kg_per_week": slope,
         "bmi": trends.bmi(weight_kg=current, height_cm=float(profile.height_cm)),
-        "series": [
-            {"id": e.id, "date": e.date, "weight_kg": float(e.weight_kg), "source": e.source} for e in entries
-        ],
+        "series": [{"id": e.id, "date": e.date, "weight_kg": float(e.weight_kg), "source": e.source} for e in entries],
         "next_reminder": None,
     }
 
@@ -86,6 +89,6 @@ def activity_overview(*, user: Any, day: date, c: NutritionConstants, locked: bo
         ],
         "activities": [s.activity_out(a) for a in selectors.activities_on(user=user, day=day)],
         "recommended_workouts": [
-            s.workout_summary_out(w, locked=locked and not w.is_free) for w in selectors.recommended_workouts()
+            workout_summary_out(w, locked=locked and not w.is_free) for w in selectors.recommended_workouts()
         ],
     }

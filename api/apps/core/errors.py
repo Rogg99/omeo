@@ -195,7 +195,7 @@ def problem_body(
 
 
 def problem_response(error: ApiError) -> Response:
-    response = Response(
+    return Response(
         problem_body(
             status_code=error.status_code,
             code=error.code,
@@ -208,7 +208,6 @@ def problem_response(error: ApiError) -> Response:
         headers=error.headers,
         content_type=PROBLEM_CONTENT_TYPE,
     )
-    return response
 
 
 def _flatten_drf_errors(data: Any, prefix: str = "") -> dict[str, list[dict[str, str]]]:
@@ -221,7 +220,9 @@ def _flatten_drf_errors(data: Any, prefix: str = "") -> dict[str, list[dict[str,
     elif isinstance(data, list):
         if data and all(isinstance(item, drf_exceptions.ErrorDetail | str) for item in data):
             field = prefix.rstrip(".") or "non_field_errors"
-            out[field] = [{"code": getattr(item, "code", "invalid") or "invalid", "message": str(item)} for item in data]
+            out[field] = [
+                {"code": getattr(item, "code", "invalid") or "invalid", "message": str(item)} for item in data
+            ]
         else:
             for index, item in enumerate(data):
                 out.update(_flatten_drf_errors(item, f"{prefix}{index}."))
@@ -239,7 +240,7 @@ _DRF_MAP: dict[type[Exception], type[ApiError]] = {
 }
 
 
-def problem_exception_handler(exc: Exception, context: Mapping[str, Any]) -> Response | None:
+def problem_exception_handler(exc: Exception, context: Mapping[str, Any]) -> Response | None:  # noqa: PLR0911 - une branche par famille d'exception
     if isinstance(exc, ApiError):
         return problem_response(exc)
     if isinstance(exc, Http404):

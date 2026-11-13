@@ -72,6 +72,9 @@ class AuditLog(UUIDModel):
         ordering: ClassVar[list[str]] = ["-created_at"]
         indexes: ClassVar[list[models.Index]] = [models.Index(fields=["target_type", "target_id"])]
 
+    def __str__(self) -> str:
+        return f"{self.action} {self.target_type}:{self.target_id}"
+
     def save(self, *args: Any, **kwargs: Any) -> None:
         if not self._state.adding:
             raise ValueError("AuditLog is append-only")
@@ -97,6 +100,9 @@ class IdempotencyRecord(BaseModel):
         constraints: ClassVar[list[models.BaseConstraint]] = [
             models.UniqueConstraint(fields=["user", "key"], name="idempotency_user_key_uniq"),
         ]
+
+    def __str__(self) -> str:
+        return f"{self.method} {self.path} ({self.key})"
 
 
 class ApprovalKind(models.TextChoices):
@@ -154,3 +160,6 @@ class ApprovalRequest(BaseModel):
                 name="approval_one_pending_per_target",
             ),
         ]
+
+    def __str__(self) -> str:
+        return f"{self.kind} {self.target_type}:{self.target_id} ({self.status})"

@@ -98,7 +98,9 @@ def record_view(*, user: Any, content_type: str, object_id: Any) -> None:
 def recipe_composition(user: Any, recipe_id: Any) -> RecipeComposition | None:
     """Fournisseur enregistré auprès de meals : composition d'UNE portion, droits Plus vérifiés."""
     recipe = (
-        Recipe.objects.filter(pk=recipe_id, status=ContentStatus.PUBLISHED).prefetch_related("ingredients__food").first()
+        Recipe.objects.filter(pk=recipe_id, status=ContentStatus.PUBLISHED)
+        .prefetch_related("ingredients__food")
+        .first()
     )
     if recipe is None:
         return None
@@ -133,9 +135,7 @@ def _day_values(user: Any, start: date, end: date) -> list[prevention.DayValues]
                 "water_ml": row.water_ml,
                 "steps": row.steps,
                 "active_minutes": row.active_minutes,
-                "on_target": calculations.kcal_within_target(
-                    consumed=row.consumed_kcal, target=row.target_kcal, c=c
-                ),
+                "on_target": calculations.kcal_within_target(consumed=row.consumed_kcal, target=row.target_kcal, c=c),
             },
         )
         for row in rows

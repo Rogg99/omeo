@@ -1,4 +1,4 @@
-"""Offres, quotas, essai, jours offerts et abonnements (paiements, promos et webhooks arrivent avec le module billing)."""
+"""Offres, quotas, essai, jours offerts, abonnements, paiements, codes promo et événements des stores."""
 
 from __future__ import annotations
 

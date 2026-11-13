@@ -22,7 +22,7 @@ from apps.meals import selectors, services
 from apps.meals import serializers as s
 from apps.meals.models import Analysis, AnalysisStatus, Meal
 from apps.nutrition.constants import nutrition_constants
-from apps.nutrition.serializers import day_summary_out
+from apps.nutrition.presenters import day_summary_out
 
 MAX_LIST_RANGE_DAYS: Final = 92
 

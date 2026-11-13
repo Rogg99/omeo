@@ -17,6 +17,7 @@ from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
+from apps.core import access
 from apps.core.errors import EmailNotVerified, ForbiddenRole, NotAuthenticated, PlanRequired, StepUpRequired
 
 STEP_UP_WINDOW: Final = timedelta(minutes=15)
@@ -37,8 +38,6 @@ def required_permission_for(view: APIView, request: Request) -> str | None:
 
 class HasPermission(BasePermission):
     def has_permission(self, request: Request, view: APIView) -> bool:
-        from apps.accounts.permissions import permissions_for_user
-
         user = request.user
         if not user or not user.is_authenticated:
             raise NotAuthenticated()
@@ -49,7 +48,7 @@ class HasPermission(BasePermission):
             raise ForbiddenRole()
         if permission == AUTHENTICATED_STAFF:
             return True
-        if permission not in permissions_for_user(user):
+        if permission not in access.permissions_for_user(user):
             raise ForbiddenRole(meta={"permission": permission})
         return True
 
@@ -95,7 +94,5 @@ def RequiresFeature(feature: str) -> type[BasePermission]:  # noqa: N802 - fabri
 
 def require_feature(user: Any, feature: str) -> None:
     """Contrôle conditionnel (`x-entitlement.when`) depuis une vue : 403 `plan_required` si le droit manque."""
-    from apps.billing.services import entitlement_for
-
-    if not entitlement_for(user).allows(feature):
+    if not access.allows_feature(user, feature):
         raise PlanRequired(meta={"feature": feature, "upgrade": True})

@@ -1,4 +1,4 @@
-"""Comptes, profils, villes, sessions, documents légaux, consentements, parrainage, équipe et double authentification."""
+"""Comptes, profils, villes, sessions, documents légaux, consentements, parrainage, équipe, double authentification."""
 
 from __future__ import annotations
 
@@ -124,9 +124,7 @@ class Profile(BaseModel):
     )
     goals = ArrayField(models.CharField(max_length=24, choices=Goal.choices), default=list)
     activity_adjustment = models.BooleanField(default=True)
-    avatar = models.ForeignKey(
-        "meals.Upload", null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
-    )
+    avatar = models.ForeignKey("meals.Upload", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     unit_weight = models.CharField(max_length=2, choices=[("kg", "kg"), ("lb", "lb")], default="kg")
     unit_height = models.CharField(max_length=2, choices=[("cm", "cm"), ("ft", "ft")], default="cm")
     unit_volume = models.CharField(max_length=2, choices=[("cl", "cl"), ("oz", "oz")], default="cl")
@@ -243,9 +241,7 @@ class Consent(BaseModel):
 
 class ReferralCode(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="referral_code")
-    code = models.CharField(
-        max_length=10, unique=True, validators=[RegexValidator(r"^[A-Z0-9]{4,10}$")]
-    )
+    code = models.CharField(max_length=10, unique=True, validators=[RegexValidator(r"^[A-Z0-9]{4,10}$")])
 
 
 class ReferralStatus(models.TextChoices):
@@ -329,7 +325,7 @@ class RecoveryCode(BaseModel):
 
 class OneTimeTokenPurpose(models.TextChoices):
     EMAIL_VERIFY = "email_verify"
-    PASSWORD_RESET = "password_reset"
+    PASSWORD_RESET = "password_reset"  # noqa: S105 - nom d'usage, pas un secret
     EMAIL_CHANGE = "email_change"
     ACCOUNT_DELETION = "account_deletion"
 

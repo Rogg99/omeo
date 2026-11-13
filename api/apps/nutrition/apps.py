@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class NutritionConfig(AppConfig):
-    name = 'apps.nutrition'
+    name = "apps.nutrition"

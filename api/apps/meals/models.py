@@ -83,9 +83,7 @@ class Analysis(BaseModel):
     tokens_out = models.PositiveIntegerField(default=0)
     cost_usd_micros = models.PositiveBigIntegerField(null=True, blank=True)
     # Résultat
-    dish_guess = models.ForeignKey(
-        "nutrition.Dish", null=True, blank=True, on_delete=models.SET_NULL, related_name="+"
-    )
+    dish_guess = models.ForeignKey("nutrition.Dish", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     dish_label = models.CharField(max_length=120, blank=True)
     corrected_dish_label = models.CharField(max_length=80, blank=True)
     confidence = models.FloatField(null=True, blank=True)
@@ -123,9 +121,7 @@ class Meal(BaseModel):
     eaten_at = models.DateTimeField()
     meal_type = models.CharField(max_length=10, choices=MealType.choices)
     source = models.CharField(max_length=10, choices=MealSource.choices)
-    analysis = models.OneToOneField(
-        Analysis, null=True, blank=True, on_delete=models.SET_NULL, related_name="meal"
-    )
+    analysis = models.OneToOneField(Analysis, null=True, blank=True, on_delete=models.SET_NULL, related_name="meal")
     dish = models.ForeignKey("nutrition.Dish", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     recipe_id = models.UUIDField(null=True, blank=True)
     photo = models.ForeignKey(Upload, null=True, blank=True, on_delete=models.SET_NULL, related_name="+")

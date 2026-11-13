@@ -13,9 +13,10 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.accounts.serializers import targets_out
+from apps.accounts.presenters import targets_out
 from apps.activity import selectors, services, views_data
 from apps.activity import serializers as s
+from apps.activity.presenters import workout_summary_out
 from apps.billing.services import entitlement_for
 from apps.core.errors import NotFound, ValidationFailed
 from apps.core.idempotency import idempotent
@@ -28,7 +29,7 @@ from apps.core.views import AppAPIView, validated
 from apps.nutrition import selectors as nutrition_selectors
 from apps.nutrition import services as nutrition
 from apps.nutrition.constants import nutrition_constants
-from apps.nutrition.serializers import day_summary_out
+from apps.nutrition.presenters import day_summary_out
 
 FULL_CATALOG: Final = "full_catalog"
 MAX_RANGE_DAYS: Final = 92
@@ -68,9 +69,7 @@ class WeightDetailView(AppAPIView):
     @extend_schema(operation_id="deleteWeight")
     def delete(self, request: Request, id: Any) -> Response:  # noqa: A002 - nom imposé par le contrat
         services.delete_weight(user=request.user, entry_id=id)
-        return Response(
-            views_data.weight_overview(user=request.user, range_key="90d", today=local_today(request.user))
-        )
+        return Response(views_data.weight_overview(user=request.user, range_key="90d", today=local_today(request.user)))
 
 
 # ───────────────────────── Santé connectée ─────────────────────────
@@ -229,10 +228,14 @@ class WorkoutsView(AppAPIView):
     @extend_schema(operation_id="listWorkouts")
     def get(self, request: Request) -> Response:
         params = validated(s.WorkoutFilterSerializer, request.query_params)
-        queryset = selectors.workouts(goal=params.get("goal"), level=params.get("level"), max_minutes=params.get("max_minutes"))
+        queryset = selectors.workouts(
+            goal=params.get("goal"), level=params.get("level"), max_minutes=params.get("max_minutes")
+        )
         full = _full_catalog(request.user)
         rows, next_cursor = cursor_paginate(request, queryset)
-        return Response(cursor_body([s.workout_summary_out(w, locked=not (full or w.is_free)) for w in rows], next_cursor))
+        return Response(
+            cursor_body([workout_summary_out(w, locked=not (full or w.is_free)) for w in rows], next_cursor)
+        )
 
 
 class WorkoutDetailView(AppAPIView):

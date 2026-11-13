@@ -19,6 +19,7 @@ from apps.core.views import AppAPIView, validated
 from apps.nutrition import selectors, services, views_data
 from apps.nutrition import serializers as s
 from apps.nutrition.constants import nutrition_constants
+from apps.nutrition.presenters import dish_summary_out, water_out
 
 LONG_RANGE_FEATURE = "progress_long_range"
 
@@ -39,7 +40,7 @@ class DishSearchView(AppAPIView):
             user=request.user, q=params.get("q"), country=params.get("country"), scope=params["scope"]
         )
         rows, next_cursor = cursor_paginate(request, queryset)
-        return Response(cursor_body([s.dish_summary_out(d) for d in rows], next_cursor))
+        return Response(cursor_body([dish_summary_out(d) for d in rows], next_cursor))
 
 
 class DishDetailView(AppAPIView):
@@ -70,7 +71,7 @@ class WaterView(AppAPIView):
         data = validated(s.WaterInputSerializer, request.data)
         with collect_rewards() as rewards:
             summary = services.add_water(user=request.user, amount_ml=data["amount_ml"], day=data.get("date"))
-        body = {"water": s.water_out(summary, c=nutrition_constants()), "rewards": rewards.as_dict()}
+        body = {"water": water_out(summary, c=nutrition_constants()), "rewards": rewards.as_dict()}
         return Response(body, status=status.HTTP_201_CREATED)
 
 

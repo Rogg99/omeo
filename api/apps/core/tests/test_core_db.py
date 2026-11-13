@@ -8,8 +8,8 @@ from decimal import Decimal
 from typing import Any
 
 import pytest
-from django.core.management import call_command
 from django.core.cache import cache
+from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.db import IntegrityError, connection
 from django.utils import timezone
@@ -191,9 +191,13 @@ class TestSeedDemo:
 
     def test_deterministic_accounts(self, reference: None) -> None:
         call_command("seed_demo", verbosity=0)
-        first = sorted(User.objects.filter(email__endswith="@demo.omeo.app").values_list("email", "profile__birth_date"))
+        first = sorted(
+            User.objects.filter(email__endswith="@demo.omeo.app").values_list("email", "profile__birth_date")
+        )
         call_command("seed_demo", "--reset", verbosity=0)
-        second = sorted(User.objects.filter(email__endswith="@demo.omeo.app").values_list("email", "profile__birth_date"))
+        second = sorted(
+            User.objects.filter(email__endswith="@demo.omeo.app").values_list("email", "profile__birth_date")
+        )
         assert first == second
         assert not User.objects.get(email="suspendu@demo.omeo.app").is_active
         assert User.objects.get(email="awa@demo.omeo.app").profile.city is not None

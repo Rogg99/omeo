@@ -35,7 +35,7 @@ _recent_dishes: list[RecentDishes] = []
 
 
 def register_recent_dishes(provider: RecentDishes) -> None:
-    """meals fournit les identifiants des plats récemment enregistrés par l'utilisateur (du plus récent au plus ancien)."""
+    """meals fournit les plats récemment enregistrés par l'utilisateur, du plus récent au plus ancien."""
     _recent_dishes[:] = [provider]
 
 

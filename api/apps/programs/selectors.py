@@ -67,6 +67,4 @@ def participations(*, user: Any, status: str | None) -> QuerySet[ChallengePartic
 
 
 def active_challenge_ids(*, user: Any) -> set[Any]:
-    return set(
-        ChallengeParticipation.objects.filter(user=user, status="active").values_list("challenge_id", flat=True)
-    )
+    return set(ChallengeParticipation.objects.filter(user=user, status="active").values_list("challenge_id", flat=True))

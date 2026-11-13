@@ -61,9 +61,7 @@ def _as_bool(value: object) -> bool:
 
 
 def verify_google(id_token: str) -> SocialIdentity:
-    claims = _decode(
-        id_token, jwks_url=GOOGLE_JWKS, audience=list(settings.GOOGLE_CLIENT_IDS), issuer=GOOGLE_ISSUERS
-    )
+    claims = _decode(id_token, jwks_url=GOOGLE_JWKS, audience=list(settings.GOOGLE_CLIENT_IDS), issuer=GOOGLE_ISSUERS)
     email = claims.get("email")
     return SocialIdentity(
         provider="google",
@@ -76,9 +74,7 @@ def verify_google(id_token: str) -> SocialIdentity:
 def verify_apple(identity_token: str, *, nonce: str | None) -> SocialIdentity:
     if not nonce:
         raise ValidationFailed(errors={"nonce": [{"code": "required", "message": "nonce required for Apple"}]})
-    claims = _decode(
-        identity_token, jwks_url=APPLE_JWKS, audience=list(settings.APPLE_CLIENT_IDS), issuer=APPLE_ISSUER
-    )
+    claims = _decode(identity_token, jwks_url=APPLE_JWKS, audience=list(settings.APPLE_CLIENT_IDS), issuer=APPLE_ISSUER)
     expected = hashlib.sha256(nonce.encode()).hexdigest()
     if not hmac.compare_digest(str(claims.get("nonce", "")), expected):
         raise InvalidCredentials()

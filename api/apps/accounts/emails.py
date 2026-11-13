@@ -7,6 +7,7 @@ from django.utils import translation
 from django.utils.translation import gettext as _
 
 from apps.accounts.models import User
+from apps.accounts.tasks import send_account_email
 from apps.core.i18n import to_django_locale
 
 
@@ -38,7 +39,5 @@ def _render(user: User, kind: str, token: str) -> tuple[str, str]:
 
 
 def send(*, user: User, kind: str, token: str, to: str | None = None) -> None:
-    from apps.accounts.tasks import send_account_email
-
     subject, body = _render(user, kind, token)
     send_account_email.delay(to=to or user.email, subject=subject, body=body)

@@ -14,10 +14,12 @@ from rest_framework.throttling import BaseThrottle
 from apps.accounts import selectors, services
 from apps.accounts import serializers as s
 from apps.accounts.models import Session
-from apps.core.captcha import verify_turnstile
+from apps.accounts.presenters import city_out, legal_ref_out
 from apps.accounts.tokens import rotate
+from apps.core.captcha import verify_turnstile
 from apps.core.idempotency import idempotent
 from apps.core.permissions import AUTHENTICATED_STAFF, HasPermission, RequiresVerifiedEmail
+from apps.core.presenters import image_out
 from apps.core.throttles import (
     AuthAccountThrottle,
     AuthIpThrottle,
@@ -66,7 +68,7 @@ class CitySearchView(PublicAPIView):
     def get(self, request: Request) -> Response:
         params = validated(s.CitySearchSerializer, request.query_params)
         cities = selectors.search_cities(q=params.get("q"), country=params.get("country"))
-        return Response({"results": [s.city_out(c) for c in cities]})
+        return Response({"results": [city_out(c) for c in cities]})
 
 
 # ───────────────────────── Authentification ─────────────────────────
@@ -242,7 +244,7 @@ class AvatarView(AppAPIView):
     def put(self, request: Request) -> Response:
         data = validated(s.UploadRefSerializer, request.data)
         profile = services.set_avatar(user=request.user, upload_id=data["upload_id"])  # type: ignore[arg-type]
-        return Response(s.image_out(profile.avatar))
+        return Response(image_out(profile.avatar))
 
     @extend_schema(operation_id="deleteAvatar")
     def delete(self, request: Request) -> Response:
@@ -302,7 +304,7 @@ class ConsentsView(AppAPIView):
         return Response(
             {
                 "consents": selectors.consent_states(user),  # type: ignore[arg-type]
-                "pending_documents": [s.legal_ref_out(d) for d in selectors.pending_documents(user)],  # type: ignore[arg-type]
+                "pending_documents": [legal_ref_out(d) for d in selectors.pending_documents(user)],  # type: ignore[arg-type]
             }
         )
 
@@ -356,4 +358,3 @@ class ConfirmDeletionByEmailView(PublicAPIView):
         data = validated(s.TokenSerializer, request.data)
         services.confirm_deletion_by_email(token=data["token"])
         return Response(status=status.HTTP_204_NO_CONTENT)
-

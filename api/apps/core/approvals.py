@@ -15,7 +15,7 @@ from typing import Any, Final
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 
-from apps.core import audit, settings_store
+from apps.core import access, audit, settings_store
 from apps.core.errors import ApprovalPending, Conflict, ForbiddenRole, SelfApprovalForbidden
 from apps.core.models import ApprovalDomain, ApprovalKind, ApprovalRequest, ApprovalStatus
 
@@ -97,11 +97,9 @@ class ApprovalService:
 
     @staticmethod
     def _check_decider(approval: ApprovalRequest, decider: Any) -> None:
-        from apps.accounts.permissions import can_decide_domain
-
         if approval.requested_by_id == decider.pk:
             raise SelfApprovalForbidden()
-        if not can_decide_domain(decider, approval.domain):
+        if not access.can_decide_domain(decider, approval.domain):
             raise ForbiddenRole(meta={"permission": DECIDE_PERMISSION, "domain": approval.domain})
 
     @classmethod

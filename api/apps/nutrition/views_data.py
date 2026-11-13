@@ -38,9 +38,7 @@ def calendar_month(*, user: Any, year: int, month: int, today: date, c: Nutritio
     if end < first:
         return []
     rows = selectors.summaries_between(user=user, start=first, end=end)
-    return [
-        {"date": d, "status": status_of(rows[d], c) if d in rows else "empty"} for d in selectors.days(first, end)
-    ]
+    return [{"date": d, "status": status_of(rows[d], c) if d in rows else "empty"} for d in selectors.days(first, end)]
 
 
 def _value(s: DailySummary, field: str, unit: str) -> float:

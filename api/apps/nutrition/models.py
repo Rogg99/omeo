@@ -13,6 +13,7 @@ from django.db.models import Q
 from apps.core.i18n import I18nTextField
 from apps.core.models import BaseModel, ContentStatus
 
+
 def _nutrient() -> models.DecimalField:  # type: ignore[type-arg]
     return models.DecimalField(max_digits=7, decimal_places=2, default=0)
 

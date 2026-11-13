@@ -21,7 +21,7 @@ from apps.core import crypto
 from apps.core.errors import InvalidCredentials
 
 ISSUER: Final = "Omeo Admin"
-MFA_TOKEN_SALT: Final = "omeo.mfa"
+MFA_TOKEN_SALT: Final = "omeo.mfa"  # noqa: S105 - sel de signature, pas un secret
 MFA_TOKEN_MAX_AGE_S: Final = 300
 RECOVERY_CODE_COUNT: Final = 10
 VALID_WINDOW: Final = 1  # ±30 s de dérive d'horloge
@@ -87,9 +87,7 @@ def _verify_totp(device: TOTPDevice, code: str) -> bool:
         if step <= device.last_used_step:
             continue  # un code déjà utilisé ne peut pas être rejoué
         if secrets.compare_digest(totp.generate_otp(step), code):
-            TOTPDevice.objects.filter(pk=device.pk).update(
-                last_used_step=step, confirmed_at=device.confirmed_at or now
-            )
+            TOTPDevice.objects.filter(pk=device.pk).update(last_used_step=step, confirmed_at=device.confirmed_at or now)
             return True
     return False
 

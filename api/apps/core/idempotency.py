@@ -14,7 +14,7 @@ import uuid
 from collections.abc import Callable
 from datetime import timedelta
 from functools import wraps
-from typing import Any, Final, TypeVar
+from typing import Any, Final
 
 from django.core.cache import cache
 from django.utils import timezone
@@ -28,8 +28,6 @@ HEADER: Final = "HTTP_IDEMPOTENCY_KEY"
 TTL: Final = timedelta(hours=24)
 LOCK_TTL_S: Final = 30
 REPLAY_HEADER: Final = "Idempotent-Replayed"
-
-F = TypeVar("F", bound=Callable[..., Response])
 
 
 def _body_hash(request: Request) -> str:
@@ -59,7 +57,7 @@ def _replay(stored: dict[str, Any], body_hash: str) -> Response:
     return response
 
 
-def idempotent(view_method: F) -> F:
+def idempotent[F: Callable[..., Response]](view_method: F) -> F:
     """Décorateur de méthode de vue DRF (`def post(self, request, ...)`)."""
 
     @wraps(view_method)

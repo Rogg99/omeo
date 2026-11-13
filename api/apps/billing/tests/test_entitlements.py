@@ -43,7 +43,9 @@ class TestPureMatrix:
         assert e.plus_until is None
 
     def test_global_switch_disables_feature(self) -> None:
-        e = entitlements.build(now=NOW, trial_ends_at=None, plus_until=NOW + timedelta(days=1), switches={"programs": False})
+        e = entitlements.build(
+            now=NOW, trial_ends_at=None, plus_until=NOW + timedelta(days=1), switches={"programs": False}
+        )
         assert not e.allows("programs")
         assert e.allows("insights")
 

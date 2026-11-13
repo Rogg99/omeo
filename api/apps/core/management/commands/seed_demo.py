@@ -36,6 +36,8 @@ from apps.core.audit import RequestMeta
 from apps.core.localtime import local_today
 from apps.core.models import ContentStatus
 from apps.nutrition import services as nutrition
+from apps.nutrition.calculations import NUTRIENT_KEYS
+from apps.nutrition.models import Dish, DishComponent, Food
 from apps.programs import services as programs_service
 from apps.programs.models import (
     Challenge,
@@ -46,8 +48,6 @@ from apps.programs.models import (
     ProgramTask,
     Rule,
 )
-from apps.nutrition.calculations import NUTRIENT_KEYS
-from apps.nutrition.models import Dish, DishComponent, Food
 
 DEMO_DOMAIN: Final = "demo.omeo.app"
 DEMO_SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "demo"
@@ -80,12 +80,50 @@ class DemoUser:
 
 
 DEMO_USERS: Final[tuple[DemoUser, ...]] = (
-    DemoUser("awa", "Awa", "Diallo", "female", 30, "Yaoundé", 175, 78.4, 74, ["lose_weight", "eat_balanced", "prevent_diabetes"], "trial"),
-    DemoUser("moussa", "Moussa", "Koné", "male", 34, "Abidjan", 178, 84.0, 80, ["lose_weight", "prevent_hypertension"], "free"),
+    DemoUser(
+        "awa",
+        "Awa",
+        "Diallo",
+        "female",
+        30,
+        "Yaoundé",
+        175,
+        78.4,
+        74,
+        ["lose_weight", "eat_balanced", "prevent_diabetes"],
+        "trial",
+    ),
+    DemoUser(
+        "moussa",
+        "Moussa",
+        "Koné",
+        "male",
+        34,
+        "Abidjan",
+        178,
+        84.0,
+        80,
+        ["lose_weight", "prevent_hypertension"],
+        "free",
+    ),
     DemoUser("fatou", "Fatou", "Kane", "female", 27, "Dakar", 165, 61.0, 61, ["eat_balanced"], "plus_monthly"),
     DemoUser("koffi", "Koffi", "Mensah", "male", 29, "Lomé", 181, 72.0, 77, ["gain_muscle"], "plus_annual"),
-    DemoUser("aicha", "Aïcha", "Traoré", "female", 41, "Bamako", 162, 70.5, 65, ["lose_weight", "prevent_diabetes"], "quota_exhausted"),
-    DemoUser("nouveau", "Nouveau", "Compte", "female", 24, "Cotonou", 168, 60.0, 58, ["eat_balanced"], "new", verified=False),
+    DemoUser(
+        "aicha",
+        "Aïcha",
+        "Traoré",
+        "female",
+        41,
+        "Bamako",
+        162,
+        70.5,
+        65,
+        ["lose_weight", "prevent_diabetes"],
+        "quota_exhausted",
+    ),
+    DemoUser(
+        "nouveau", "Nouveau", "Compte", "female", 24, "Cotonou", 168, 60.0, 58, ["eat_balanced"], "new", verified=False
+    ),
     DemoUser("suspendu", "Compte", "Suspendu", "male", 38, "Douala", 172, 76.0, 72, ["eat_balanced"], "suspended"),
 )
 
@@ -219,7 +257,8 @@ class Command(BaseCommand):
                 status=ContentStatus.PUBLISHED,
             )
             DishComponent.objects.bulk_create(
-                DishComponent(dish=dish, food=foods[key], grams=Decimal(str(grams))) for key, grams in components.items()
+                DishComponent(dish=dish, food=foods[key], grams=Decimal(str(grams)))
+                for key, grams in components.items()
             )
             nutrition.refresh_dish(dish=dish)
 

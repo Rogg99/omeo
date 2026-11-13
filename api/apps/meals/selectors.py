@@ -32,9 +32,7 @@ def meals_for(*, user: Any) -> QuerySet[Meal]:
         Meal.objects.filter(user=user)
         .select_related("photo")
         .prefetch_related(Prefetch("items", queryset=MealItem.objects.order_by("position")))
-        .annotate(
-            feedback_given=Exists(AnalysisFeedback.objects.filter(analysis_id=OuterRef("analysis_id")))
-        )
+        .annotate(feedback_given=Exists(AnalysisFeedback.objects.filter(analysis_id=OuterRef("analysis_id"))))
     )
 
 

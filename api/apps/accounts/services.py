@@ -89,9 +89,7 @@ def _check_age(birth_date: date) -> None:
 
 
 def _current_document(kind: str) -> LegalDocument | None:
-    return (
-        LegalDocument.objects.filter(kind=kind, published_at__isnull=False).order_by("-version").first()
-    )
+    return LegalDocument.objects.filter(kind=kind, published_at__isnull=False).order_by("-version").first()
 
 
 def _validate_consents(consents: list[dict[str, Any]]) -> None:
@@ -397,7 +395,9 @@ def social_auth(
             "id_token": not email,
         }
         raise ValidationFailed(
-            errors=field_errors({k: ["required for sign-up"] for k, absent in missing.items() if absent}, code="required")
+            errors=field_errors(
+                {k: ["required for sign-up"] for k, absent in missing.items() if absent}, code="required"
+            )
         )
     user = User.objects.create_user(
         email=email,
@@ -466,10 +466,12 @@ def verify_email(*, token: str) -> User:
     """Vérifie l'email du compte, ou confirme un changement d'adresse (`email_change`)."""
     try:
         consumed = one_time_tokens.consume(raw=token, purpose=OneTimeTokenPurpose.EMAIL_VERIFY)
-        user = consumed.user
+        is_change = False
     except ValidationFailed:
         consumed = one_time_tokens.consume(raw=token, purpose=OneTimeTokenPurpose.EMAIL_CHANGE)
-        user = consumed.user
+        is_change = True
+    user = consumed.user
+    if is_change:
         new_email = str(consumed.payload["new_email"])
         if User.objects.filter(email__iexact=new_email).exclude(pk=user.pk).exists():
             raise Conflict(code="email_taken", detail="email already registered")
@@ -489,9 +491,7 @@ def request_email_change(*, user: User, new_email: str, password: str | None) ->
         raise ValidationFailed(errors=field_errors({"password": ["wrong password"]}, code="invalid"))
     if User.objects.filter(email__iexact=new_email).exists():
         raise Conflict(code="email_taken", detail="email already registered")
-    raw = one_time_tokens.issue(
-        user=user, purpose=OneTimeTokenPurpose.EMAIL_CHANGE, payload={"new_email": new_email}
-    )
+    raw = one_time_tokens.issue(user=user, purpose=OneTimeTokenPurpose.EMAIL_CHANGE, payload={"new_email": new_email})
     transaction.on_commit(lambda: emails.send(user=user, kind="email_change", token=raw, to=new_email))
 
 

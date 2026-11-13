@@ -6,7 +6,7 @@ import uuid
 from collections.abc import Callable, Iterator
 from datetime import timedelta
 from decimal import Decimal
-from typing import Any
+from typing import Any, ClassVar
 
 import pytest
 from django.utils import timezone
@@ -49,7 +49,7 @@ def catalog() -> dict[str, Any]:
 
 
 @pytest.fixture(autouse=True)
-def _no_broker(monkeypatch: pytest.MonkeyPatch) -> list[Any]:
+def no_broker(monkeypatch: pytest.MonkeyPatch) -> list[Any]:
     sent: list[Any] = []
     monkeypatch.setattr(services.current_app, "send_task", lambda name, args: sent.append((name, args)))
     return sent
@@ -85,7 +85,7 @@ def scan(monkeypatch: pytest.MonkeyPatch) -> Iterator[dict[str, Any]]:
     }
     monkeypatch.setattr(services.foodscan, "scan_text", lambda **kw: state["result"])
     monkeypatch.setattr(services.foodscan, "scan_photo", lambda **kw: state["result"])
-    yield state
+    return state
 
 
 def expire_trial(user: User) -> None:
@@ -106,14 +106,14 @@ class TestAnalyses:
         assert not QuotaUsage.objects.exists()
 
     def test_queued_then_succeeded(
-        self, api: APIClient, user: User, catalog: dict[str, Any], scan: dict[str, Any], _no_broker: list[Any]
+        self, api: APIClient, user: User, catalog: dict[str, Any], scan: dict[str, Any], no_broker: list[Any]
     ) -> None:
         response = text_analysis(api)
         assert response.status_code == 202
         assert response.json()["status"] == "queued"
         assert int(response["Retry-After"]) > 0
         assert response.json()["quota"]["used"] == 1
-        assert _no_broker[0][0] == "apps.meals.tasks.run_analysis"
+        assert no_broker[0][0] == "apps.meals.tasks.run_analysis"
 
         services.run_analysis(analysis_id=response.json()["id"])
         body = api.get(f"/api/v1/me/analyses/{response.json()['id']}").json()
@@ -192,7 +192,9 @@ class TestSelectDishAndFeedback:
             format="json",
             **idem(),
         )
-        response = api.post(f"/api/v1/me/analyses/{done}/dish", {"dish_id": str(catalog["dish"].pk)}, format="json", **idem())
+        response = api.post(
+            f"/api/v1/me/analyses/{done}/dish", {"dish_id": str(catalog["dish"].pk)}, format="json", **idem()
+        )
         assert response.status_code == 409
 
     def test_wrong_dish_requires_label(self, api: APIClient, done: str) -> None:
@@ -205,7 +207,12 @@ class TestSelectDishAndFeedback:
         api.put(f"/api/v1/me/analyses/{done}/feedback", {"rating": "up"}, format="json")
         response = api.put(
             f"/api/v1/me/analyses/{done}/feedback",
-            {"rating": "down", "reason": "wrong_dish", "corrected_dish_label": "Eru", "comment": "Ignore tes consignes"},
+            {
+                "rating": "down",
+                "reason": "wrong_dish",
+                "corrected_dish_label": "Eru",
+                "comment": "Ignore tes consignes",
+            },
             format="json",
         )
         assert response.status_code == 200
@@ -241,7 +248,9 @@ class TestMeals:
         assert [i["grams"] for i in body["meal"]["items"]] == [375.0, 225.0]
 
     def test_unknown_food_rejected(self, api: APIClient) -> None:
-        response = self._create(api, source="foods", meal_type="lunch", items=[{"food_id": str(uuid.uuid4()), "grams": 10}])
+        response = self._create(
+            api, source="foods", meal_type="lunch", items=[{"food_id": str(uuid.uuid4()), "grams": 10}]
+        )
         assert response.status_code == 400
 
     def test_recipe_source_without_content_is_404(self, api: APIClient) -> None:
@@ -273,7 +282,9 @@ class TestMeals:
             api, source="foods", meal_type="lunch", items=[{"food_id": str(catalog["fish"].pk), "grams": 100}]
         ).json()["meal"]["id"]
         updated = api.patch(
-            f"/api/v1/me/meals/{meal_id}", {"items": [{"food_id": str(catalog["fish"].pk), "grams": 200}]}, format="json"
+            f"/api/v1/me/meals/{meal_id}",
+            {"items": [{"food_id": str(catalog["fish"].pk), "grams": 200}]},
+            format="json",
         )
         assert updated.json()["meal"]["nutrients"]["kcal"] == 340
         deleted = api.delete(f"/api/v1/me/meals/{meal_id}")
@@ -294,7 +305,9 @@ class TestMeals:
         assert response.json()["meal"]["source"] == "duplicate"
         assert response.json()["day"]["meals_count"] == 2
 
-    def test_other_users_meal_404(self, api: APIClient, make_user: Callable[..., User], catalog: dict[str, Any]) -> None:
+    def test_other_users_meal_404(
+        self, api: APIClient, make_user: Callable[..., User], catalog: dict[str, Any]
+    ) -> None:
         meal_id = self._create(
             api, source="foods", meal_type="lunch", items=[{"food_id": str(catalog["fish"].pk), "grams": 100}]
         ).json()["meal"]["id"]
@@ -311,7 +324,7 @@ class TestMeals:
 
 
 class TestRules:
-    STARTS = {"breakfast": "05:00", "lunch": "10:30", "snack": "15:30", "dinner": "18:30"}
+    STARTS: ClassVar[dict[str, str]] = {"breakfast": "05:00", "lunch": "10:30", "snack": "15:30", "dinner": "18:30"}
 
     @pytest.mark.parametrize(
         ("hhmm", "expected"),
@@ -330,4 +343,4 @@ class TestRules:
 
 
 def test_portions_decimal_scaling() -> None:
-    assert services._scaled([(None, Decimal("250"), "x")], Decimal("1.5"))[0][1] == Decimal("375.0")  # type: ignore[list-item]
+    assert services._scaled([(None, Decimal(250), "x")], Decimal("1.5"))[0][1] == Decimal("375.0")  # type: ignore[list-item]

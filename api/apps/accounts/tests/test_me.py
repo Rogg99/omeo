@@ -104,7 +104,9 @@ class TestConsents:
         assert body["pending_documents"] == []
 
     def test_append_only(self, api: APIClient, user: User) -> None:
-        response = api.post("/api/v1/me/consents", {"consents": [{"kind": "marketing", "granted": True}]}, format="json")
+        response = api.post(
+            "/api/v1/me/consents", {"consents": [{"kind": "marketing", "granted": True}]}, format="json"
+        )
         assert response.status_code == 200
         api.post("/api/v1/me/consents", {"consents": [{"kind": "marketing", "granted": False}]}, format="json")
         assert Consent.objects.filter(user=user, kind="marketing").count() == 2

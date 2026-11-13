@@ -9,7 +9,9 @@ from django.utils.translation import gettext_lazy
 from rest_framework import serializers
 
 from apps.activity.models import Activity, ActivityType, Exercise, HealthConnection, Insight, Intensity, Workout
+from apps.activity.presenters import workout_summary_out
 from apps.core.i18n import resolve
+from apps.core.presenters import image_from_key
 from apps.core.storage import public_url
 
 GRANTED_TYPES: Final = ["steps", "distance", "active_calories", "workouts", "weight", "heart_rate"]
@@ -160,10 +162,6 @@ def merge_out(manual: Activity, imported: Activity) -> dict[str, Any]:
     }
 
 
-def _image(key: str) -> dict[str, Any] | None:
-    return {"url": public_url(key)} if key else None
-
-
 def exercise_summary_out(exercise: Exercise, *, locked: bool) -> dict[str, Any]:
     body: dict[str, Any] = {
         "id": exercise.id,
@@ -173,7 +171,7 @@ def exercise_summary_out(exercise: Exercise, *, locked: bool) -> dict[str, Any]:
         "equipment": list(exercise.equipment),
         "locked": locked,
     }
-    thumbnail = _image(exercise.thumbnail_key)
+    thumbnail = image_from_key(exercise.thumbnail_key)
     if thumbnail:
         body["thumbnail"] = thumbnail
     return body
@@ -184,7 +182,7 @@ def exercise_detail_out(exercise: Exercise) -> dict[str, Any]:
         "hls_url": public_url(exercise.video_key),
         "subtitles": [{"locale": locale, "url": public_url(key)} for locale, key in sorted(exercise.subtitles.items())],
     }
-    poster = _image(exercise.thumbnail_key)
+    poster = image_from_key(exercise.thumbnail_key)
     if poster:
         video["poster"] = poster
     if exercise.video_duration_s:
@@ -194,24 +192,6 @@ def exercise_detail_out(exercise: Exercise) -> dict[str, Any]:
         "instructions": resolve(exercise.instructions),
         "video": video,
     }
-
-
-def workout_summary_out(workout: Workout, *, locked: bool, estimated_kcal: int | None = None) -> dict[str, Any]:
-    body: dict[str, Any] = {
-        "id": workout.id,
-        "name": resolve(workout.name),
-        "goal": workout.goal,
-        "level": workout.level,
-        "duration_s": workout.duration_s,
-        "exercises_count": int(getattr(workout, "exercises_count", 0)),
-        "locked": locked,
-    }
-    if estimated_kcal is not None:
-        body["estimated_kcal"] = estimated_kcal
-    cover = _image(workout.cover_key)
-    if cover:
-        body["cover"] = cover
-    return body
 
 
 def workout_detail_out(workout: Workout, *, downloadable: bool, estimated_kcal: int) -> dict[str, Any]:

@@ -49,9 +49,7 @@ def _plus_until(user: Any, now: datetime) -> datetime | None:
         .aggregate(end=Max("current_period_end"))
         .get("end")
     )
-    grant_end = (
-        GrantedDays.objects.filter(user=user, ends_at__gt=now).aggregate(end=Max("ends_at")).get("end")
-    )
+    grant_end = GrantedDays.objects.filter(user=user, ends_at__gt=now).aggregate(end=Max("ends_at")).get("end")
     candidates = [d for d in (subscription_end, grant_end) if d is not None]
     return max(candidates) if candidates else None
 
@@ -199,9 +197,7 @@ def consume_quota(*, user: Any, feature: str) -> QuotaState:
 @transaction.atomic
 def refund_quota(*, user: Any, feature: str, period_start: date) -> None:
     """Rend une unité (analyse échouée). Sans effet si la période a déjà été remise à zéro."""
-    usage = (
-        QuotaUsage.objects.select_for_update().filter(user=user, feature=feature, period_start=period_start).first()
-    )
+    usage = QuotaUsage.objects.select_for_update().filter(user=user, feature=feature, period_start=period_start).first()
     if usage is not None and usage.used > 0:
         usage.used -= 1
         usage.save(update_fields=["used", "updated_at"])

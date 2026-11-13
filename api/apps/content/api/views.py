@@ -10,11 +10,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.throttling import BaseThrottle
 
+from apps.accounts.presenters import legal_ref_out
 from apps.accounts.selectors import latest_published_documents
-from apps.accounts.serializers import legal_ref_out
 from apps.billing.services import entitlement_for
 from apps.content import selectors, services
 from apps.content import serializers as s
+from apps.content.presenters import plant_summary_out, recipe_summary_out
 from apps.core.errors import NotFound
 from apps.core.i18n import resolve
 from apps.core.localtime import local_today
@@ -46,7 +47,7 @@ class RecipesView(AppAPIView):
         )
         full = _full(request.user)
         rows, next_cursor = cursor_paginate(request, queryset)
-        return Response(cursor_body([s.recipe_summary_out(r, full_catalog=full) for r in rows], next_cursor))
+        return Response(cursor_body([recipe_summary_out(r, full_catalog=full) for r in rows], next_cursor))
 
 
 class RecipeDetailView(AppAPIView):
@@ -80,10 +81,13 @@ class PlantsView(AppAPIView):
     def get(self, request: Request) -> Response:
         params = validated(s.PlantFilterSerializer, request.query_params)
         queryset = selectors.filter_plants(
-            selectors.plants_for(user=request.user), q=params.get("q"), tag=params.get("tag"), favorites=params["favorites"]
+            selectors.plants_for(user=request.user),
+            q=params.get("q"),
+            tag=params.get("tag"),
+            favorites=params["favorites"],
         )
         rows, next_cursor = cursor_paginate(request, queryset)
-        return Response(cursor_body([s.plant_summary_out(p) for p in rows], next_cursor))
+        return Response(cursor_body([plant_summary_out(p) for p in rows], next_cursor))
 
 
 class PlantDetailView(AppAPIView):
@@ -153,4 +157,6 @@ class LegalDocumentView(PublicAPIView):
         document = latest_published_documents().get(kind)
         if document is None:
             raise NotFound()
-        return Response({**legal_ref_out(document), "body": resolve(document.body), "published_at": document.published_at})
+        return Response(
+            {**legal_ref_out(document), "body": resolve(document.body), "published_at": document.published_at}
+        )

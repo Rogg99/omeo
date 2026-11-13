@@ -19,7 +19,11 @@ from apps.gamification import rules, services
 from apps.gamification.models import PointEvent, UserBadge
 from apps.nutrition.models import DailySummary
 
-LEVELS = [rules.LevelStep(rank=1, min_points=0), rules.LevelStep(rank=2, min_points=300), rules.LevelStep(rank=3, min_points=1000)]
+LEVELS = [
+    rules.LevelStep(rank=1, min_points=0),
+    rules.LevelStep(rank=2, min_points=300),
+    rules.LevelStep(rank=3, min_points=1000),
+]
 MONDAY = date(2026, 11, 9)
 
 
@@ -73,7 +77,9 @@ class TestAward:
         assert services.stats_for(user).total_points == 10
 
     def test_daily_cap(self, user: User) -> None:
-        gained = [services.award(user=user, action="meal_logged", ref_type="meal", ref_id=uuid.uuid4()) for _ in range(6)]
+        gained = [
+            services.award(user=user, action="meal_logged", ref_type="meal", ref_id=uuid.uuid4()) for _ in range(6)
+        ]
         assert gained == [10, 10, 10, 10, 0, 0]
 
     def test_weekly_cap(self, user: User) -> None:
@@ -128,7 +134,9 @@ class TestEvents:
 
     def test_kcal_goal_only_at_day_close(self, user: User) -> None:
         day = local_today(user) - timedelta(days=1)
-        DailySummary.objects.create(user=user, date=day, consumed_kcal=1800, target_kcal=1800, meals_count=3, is_complete=True)
+        DailySummary.objects.create(
+            user=user, date=day, consumed_kcal=1800, target_kcal=1800, meals_count=3, is_complete=True
+        )
         services.close_day(user=user, day=day)
         services.close_day(user=user, day=day)
         assert PointEvent.objects.filter(user=user, action="kcal_goal").count() == 1

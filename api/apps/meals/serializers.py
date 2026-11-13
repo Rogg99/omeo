@@ -7,11 +7,11 @@ from typing import Any, Final
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
-from apps.accounts.serializers import image_out
+from apps.core.presenters import image_out
 from apps.meals.models import Analysis, FeedbackRating, FeedbackReason, Meal, MealSource, MealType
 from apps.nutrition import calculations
 from apps.nutrition.models import Dish
-from apps.nutrition.serializers import dish_summary_out, nutrients_out
+from apps.nutrition.presenters import dish_summary_out, nutrients_out
 
 FAILURE_MESSAGES: Final[dict[str, Any]] = {
     "blurry": _("La photo est floue. Reprends-la avec plus de lumière, sans bouger."),
@@ -119,7 +119,9 @@ def analysis_out(
     items = [_item_out(i, foods) for i in analysis.items]
     totals = calculations.sum_nutrients(
         [
-            calculations.scale_nutrients({k: getattr(foods[i["food_id"]], k) for k in calculations.NUTRIENT_KEYS}, i["grams"])
+            calculations.scale_nutrients(
+                {k: getattr(foods[i["food_id"]], k) for k in calculations.NUTRIENT_KEYS}, i["grams"]
+            )
             for i in analysis.items
             if i["food_id"] in foods
         ]

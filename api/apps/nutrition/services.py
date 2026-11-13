@@ -235,7 +235,9 @@ def match_dish(*, label: str, country: str | None, threshold: float = MATCH_THRE
     if not rows:
         return None
     if country:
-        local = [d for d in rows if d.country == country and d.similarity >= rows[0].similarity - LOCAL_PREFERENCE_MARGIN]  # type: ignore[attr-defined]
+        local = [
+            d for d in rows if d.country == country and d.similarity >= rows[0].similarity - LOCAL_PREFERENCE_MARGIN
+        ]  # type: ignore[attr-defined]
         if local:
             return local[0]
     return rows[0]

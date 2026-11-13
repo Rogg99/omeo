@@ -8,6 +8,7 @@ Les clients (mobile, admin, web) se contentent d'afficher.
 from pathlib import Path
 
 import environ
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -274,6 +275,27 @@ CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_WORKER_PREFETCH_MULTIPLIER = 1
 CELERY_TASK_ROUTES = {"apps.meals.tasks.*": {"queue": "ai"}}
+# Tâches planifiées (toutes idempotentes). Les tâches « par fuseau » tournent chaque heure et ne traitent que les
+# utilisateurs dont l'heure locale correspond.
+CELERY_BEAT_SCHEDULE = {
+    "close-days-rewards": {"task": "apps.gamification.tasks.close_days", "schedule": crontab(minute=5)},
+    "close-days-challenges": {"task": "apps.programs.tasks.close_days", "schedule": crontab(minute=10)},
+    "prevention-tips": {"task": "apps.content.tasks.evaluate_prevention", "schedule": crontab(minute=20)},
+    "reminders": {"task": "apps.notifications.tasks.send_reminders", "schedule": crontab(minute="*/15")},
+    "campaigns": {"task": "apps.notifications.tasks.send_campaigns", "schedule": crontab(minute="*/5")},
+    "weekly-insights": {"task": "apps.activity.tasks.weekly_insights", "schedule": crontab(day_of_week=1, hour=3)},
+    "weekly-reports": {"task": "apps.content.tasks.weekly_reports", "schedule": crontab(day_of_week=1, hour=4)},
+    "trial-notifications": {"task": "apps.billing.tasks.trial_notifications", "schedule": crontab(minute=30)},
+    "store-reconciliation": {
+        "task": "apps.billing.tasks.reconcile_store_subscriptions",
+        "schedule": crontab(minute=45, hour="*/6"),
+    },
+    "quota-usage-cleanup": {"task": "apps.billing.tasks.purge_old_quota_usage", "schedule": crontab(hour=2, minute=0)},
+    "account-purge": {"task": "apps.accounts.tasks.purge_deleted_accounts", "schedule": crontab(hour=1, minute=0)},
+    "export-expiry": {"task": "apps.support.tasks.expire_exports", "schedule": crontab(minute=50)},
+    "approval-expiry": {"task": "apps.core.tasks.expire_approvals", "schedule": crontab(hour=0, minute=15)},
+    "idempotency-purge": {"task": "apps.core.tasks.purge_idempotency_records", "schedule": crontab(hour=3, minute=30)},
+}
 
 # ───────────────────────── IA ─────────────────────────
 OPENROUTER_API_KEY = env("OPENROUTER_API_KEY", default="")

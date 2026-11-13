@@ -36,6 +36,16 @@ from apps.core.audit import RequestMeta
 from apps.core.localtime import local_today
 from apps.core.models import ContentStatus
 from apps.nutrition import services as nutrition
+from apps.programs import services as programs_service
+from apps.programs.models import (
+    Challenge,
+    ChallengeParticipation,
+    Enrollment,
+    Program,
+    ProgramDay,
+    ProgramTask,
+    Rule,
+)
 from apps.nutrition.calculations import NUTRIENT_KEYS
 from apps.nutrition.models import Dish, DishComponent, Food
 
@@ -132,9 +142,14 @@ class Command(BaseCommand):
             self.seed_staff()
             self.seed_water(users)
             self.seed_activity(users)
+            self.seed_programs(users)
         self.stdout.write(self.style.SUCCESS(f"seed_demo : {len(users)} comptes et {len(STAFF)} membres du staff."))
 
     def reset(self) -> None:
+        Enrollment.objects.filter(user__email__endswith=f"@{DEMO_DOMAIN}").delete()
+        ChallengeParticipation.objects.filter(user__email__endswith=f"@{DEMO_DOMAIN}").delete()
+        Program.objects.filter(is_demo=True).delete()
+        Challenge.objects.filter(is_demo=True).delete()
         Recipe.objects.filter(is_demo=True).delete()
         Plant.objects.filter(is_demo=True).delete()
         deleted, _ = User.objects.filter(email__endswith=f"@{DEMO_DOMAIN}").delete()
@@ -274,6 +289,44 @@ class Command(BaseCommand):
                         "started_at": timezone.now() - timedelta(days=offset),
                     },
                 )
+
+    def seed_programs(self, users: dict[str, User]) -> None:
+        """Programmes et challenges publiés ; Awa a un programme à mi-parcours et un challenge actif."""
+        data = yaml.safe_load((DEMO_SEED_DIR / "programs.yaml").read_text(encoding="utf-8"))
+        programs: list[Program] = []
+        for row in data["programs"]:
+            program = Program.objects.create(
+                name=row["name"],
+                description=row["description"],
+                goal=row["goal"],
+                weeks=row["weeks"],
+                points=row["points"],
+                status=ContentStatus.PUBLISHED,
+                is_demo=True,
+            )
+            rules_by_task = [Rule.objects.create(**t["rule"]) if t.get("rule") else None for t in row["daily_tasks"]]
+            for index in range(1, row["weeks"] * 7 + 1):
+                day = ProgramDay.objects.create(program=program, day_index=index)
+                for order, (task, rule) in enumerate(zip(row["daily_tasks"], rules_by_task, strict=True)):
+                    ProgramTask.objects.create(day=day, label=task["label"], rule=rule, order=order)
+            programs.append(program)
+        challenges = [
+            Challenge.objects.create(
+                name=row["name"],
+                description=row.get("description", {}),
+                duration_days=row["duration_days"],
+                rule=Rule.objects.create(**row["rule"]),
+                status=ContentStatus.PUBLISHED,
+                is_demo=True,
+            )
+            for row in data["challenges"]
+        ]
+        awa = users["awa"]
+        enrollment = programs_service.enroll(user=awa, program_id=programs[0].pk, replace=False)
+        # Situation des maquettes : programme commencé il y a 13 jours (jour 14 sur 28)
+        Enrollment.objects.filter(pk=enrollment.pk).update(started_on=local_today(awa) - timedelta(days=13))
+        programs_service.join_challenge(user=awa, challenge_id=challenges[0].pk)
+        programs_service.join_challenge(user=users["fatou"], challenge_id=challenges[1].pk)
 
     def seed_staff(self) -> None:
         self.stdout.write("Staff de démo (mot de passe commun, TOTP ci-dessous) :")

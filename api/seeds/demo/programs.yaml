@@ -1,0 +1,35 @@
+# Programmes et challenges de démo. `daily_tasks` s'applique à chaque jour du programme.
+# rule : { metric, operator, threshold } ; absent = tâche cochée par l'utilisateur.
+programs:
+  - name: { fr: Perdre du poids en douceur, en: Gentle weight loss }
+    description: { fr: "4 semaines pour installer de bonnes habitudes, sans régime strict.", en: "4 weeks to build good habits, no strict diet." }
+    goal: lose_weight
+    weeks: 4
+    points: 300
+    daily_tasks:
+      - { label: { fr: Boire 2 L d'eau, en: Drink 2 L of water }, rule: { metric: water_ml, operator: gte, threshold: 2000 } }
+      - { label: { fr: Faire 8 000 pas, en: Walk 8000 steps }, rule: { metric: steps, operator: gte, threshold: 8000 } }
+      - { label: { fr: Un légume à chaque repas, en: A vegetable at every meal } }
+  - name: { fr: Prévenir le diabète, en: Diabetes prevention }
+    description: { fr: Moins de sucres rapides et plus de fibres pendant 3 semaines., en: Fewer fast sugars and more fibre for 3 weeks. }
+    goal: prevent_diabetes
+    weeks: 3
+    points: 300
+    daily_tasks:
+      - { label: { fr: Respecter ton objectif calorique, en: Stay within your calorie target }, rule: { metric: kcal_within_target, operator: gte, threshold: 1 } }
+      - { label: { fr: Pas de boisson sucrée, en: No sugary drink } }
+  - name: { fr: Prendre de la masse, en: Build muscle }
+    description: { fr: Séances guidées et protéines à chaque repas., en: Guided workouts and protein at every meal. }
+    goal: gain_muscle
+    weeks: 4
+    points: 300
+    daily_tasks:
+      - { label: { fr: Manger 120 g de protéines, en: Eat 120 g of protein }, rule: { metric: protein_g, operator: gte, threshold: 120 } }
+      - { label: { fr: Terminer une séance guidée, en: Complete a guided workout }, rule: { metric: workout_completed, operator: gte, threshold: 1 } }
+challenges:
+  - { name: { fr: Hydratation, en: Hydration }, duration_days: 7, rule: { metric: water_ml, operator: gte, threshold: 2000 } }
+  - { name: { fr: 8 000 pas, en: 8000 steps }, duration_days: 14, rule: { metric: steps, operator: gte, threshold: 8000 } }
+  - { name: { fr: Bouger 20 minutes, en: Move 20 minutes }, duration_days: 14, rule: { metric: active_minutes, operator: gte, threshold: 20 } }
+  - { name: { fr: Assiette protéinée, en: Protein plate }, duration_days: 7, rule: { metric: protein_g, operator: gte, threshold: 80 } }
+  - { name: { fr: Trois repas par jour, en: Three meals a day }, duration_days: 10, rule: { metric: meals_count, operator: gte, threshold: 3 } }
+  - { name: { fr: Zéro soda, en: Zero soda }, duration_days: 7, rule: { metric: manual, operator: gte, threshold: 1 } }

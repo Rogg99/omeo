@@ -22,6 +22,7 @@ from typing import Any, Final
 
 import yaml
 from django.conf import settings
+from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError, CommandParser
 from django.db import transaction
 from django.utils import timezone
@@ -30,6 +31,7 @@ from apps.accounts import mfa
 from apps.accounts import services as accounts
 from apps.accounts.models import City, Role, StaffRole, User
 from apps.activity import services as activity
+from apps.content.models import FaqItem, Plant, PreventionTip, Recipe
 from apps.core.audit import RequestMeta
 from apps.core.localtime import local_today
 from apps.core.models import ContentStatus
@@ -125,6 +127,7 @@ class Command(BaseCommand):
                 self.stdout.write("Données de démo déjà présentes (utiliser --reset pour les recréer).")
                 return
             self.seed_catalog()
+            self.seed_content()
             users = self.seed_accounts()
             self.seed_staff()
             self.seed_water(users)
@@ -132,6 +135,8 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"seed_demo : {len(users)} comptes et {len(STAFF)} membres du staff."))
 
     def reset(self) -> None:
+        Recipe.objects.filter(is_demo=True).delete()
+        Plant.objects.filter(is_demo=True).delete()
         deleted, _ = User.objects.filter(email__endswith=f"@{DEMO_DOMAIN}").delete()
         self.stdout.write(f"Réinitialisation : {deleted} ligne(s) de démo supprimée(s).")
 
@@ -202,6 +207,17 @@ class Command(BaseCommand):
                 DishComponent(dish=dish, food=foods[key], grams=Decimal(str(grams))) for key, grams in components.items()
             )
             nutrition.refresh_dish(dish=dish)
+
+    def seed_content(self) -> None:
+        """Contenus importés en brouillon (comme en production), puis publiés : en démo, tout est publié."""
+        folder = DEMO_SEED_DIR / "content"
+        call_command("import_content", str(folder), "--tag-demo", verbosity=0)
+        Recipe.objects.filter(is_demo=True).update(status=ContentStatus.PUBLISHED)
+        Plant.objects.filter(is_demo=True).update(status=ContentStatus.PUBLISHED)
+        tip_codes = [row["code"] for row in yaml.safe_load((folder / "tips.yaml").read_text(encoding="utf-8"))]
+        PreventionTip.objects.filter(code__in=tip_codes).update(status=ContentStatus.PUBLISHED)
+        questions = [row["question"]["fr"] for row in yaml.safe_load((folder / "faq.yaml").read_text(encoding="utf-8"))]
+        FaqItem.objects.filter(question__fr__in=questions).update(status=ContentStatus.PUBLISHED)
 
     def seed_water(self, users: dict[str, User]) -> None:
         """60 jours d'hydratation variée (comptes actifs), par `add_water` : la projection est recalculée."""

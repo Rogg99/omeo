@@ -1,0 +1,19 @@
+# Conseils de prévention de démo. `trigger` est évalué par apps/content/prevention.py.
+- code: salt_high_3d
+  topic: salt
+  tier: free
+  title: { fr: Un peu trop de sel ces derniers jours, en: A bit too much salt lately }
+  body: { fr: "Tu as dépassé 5 g de sel trois jours de suite. Les bouillons cubes en contiennent beaucoup : essaie d'en mettre moitié moins.", en: "You went over 5 g of salt three days in a row. Stock cubes contain a lot: try using half." }
+  trigger: { metric: salt_g, op: gte, value: 5, consecutive_days: 3 }
+- code: water_low_3d
+  topic: water
+  tier: free
+  title: { fr: Pense à boire, en: Remember to drink }
+  body: { fr: "Tu as bu moins d'1,5 L trois jours de suite. Garde une bouteille près de toi.", en: "You drank less than 1.5 L three days in a row. Keep a bottle nearby." }
+  trigger: { metric: water_ml, op: lte, value: 1500, consecutive_days: 3 }
+- code: fiber_low_5d
+  topic: fiber
+  tier: plus
+  title: { fr: Plus de fibres pour ta glycémie, en: More fibre for your blood sugar }
+  body: { fr: "Moins de 15 g de fibres cinq jours de suite. Le niébé, le gombo et les légumes-feuilles t'aideront.", en: "Under 15 g of fibre five days in a row. Cowpeas, okra and leafy greens will help." }
+  trigger: { metric: fiber_g, op: lte, value: 15, consecutive_days: 5 }

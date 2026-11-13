@@ -1,0 +1,57 @@
+# Recettes de démo. `food` = clé source_ref des aliments de démo (seeds/demo/foods.yaml), grammes pour toute la recette.
+- name: { fr: Attiéké poisson braisé, en: Attieke with grilled fish }
+  description: { fr: "Le classique ivoirien : attiéké, poisson braisé et crudités.", en: "The Ivorian classic: attieke, grilled fish and raw vegetables." }
+  country: CI
+  prep_minutes: 15
+  cook_minutes: 20
+  difficulty: easy
+  servings: 2
+  tags: [healthy, traditional]
+  goals: [eat_balanced, lose_weight]
+  is_free: true
+  ingredients:
+    - { food: attieke, grams: 500, display: { fr: 500 g d'attiéké, en: 500 g attieke } }
+    - { food: poisson_braise, grams: 300, display: { fr: 2 poissons (300 g), en: 2 fish (300 g) } }
+    - { food: tomate, grams: 120, display: { fr: 2 tomates, en: 2 tomatoes } }
+    - { food: oignon, grams: 60, display: { fr: 1 oignon, en: 1 onion } }
+  steps:
+    - { fr: Faire mariner le poisson avec l'oignon et les épices., en: Marinate the fish with onion and spices. }
+    - { fr: Braiser le poisson 10 minutes de chaque côté., en: Grill the fish 10 minutes on each side. }
+    - { fr: Réchauffer l'attiéké à la vapeur et servir avec les tomates., en: Steam the attieke and serve with the tomatoes. }
+- name: { fr: Ndolé aux crevettes, en: Ndole with shrimp }
+  description: { fr: Feuilles amères mijotées à la pâte d'arachide., en: Bitter leaves simmered in peanut paste. }
+  country: CM
+  prep_minutes: 30
+  cook_minutes: 60
+  difficulty: medium
+  servings: 4
+  tags: [traditional, high_protein]
+  goals: [gain_muscle, eat_balanced]
+  ingredients:
+    - { food: feuilles_ndole, grams: 600, display: { fr: 600 g de feuilles de ndolé, en: 600 g bitterleaf } }
+    - { food: arachide_pate, grams: 160, display: { fr: 160 g de pâte d'arachide, en: 160 g peanut paste } }
+    - { food: crevettes, grams: 160, display: { fr: 160 g de crevettes, en: 160 g shrimp } }
+    - { food: boeuf, grams: 240, display: { fr: 240 g de bœuf, en: 240 g beef } }
+    - { food: huile_arachide, grams: 40, display: { fr: 4 cuillères d'huile, en: 4 tbsp oil } }
+  steps:
+    - { fr: Laver et presser les feuilles pour retirer l'amertume., en: Wash and squeeze the leaves to remove bitterness. }
+    - { fr: "Cuire la viande, ajouter la pâte d'arachide puis les feuilles.", en: "Cook the meat, add the peanut paste, then the leaves." }
+    - { fr: Ajouter les crevettes en fin de cuisson., en: Add the shrimp at the end. }
+- name: { fr: Salade de niébé, en: Cowpea salad }
+  description: { fr: Riche en fibres et en protéines végétales., en: Rich in fibre and plant protein. }
+  country: SN
+  prep_minutes: 15
+  cook_minutes: 0
+  difficulty: easy
+  servings: 2
+  tags: [vegetarian, healthy, low_salt, quick]
+  goals: [prevent_diabetes, prevent_hypertension, eat_balanced]
+  is_free: true
+  ingredients:
+    - { food: niebe, grams: 300, display: { fr: 300 g de niébé cuit, en: 300 g cooked cowpeas } }
+    - { food: tomate, grams: 120, display: { fr: 2 tomates, en: 2 tomatoes } }
+    - { food: oignon, grams: 40, display: { fr: 1/2 oignon, en: 1/2 onion } }
+    - { food: avocat, grams: 100, display: { fr: 1/2 avocat, en: 1/2 avocado } }
+  steps:
+    - { fr: Couper les légumes en dés., en: Dice the vegetables. }
+    - { fr: Mélanger avec le niébé et assaisonner sans trop saler., en: Mix with the cowpeas and season lightly. }

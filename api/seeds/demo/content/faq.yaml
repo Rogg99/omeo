@@ -1,0 +1,13 @@
+# FAQ de démo.
+- category: { fr: Analyse des repas, en: Meal analysis }
+  question: { fr: "Comment fonctionne l'analyse photo ?", en: "How does photo analysis work?" }
+  answer: { fr: "L'IA reconnaît le plat et ses ingrédients ; les valeurs nutritionnelles viennent toujours de notre base d'aliments.", en: "The AI recognises the dish and its ingredients; nutrition values always come from our food database." }
+  audience: both
+- category: { fr: Analyse des repas, en: Meal analysis }
+  question: { fr: "Pourquoi une analyse floue ne compte pas ?", en: "Why doesn't a blurry analysis count?" }
+  answer: { fr: "Une photo floue ou sans aliment ne consomme pas ton quota.", en: "A blurry photo or one without food does not use your quota." }
+  audience: app
+- category: { fr: Abonnement, en: Subscription }
+  question: { fr: "Comment résilier Omeo Plus ?", en: "How do I cancel Omeo Plus?" }
+  answer: { fr: "Depuis Google Play ou l'App Store si tu t'es abonné·e dans l'app, ou depuis la page Abonnement du site.", en: "From Google Play or the App Store if you subscribed in the app, or from the Subscription page on the website." }
+  audience: both

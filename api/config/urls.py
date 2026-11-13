@@ -15,6 +15,7 @@ api_v1 = [
     path("", include("apps.meals.api.urls")),
     path("", include("apps.activity.api.urls")),
     path("", include("apps.gamification.api.urls")),
+    path("", include("apps.content.api.urls")),
 ]
 
 urlpatterns = [path("api/v1/", include(api_v1))]

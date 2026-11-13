@@ -1,0 +1,15 @@
+# Plantes de démo (textes à faire relire par l'équipe avant toute publication réelle).
+- common_name: { fr: Moringa, en: Moringa }
+  scientific_name: Moringa oleifera
+  tags: [traditional_use, nutritional_support]
+  traditional_use: { fr: Feuilles consommées en sauce ou en poudre., en: Leaves eaten in sauces or as powder. }
+  nutritional_benefits: { fr: "Source de fer, de calcium et de vitamine A.", en: "Source of iron, calcium and vitamin A." }
+  precautions: { fr: "À éviter en grande quantité pendant la grossesse.", en: Avoid large amounts during pregnancy. }
+  contraindications: [pregnancy]
+- common_name: { fr: Bissap (hibiscus), en: Hibiscus }
+  scientific_name: Hibiscus sabdariffa
+  tags: [traditional_use, caution]
+  traditional_use: { fr: Fleurs infusées en boisson rafraîchissante., en: Flowers brewed into a refreshing drink. }
+  nutritional_benefits: { fr: Riche en antioxydants ; à boire peu sucré., en: Rich in antioxidants; drink with little sugar. }
+  precautions: { fr: Peut faire baisser la tension ; prudence avec un traitement de l'hypertension., en: May lower blood pressure; caution with hypertension treatment. }
+  contraindications: [hypertension, pregnancy]

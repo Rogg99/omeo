@@ -140,5 +140,16 @@ def read_head_bytes(*, key: str, length: int = 64, bucket: Bucket = "private") -
     return response["Body"].read()
 
 
+def read_bytes(*, key: str, max_bytes: int | None = None, bucket: Bucket = "private") -> bytes:
+    """Contenu complet d'un objet (borné à `max_bytes` + 1 pour détecter un dépassement)."""
+    limit = (max_bytes or settings.UPLOAD_MAX_BYTES) + 1
+    response = internal_client().get_object(Bucket=_bucket_name(bucket), Key=key, Range=f"bytes=0-{limit - 1}")
+    return response["Body"].read()
+
+
+def put_bytes(*, key: str, data: bytes, content_type: str, bucket: Bucket = "private") -> None:
+    internal_client().put_object(Bucket=_bucket_name(bucket), Key=key, Body=data, ContentType=content_type)
+
+
 def delete(*, key: str, bucket: Bucket = "private") -> None:
     internal_client().delete_object(Bucket=_bucket_name(bucket), Key=key)

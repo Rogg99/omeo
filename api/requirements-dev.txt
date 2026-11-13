@@ -1,0 +1,14 @@
+-r requirements.txt
+pytest==8.4.2
+pytest-django==4.11.1
+pytest-cov==7.0.0
+factory-boy==3.3.3
+freezegun==1.5.5
+schemathesis==4.3.6
+ruff==0.14.3
+mypy==1.18.2
+django-stubs[compatible-mypy]==5.2.7
+djangorestframework-stubs[compatible-mypy]==3.16.5
+types-PyYAML==6.0.12.20250915
+types-qrcode==8.2.0.20250914
+pre-commit==4.3.0

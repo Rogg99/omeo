@@ -1,0 +1,62 @@
+[project]
+name = "omeo-api"
+version = "1.1.3"
+requires-python = ">=3.13"
+
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = [
+  "E", "W", "F", "I", "B", "C4", "UP", "N", "S", "A", "DJ", "SIM", "RET", "PIE", "PT", "TID",
+  "TCH", "PL", "RUF", "ERA", "T20", "BLE", "DTZ", "ISC", "ICN", "PGH", "PERF", "FURB", "LOG", "G",
+]
+ignore = [
+  "PLR0913",  # services à arguments nommés
+  "PLR2004",  # constantes métier nommées dans les réglages
+  "RUF001", "RUF002", "RUF003",  # textes en français (apostrophes typographiques)
+  "TC001", "TC002", "TC003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["S101", "S105", "S106", "PLR0915", "PLC0415"]
+"**/management/commands/*" = ["T201"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"rest_framework.serializers.ModelSerializer".msg = "Sérialiseurs explicites : pas d'exposition implicite des champs."
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
+exclude = ["migrations/"]
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = ["pyotp.*", "pillow_heif.*", "storages.*", "environ.*", "celery.*", "factory.*", "schemathesis.*", "jwt.*"]
+ignore_missing_imports = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["test_*.py"]
+addopts = "--strict-markers -p no:cacheprovider"
+markers = ["contract: tests du contrat OpenAPI"]
+filterwarnings = ["error::RuntimeWarning"]
+
+[tool.coverage.run]
+branch = true
+source = ["apps"]
+omit = ["*/migrations/*", "*/tests/*", "*/management/*"]
+
+[tool.coverage.report]
+fail_under = 90
+include = ["*/services.py", "*/calculations.py", "*/rules.py", "*/met.py", "*/entitlements.py"]
+show_missing = true

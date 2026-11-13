@@ -10,21 +10,42 @@
     "gen:api": "openapi-typescript ../contracts/openapi.yaml -o src/lib/api/schema.d.ts"
   },
   "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.3.0",
+    "@fontsource-variable/space-grotesk": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "@radix-ui/react-dropdown-menu": "^2.2.1",
     "next": "16.4.5",
+    "next-intl": "^4.15.1",
     "openapi-fetch": "^0.17.0",
+    "qrcode": "^1.5.4",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-markdown": "^10.1.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@lhci/cli": "^0.16.1",
+    "@playwright/test": "^1.65.0",
+    "@stoplight/prism-cli": "^5.16.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
     "openapi-typescript": "^7.13.0",
+    "prettier": "^3.10.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "stylelint": "^18.0.0",
+    "stylelint-config-standard": "^41.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.1.0"
   },
   "packageManager": "pnpm@11.10.0"
 }

@@ -41,7 +41,13 @@
     "analysis_rejected": "Impossible de reconnaître le plat. Essaie avec une photo plus nette.",
     "server_error": "Un problème est survenu de notre côté. Réessaie.",
     "step_up_required": "Saisis ton code d'authentification pour confirmer.",
-    "self_approval_forbidden": "Une autre personne doit valider cette action."
+    "self_approval_forbidden": "Une autre personne doit valider cette action.",
+    "conflict": "Cette action n'est pas possible dans l'état actuel de ton compte.",
+    "not_found": "Introuvable.",
+    "forbidden": "Tu n'as pas accès à cette action.",
+    "mfa_required": "Ce compte se connecte uniquement depuis l'espace d'administration.",
+    "captcha_failed": "La vérification anti-robot a échoué. Réessaie.",
+    "network_error": "Impossible de joindre nos serveurs. Vérifie ta connexion et réessaie."
   },
   "admin": {
     "nav": {

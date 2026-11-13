@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.3
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^api/
+      - id: ruff-format
+        files: ^api/
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: end-of-file-fixer
+        files: ^api/
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (api)
+        entry: bash -c 'cd api && mypy .'
+        language: system
+        files: ^api/.*\.py$
+        pass_filenames: false

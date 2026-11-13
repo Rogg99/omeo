@@ -96,6 +96,18 @@
   "@errorsStepUpRequired": {},
   "errorsSelfApprovalForbidden": "Une autre personne doit valider cette action.",
   "@errorsSelfApprovalForbidden": {},
+  "errorsConflict": "Cette action n'est pas possible dans l'état actuel de ton compte.",
+  "@errorsConflict": {},
+  "errorsNotFound": "Introuvable.",
+  "@errorsNotFound": {},
+  "errorsForbidden": "Tu n'as pas accès à cette action.",
+  "@errorsForbidden": {},
+  "errorsMfaRequired": "Ce compte se connecte uniquement depuis l'espace d'administration.",
+  "@errorsMfaRequired": {},
+  "errorsCaptchaFailed": "La vérification anti-robot a échoué. Réessaie.",
+  "@errorsCaptchaFailed": {},
+  "errorsNetworkError": "Impossible de joindre nos serveurs. Vérifie ta connexion et réessaie.",
+  "@errorsNetworkError": {},
   "appOnboardingStep": "{current} / {total}",
   "@appOnboardingStep": {
     "placeholders": {

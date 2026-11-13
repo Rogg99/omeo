@@ -41,7 +41,13 @@
     "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
     "server_error": "Something went wrong on our side. Please try again.",
     "step_up_required": "Enter your authentication code to confirm.",
-    "self_approval_forbidden": "Someone else must approve this action."
+    "self_approval_forbidden": "Someone else must approve this action.",
+    "conflict": "This action isn't possible in your account's current state.",
+    "not_found": "Not found.",
+    "forbidden": "You don't have access to this action.",
+    "mfa_required": "This account can only sign in from the admin area.",
+    "captcha_failed": "The anti-bot check failed. Please try again.",
+    "network_error": "We can't reach our servers. Check your connection and try again."
   },
   "admin": {
     "nav": {

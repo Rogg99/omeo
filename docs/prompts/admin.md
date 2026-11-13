@@ -87,7 +87,16 @@ MODULES (parité complète avec les maquettes) :
   - les 👎 en premier, avec des filtres ;
   - comparaison côte à côte : photo, réponse de l'IA, version corrigée ;
   - actions : créer un plat ou un aliment, ajouter un autre nom, signaler un défaut, ignorer ;
+  - validation d'une correction de plat par un validateur de confiance (rôle moderation) : approuver,
+    avec un indice visuel facultatif, crée la règle tout de suite ; rejeter la retire du consensus ;
   - statistiques.
+- Base de connaissances du scan (docs/technique/foodscan.md) :
+  - fiches de plats : clé stable, nom usuel, noms locaux, description visuelle, « à distinguer de »,
+    portée (un pays ou une région) ;
+  - règles de confusion par pays : origine (consensus ou validateur), utilisateurs distincts, part
+    d'accord, état actif ; une règle désactivée à la main n'est jamais réactivée par le calcul ;
+  - pour chaque analyse : fiches et règles injectées, modèle, version du prompt, coût.
+  Elle remplace la modération provisoire de l'admin Django.
 - Abonnements et paiements : offres et prix en USD, quotas, listes, remboursement (web uniquement),
   codes promo.
 - Support : file des demandes, assignation, réponse avec modèles, notes internes, statuts.

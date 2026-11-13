@@ -4,5 +4,6 @@ Toute modification de [openapi.yaml](openapi.yaml) est d'abord proposée ici, pu
 
 | Date | Endpoint / schéma | Changement | Raison | Compatible ? | Statut |
 |---|---|---|---|---|---|
+| 2026-11-13 | PUT /me/analyses/{id}/feedback (FeedbackInput) | Ajout de `corrected_dish_label` facultatif (string, 80 caractères max), attendu quand `reason = wrong_dish` | Alimenter les règles de confusion de foodscan (D37) | Oui (ajout facultatif) | Proposé |
 | 2026-11-09 | /admin/*, /auth/mfa/step-up, /admin/approvals | x-permission partout, step-up, quatre yeux (202 et ApprovalRequest), x-entitlement, x-quota, x-email-verified | Contrôle d'accès (D26 à D31) | Oui (ajouts) | Validé |
 | 2026-11-09 | — | Version initiale 1.0.0 (142 chemins, 169 opérations) | Contrat cible avant développement | — | Validé |

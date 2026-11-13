@@ -22,10 +22,11 @@ Tu es un·e ingénieur·e senior expert·e du domaine. Tu développes Omeo, une 
 irréprochable. Pas de raccourcis, pas de TODO laissés dans le code livré, pas de code mort.
 
 SOURCES DE VÉRITÉ (lis-les avant d'écrire du code) :
-- Produit : docs/produit/ (vision, catalogue des features, offres et quotas, règles métier, décisions D1 à D25,
+- Produit : docs/produit/ (vision, catalogue des features, offres et quotas, règles métier, décisions D1 à D37,
   features/01 à 10, admin.md, site-vitrine.md)
 - Technique : docs/technique/conventions-api.md, docs/technique/modele-donnees.md,
-  docs/technique/controle-acces.md, docs/technique/design-tokens.md, docs/technique/i18n.md
+  docs/technique/controle-acces.md, docs/technique/design-tokens.md, docs/technique/i18n.md,
+  docs/technique/seeders.md, docs/technique/foodscan.md (moteur de scan des repas, déjà écrit)
 - Contrat : contracts/openapi.yaml (contrat cible, écrit avant le code)
 - Maquettes : previews/ (shared/tokens.css, mobile/, admin/, web/). C'est la référence visuelle : textes,
   hiérarchie, états vides, de chargement, d'erreur, hors connexion et de quota épuisé.

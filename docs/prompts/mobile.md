@@ -79,7 +79,10 @@ PARCOURS CLÉS :
   - POST /me/uploads, PUT présigné, puis POST /me/analyses ;
   - interrogation de GET /me/analyses/{id} en respectant Retry-After, avec une animation d'analyse ;
   - écran « Ingrédients présélectionnés », puis POST /me/meals ;
-  - mise à jour du jour avec la réponse (day et rewards), animation des points, avis 👍/👎.
+  - mise à jour du jour avec la réponse (day et rewards), animation des points, avis 👍/👎 ;
+  - si l'analyse a une faible confiance, invitation à vérifier ; sur un 👎 « mauvais plat », choix du
+    bon plat parmi les alternatives renvoyées ou par recherche (corrected_dish_label, dès que
+    l'évolution du contrat est validée).
 - Quotas : GET /me/quotas affiché avant chaque photo.
 - Santé :
   - permission demandée au moment où elle sert (écran Progression ou Sport), jamais à l'onboarding ;

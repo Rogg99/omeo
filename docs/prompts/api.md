@@ -84,10 +84,22 @@ IDEMPOTENCE ET HORS CONNEXION :
   24 h (Redis et une table). Même clé avec un autre corps : 409 idempotency_conflict.
 - Journée locale calculée à partir de Profile.timezone, mis à jour par l'en-tête X-Timezone.
 
-IA (OpenRouter, D3) :
-- meals/ai/client.py : client httpx avec délai maximal, nouvelles tentatives à délai croissant et
-  coupe-circuit. Sortie JSON stricte validée par pydantic. Prompt versionné (prompt_version).
-- La file Celery « ai » gère l'analyse. Statuts : queued, processing, succeeded ou failed.
+IA (OpenRouter, D3, D37) :
+- Le moteur d'analyse existe déjà : apps/foodscan (docs/technique/foodscan.md, à lire en entier). Ne le
+  réécris pas et ne crée pas de second client IA. Il fournit le client OpenRouter (délai, nouvelles
+  tentatives, coupe-circuit, coût), la sortie JSON stricte (ScanOutput), le prompt versionné
+  (PROMPT_VERSION), le contexte géographique, les fiches de plats et les règles de confusion.
+- meals appelle uniquement les services de foodscan, jamais ses vues :
+  services.scan_photo(image_bytes, country=Profile.country, locale) et services.scan_text(...).
+  Le pays vient toujours de Profile.country, jamais d'une position GPS.
+- La file Celery « ai » exécute l'analyse. Statuts : queued, processing, succeeded ou failed.
+  Analysis enregistre les champs de ScanResult (modèle, prompt_version, tokens, coût, réponse brute,
+  contexte injecté). result.low_confidence alimente l'invitation à vérifier ; result.counted_in_quota
+  décide du décompte.
+- Avis : PUT /me/analyses/{id}/feedback appelle services.submit_review dès qu'un plat corrigé est fourni
+  (motif wrong_dish). Le commentaire libre est enregistré mais n'entre jamais dans un prompt.
+  corrected_dish_label est une évolution du contrat proposée dans contracts/CHANGES.md : ne l'implémente
+  qu'une fois validée.
 - Rapprochement des ingrédients : recherche trigram et unaccent sur Food.name et Food.aliases, plus
   un seuil. Les valeurs nutritionnelles viennent toujours de Food.
 - Le quota est décompté dans la transaction (SELECT FOR UPDATE sur QuotaUsage) et rendu si l'analyse

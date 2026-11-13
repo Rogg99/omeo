@@ -38,3 +38,19 @@ meals:
   meal_type_starts: { breakfast: "05:00", lunch: "10:30", snack: "15:30", dinner: "18:30" }
   analysis_poll_seconds: 2             # Retry-After renvoyé pendant une analyse
   food_match_threshold: 0.45           # similarité trigram minimale pour rapprocher un ingrédient de Food
+activity:
+  steps_goal: 8000
+  # METs (Compendium of Physical Activities, valeurs arrondies) par type et intensité
+  met_table:
+    walking:  { light: 2.8, moderate: 3.5, vigorous: 5.0 }
+    running:  { light: 6.0, moderate: 8.3, vigorous: 11.0 }
+    football: { light: 5.0, moderate: 7.0, vigorous: 10.0 }
+    dancing:  { light: 3.5, moderate: 5.0, vigorous: 7.3 }
+    cycling:  { light: 4.0, moderate: 6.8, vigorous: 10.0 }
+    strength: { light: 3.5, moderate: 5.0, vigorous: 6.0 }
+    swimming: { light: 5.0, moderate: 7.0, vigorous: 10.0 }
+    other:    { light: 3.0, moderate: 4.5, vigorous: 6.0 }
+  seconds_per_rep: 3                   # durée estimée d'une répétition (étapes « reps » des séances)
+  sync_max_days_back: 30
+  weight_trend_days: 28                # fenêtre de la tendance de poids
+  weight_stable_kg_per_week: 0.1       # en dessous : tendance « stable »

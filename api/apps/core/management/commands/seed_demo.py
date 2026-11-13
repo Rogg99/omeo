@@ -29,6 +29,7 @@ from django.utils import timezone
 from apps.accounts import mfa
 from apps.accounts import services as accounts
 from apps.accounts.models import City, Role, StaffRole, User
+from apps.activity import services as activity
 from apps.core.audit import RequestMeta
 from apps.core.localtime import local_today
 from apps.core.models import ContentStatus
@@ -39,6 +40,7 @@ from apps.nutrition.models import Dish, DishComponent, Food
 DEMO_DOMAIN: Final = "demo.omeo.app"
 DEMO_SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "demo"
 HISTORY_DAYS: Final = 60
+SYNC_DAYS: Final = 30  # la synchronisation santé n'accepte que les 30 derniers jours
 DEMO_PASSWORD: Final = "Demo-Omeo-2026!"
 DEMO_META: Final = RequestMeta(ip=None, user_agent="seed_demo")
 ALL_CONSENTS: Final = [
@@ -126,6 +128,7 @@ class Command(BaseCommand):
             users = self.seed_accounts()
             self.seed_staff()
             self.seed_water(users)
+            self.seed_activity(users)
         self.stdout.write(self.style.SUCCESS(f"seed_demo : {len(users)} comptes et {len(STAFF)} membres du staff."))
 
     def reset(self) -> None:
@@ -210,6 +213,51 @@ class Command(BaseCommand):
                 glasses = self.rng.choice((0, 3, 5, 6, 8, 10))
                 if glasses:
                     nutrition.add_water(user=user, amount_ml=glasses * 250, day=today - timedelta(days=offset))
+
+    def seed_activity(self, users: dict[str, User]) -> None:
+        """
+        Pesées hebdomadaires (en baisse ou stables), pas des 30 derniers jours via la synchronisation santé,
+        et quelques activités manuelles plus anciennes. Tout passe par les services d'activity.
+        """
+        for slug, user in users.items():
+            demo = next(d for d in DEMO_USERS if d.slug == slug)
+            if demo.situation in ("new", "suspended"):
+                continue
+            today = local_today(user)
+            losing = "lose_weight" in demo.goals
+            start_weight = demo.weight_kg + (2.1 if losing else 0.0)
+            weeks = HISTORY_DAYS // 7
+            for week in range(weeks, -1, -1):
+                progress = (weeks - week) / weeks
+                weight = start_weight - (start_weight - demo.weight_kg) * progress
+                activity.add_weight(
+                    user=user,
+                    weight_kg=Decimal(str(round(weight, 1))),
+                    day=today - timedelta(days=week * 7),
+                )
+            sync_days = [
+                {
+                    "date": today - timedelta(days=offset),
+                    "steps": self.rng.choice((2500, 4800, 6200, 8300, 9700, 12100)),
+                    "active_kcal": self.rng.choice((120, 210, 340, 460)),
+                }
+                for offset in range(SYNC_DAYS - 1, -1, -1)
+            ]
+            activity.set_health_connection(
+                user=user, source="health_connect", granted_types=["steps", "distance", "active_calories", "weight"]
+            )
+            activity.sync_health(user=user, source="health_connect", days=sync_days, workouts=[], weights=[])
+            for offset in range(HISTORY_DAYS, SYNC_DAYS, 4):
+                activity.create_activity(
+                    user=user,
+                    data={
+                        "type": self.rng.choice(("walking", "running", "football", "dancing")),
+                        "intensity": self.rng.choice(("light", "moderate", "vigorous")),
+                        "duration_s": self.rng.choice((1200, 1800, 2700, 3600)),
+                        "date": today - timedelta(days=offset),
+                        "started_at": timezone.now() - timedelta(days=offset),
+                    },
+                )
 
     def seed_staff(self) -> None:
         self.stdout.write("Staff de démo (mot de passe commun, TOTP ci-dessous) :")

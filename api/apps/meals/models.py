@@ -14,6 +14,7 @@ class UploadKind(models.TextChoices):
     MEAL_PHOTO = "meal_photo"
     SUPPORT_ATTACHMENT = "support_attachment"
     AVATAR = "avatar"
+    MEDIA = "media"  # médias éditoriaux téléversés depuis l'admin (bucket public)
 
 
 class UploadStatus(models.TextChoices):

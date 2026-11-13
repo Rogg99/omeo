@@ -4,6 +4,7 @@ Toute modification de [openapi.yaml](openapi.yaml) est d'abord proposée ici, pu
 
 | Date | Endpoint / schéma | Changement | Raison | Compatible ? | Statut |
 |---|---|---|---|---|---|
+| 2026-11-13 | NotificationPreferences.categories.subscription ; AdminUserDetail.health_masked | `const: true` remplacé par une description « toujours true » | Le générateur dart-dio produit un enum invalide pour un booléen constant | Oui (aucun changement sur le fil) | Validé (1.1.3) |
 | 2026-11-13 | 116 opérations ; tags admin-* ; info | Réponses d'erreur standard déclarées partout (401 si authentifiée, 403 si admin, 404 si paramètre de chemin, 422 si corps, 429 si publique) ; descriptions des tags admin ; licence propriétaire ; redocly.yaml à la racine | Lint Redocly sans erreur ni avertissement ; clients générés plus précis | Oui (documentation de réponses existantes) | Validé (1.1.2) |
 | 2026-11-13 | 78 opérations ; POST /me/analyses ; POST /me/subscription/verify | `summary` ajouté partout ; corps à discriminant en schémas nommés (PhotoAnalysisInput, TextAnalysisInput, GooglePlayPurchaseInput, AppStorePurchaseInput) avec `mapping` | Lint Redocly sans erreur ; génération fiable des clients TypeScript et Dart | Oui (aucun changement sur le fil) | Validé (1.1.1) |
 | 2026-11-13 | PUT /me/analyses/{id}/feedback (FeedbackInput) | Ajout de `corrected_dish_label` facultatif (string, 80 caractères max), attendu quand `reason = wrong_dish` | Alimenter les règles de confusion de foodscan (D37) | Oui (ajout facultatif) | Validé (1.1.0) |

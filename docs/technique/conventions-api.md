@@ -108,7 +108,9 @@ Ces règles s'appliquent à tous les endpoints de [contracts/openapi.yaml](../..
 ## Contrat et génération de code
 - [contracts/openapi.yaml](../../contracts/openapi.yaml) est le **contrat cible**, écrit avant le code.
 - Le schéma généré par drf-spectacular (`/api/v1/schema/`) doit lui être conforme. La CI compare les deux avec `oasdiff` et échoue en cas de changement incompatible.
-- Clients générés à partir du contrat :
-  - TypeScript pour l'admin et le web (`openapi-typescript` et `openapi-fetch`) ;
-  - Dart pour le mobile (`openapi-generator`, générateur `dart-dio`).
+- Lint du contrat, sans erreur ni avertissement : `npx @redocly/cli lint contracts/openapi.yaml` (règles dans `redocly.yaml`).
+- Clients générés à partir du contrat, jamais modifiés à la main, à régénérer après chaque évolution :
+  - TypeScript pour l'admin et le web (`openapi-typescript` et `openapi-fetch`) : `pnpm gen:api` dans `admin/` et `web/`, qui écrit `src/lib/api/schema.d.ts`. Le client typé est `api`, exporté par `src/lib/api`.
+  - Dart pour le mobile (`openapi-generator`, générateur `dart-dio`, sérialisation `json_serializable`) : `bash tool/gen_api.sh` dans `mobile/`, qui écrit `packages/omeo_api`. Il faut Java 11 ou plus (`JAVA_HOME`, par exemple le JBR d'Android Studio). La version du générateur est figée dans `mobile/openapitools.json`.
+- Le générateur Dart ne gère pas les booléens `const` : décrire la valeur imposée dans `description`.
 - Pendant le développement du front, un serveur fictif sert le contrat : `npx @stoplight/prism-cli mock contracts/openapi.yaml`.

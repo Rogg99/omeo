@@ -228,6 +228,7 @@ class TestActivities:
         assert response.status_code == 409
 
     def test_overview_query_budget(self, api: APIClient, django_assert_max_num_queries: Any) -> None:
+        api.get("/api/v1/me/activity")  # caches chauds (réglages, droits)
         with django_assert_max_num_queries(8):
             response = api.get("/api/v1/me/activity")
         assert response.status_code == 200

@@ -7,7 +7,7 @@ from typing import Any, Final
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
-from apps.content.models import FaqItem, Plant, Recipe, UserTip
+from apps.content.models import FaqItem, Plant, Recipe
 from apps.content.presenters import plant_summary_out, recipe_summary_out
 from apps.core.i18n import resolve
 from apps.core.presenters import image_from_key
@@ -97,25 +97,6 @@ def plant_detail_out(plant: Plant, *, full_catalog: bool) -> dict[str, Any]:
         "disclaimer": str(PLANT_DISCLAIMER),
         "related_recipes": [recipe_summary_out(r, full_catalog=full_catalog) for r in plant.related_recipes.all()],
     }
-
-
-def user_tip_out(user_tip: UserTip, *, plus: bool, full_catalog: bool) -> dict[str, Any]:
-    tip = user_tip.tip
-    locked = tip.tier == "plus" and not plus
-    body: dict[str, Any] = {
-        "id": user_tip.id,
-        "topic": tip.topic,
-        "title": resolve(tip.title),
-        "body": "" if locked else resolve(tip.body),
-        "tier": tip.tier,
-        "locked": locked,
-        "triggered_on": user_tip.triggered_on,
-        "read": user_tip.read_at is not None,
-    }
-    if not locked:
-        body["related_recipes"] = [recipe_summary_out(r, full_catalog=full_catalog) for r in tip.related_recipes.all()]
-        body["related_plants"] = [plant_summary_out(p) for p in tip.related_plants.all()]
-    return body
 
 
 def faq_out(items: list[FaqItem]) -> list[dict[str, Any]]:

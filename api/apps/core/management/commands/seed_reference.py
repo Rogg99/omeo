@@ -21,10 +21,13 @@ from django.db import transaction
 from django.utils import timezone
 
 from apps.accounts.models import City, LegalDocument, LegalKind
+from apps.accounts.selectors import invalidate_legal_documents
 from apps.billing.models import Plan, QuotaRule
+from apps.billing.services import invalidate_quota_rules
 from apps.core import settings_store
 from apps.core.models import Setting
 from apps.gamification.models import Badge, Level, PointRule
+from apps.gamification.services import invalidate_levels
 
 SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "reference"
 _HTML_COMMENT: Final = re.compile(r"<!--.*?-->", re.DOTALL)
@@ -77,6 +80,9 @@ class Command(BaseCommand):
                 transaction.set_rollback(True)
         if not self.dry_run:
             settings_store.invalidate()
+            invalidate_legal_documents()
+            invalidate_quota_rules()
+            invalidate_levels()
         verb = "serait créé" if self.dry_run else "créé"
         for line in self.created:
             self.stdout.write(f"  + {line} ({verb})")

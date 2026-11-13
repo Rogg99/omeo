@@ -16,7 +16,7 @@ from rest_framework.response import Response
 from apps.accounts.presenters import targets_out
 from apps.activity import selectors, services, views_data
 from apps.activity import serializers as s
-from apps.activity.presenters import workout_summary_out
+from apps.activity.presenters import insight_out, workout_summary_out
 from apps.billing.services import entitlement_for
 from apps.core.errors import NotFound, ValidationFailed
 from apps.core.idempotency import idempotent
@@ -191,7 +191,7 @@ class InsightsView(AppAPIView):
     @extend_schema(operation_id="listInsights")
     def get(self, request: Request) -> Response:
         rows, next_cursor = cursor_paginate(request, selectors.insights_for(user=request.user))
-        return Response(cursor_body([s.insight_out(i) for i in rows], next_cursor))
+        return Response(cursor_body([insight_out(i) for i in rows], next_cursor))
 
 
 # ───────────────────────── Entraînement ─────────────────────────

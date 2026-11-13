@@ -16,7 +16,7 @@ from apps.core.pagination import cursor_body, cursor_paginate
 from apps.core.permissions import require_feature
 from apps.core.rewards import collect_rewards
 from apps.core.views import AppAPIView, validated
-from apps.nutrition import selectors, services, views_data
+from apps.nutrition import home, selectors, services, views_data
 from apps.nutrition import serializers as s
 from apps.nutrition.constants import nutrition_constants
 from apps.nutrition.presenters import dish_summary_out, water_out
@@ -104,3 +104,20 @@ class ProgressView(AppAPIView):
                 c=nutrition_constants(),
             )
         )
+
+
+class HomeView(AppAPIView):
+    @extend_schema(operation_id="getHome")
+    def get(self, request: Request) -> Response:
+        params = validated(s.DayQuerySerializer, request.query_params)
+        today = services.resolve_day(user=request.user, day=params.get("date"))
+        return Response(home.build_home(user=request.user, today=today))
+
+
+class DayView(AppAPIView):
+    @extend_schema(operation_id="getDay")
+    def get(self, request: Request, date: Any) -> Response:
+        today = local_today(request.user)
+        if date > today:
+            raise NotFound()
+        return Response(home.build_day(user=request.user, day=date, today=today))

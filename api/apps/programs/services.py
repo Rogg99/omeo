@@ -14,8 +14,7 @@ from typing import Any
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 
-from apps.billing.models import QuotaRule
-from apps.billing.services import entitlement_for, quota_exceeded, quota_state
+from apps.billing.services import quota_exceeded, quota_limit, quota_state
 from apps.core import events
 from apps.core.errors import Conflict, NotFound, ValidationFailed
 from apps.core.localtime import local_today
@@ -170,12 +169,6 @@ def finish_program_if_due(*, enrollment: Enrollment, today: date) -> bool:
 # ───────────────────────── Challenges ─────────────────────────
 
 
-def _challenge_limit(user: Any) -> int | None:
-    tier = entitlement_for(user).tier
-    rule = QuotaRule.objects.filter(plan_tier=tier, feature="challenges_active").first()
-    return rule.limit if rule else None
-
-
 @transaction.atomic
 def join_challenge(*, user: Any, challenge_id: Any) -> ChallengeParticipation:
     challenge = Challenge.objects.filter(pk=challenge_id, status=ContentStatus.PUBLISHED).select_related("rule").first()
@@ -184,7 +177,7 @@ def join_challenge(*, user: Any, challenge_id: Any) -> ChallengeParticipation:
     active = ChallengeParticipation.objects.select_for_update().filter(user=user, status=ParticipationStatus.ACTIVE)
     if any(p.challenge_id == challenge.pk for p in active):
         raise Conflict(code="already_enrolled", detail="challenge already joined")
-    limit = _challenge_limit(user)
+    limit = quota_limit(user=user, feature="challenges_active")
     if limit is not None and active.count() >= limit:
         raise quota_exceeded(quota_state(user=user, feature="challenges_active"))
     try:

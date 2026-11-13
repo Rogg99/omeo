@@ -36,6 +36,10 @@ class DishSearchSerializer(serializers.Serializer[Any]):
     scope = serializers.ChoiceField(choices=["all", "recent", "favorites"], default="all")
 
 
+class DayQuerySerializer(serializers.Serializer[Any]):
+    date = serializers.DateField(required=False)
+
+
 class CalendarSerializer(serializers.Serializer[Any]):
     month = serializers.RegexField(r"^\d{4}-(0[1-9]|1[0-2])$")
 

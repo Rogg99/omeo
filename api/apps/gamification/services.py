@@ -12,6 +12,7 @@ from datetime import date, timedelta
 from typing import Any, Final
 
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.db import IntegrityError, transaction
 from django.db.models import Sum
 from django.utils import timezone
@@ -31,15 +32,29 @@ STREAK_LOOKBACK_DAYS: Final = 400
 
 
 def stats_for(user: Any, *, for_update: bool = False) -> UserStats:
-    UserStats.objects.get_or_create(user=user)
+    """Projection des récompenses (une requête si elle existe déjà)."""
     queryset = UserStats.objects.select_related("level")
     if for_update:
-        queryset = queryset.select_for_update()
-    return queryset.get(user=user)
+        UserStats.objects.get_or_create(user=user)
+        return queryset.select_for_update().get(user=user)
+    stats = queryset.filter(user=user).first()
+    return stats if stats is not None else UserStats.objects.get_or_create(user=user)[0]
+
+
+_LEVELS_CACHE_KEY: Final = "levels:v1"
+
+
+def invalidate_levels() -> None:
+    cache.delete(_LEVELS_CACHE_KEY)
 
 
 def _levels() -> list[Level]:
-    return list(Level.objects.order_by("min_points"))
+    """Niveaux triés, en cache (modifiés seulement depuis l'admin)."""
+    levels = cache.get(_LEVELS_CACHE_KEY)
+    if levels is None:
+        levels = list(Level.objects.order_by("min_points"))
+        cache.set(_LEVELS_CACHE_KEY, levels, 600)
+    return list(levels)
 
 
 def level_info(level: Level | None) -> dict[str, Any] | None:

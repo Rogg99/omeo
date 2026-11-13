@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 from rest_framework import serializers
 
-from apps.activity.models import Activity, ActivityType, Exercise, HealthConnection, Insight, Intensity, Workout
+from apps.activity.models import Activity, ActivityType, Exercise, HealthConnection, Intensity, Workout
 from apps.activity.presenters import workout_summary_out
 from apps.core.i18n import resolve
 from apps.core.presenters import image_from_key
@@ -210,14 +210,4 @@ def workout_detail_out(workout: Workout, *, downloadable: bool, estimated_kcal: 
             }
             for step in workout.steps.all()
         ],
-    }
-
-
-def insight_out(insight: Insight) -> dict[str, Any]:
-    return {
-        "id": insight.id,
-        "week_start": insight.week_start,
-        "kind": insight.kind,
-        "message": resolve(insight.message),
-        "data": insight.data,
     }

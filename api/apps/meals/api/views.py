@@ -21,6 +21,7 @@ from apps.core.views import AppAPIView, validated
 from apps.meals import selectors, services
 from apps.meals import serializers as s
 from apps.meals.models import Analysis, AnalysisStatus, Meal
+from apps.meals.presenters import meal_out
 from apps.nutrition.constants import nutrition_constants
 from apps.nutrition.presenters import day_summary_out
 
@@ -50,7 +51,7 @@ def _meal_write_body(write: services.MealWrite, rewards: dict[str, Any]) -> dict
     if meal is None:
         raise NotFound()
     return {
-        "meal": s.meal_out(meal),
+        "meal": meal_out(meal),
         "day": day_summary_out(write.day, c=c),
         "previous_day": day_summary_out(write.previous_day, c=c) if write.previous_day else None,
         "rewards": rewards,
@@ -133,7 +134,7 @@ class MealsView(AppAPIView):
         else:
             queryset = selectors.meals_for(user=request.user)
         rows, next_cursor = cursor_paginate(request, queryset, order_field="eaten_at")
-        return Response(cursor_body([s.meal_out(m) for m in rows], next_cursor))
+        return Response(cursor_body([meal_out(m) for m in rows], next_cursor))
 
     @extend_schema(operation_id="createMeal", request=s.MealInputSerializer)
     @idempotent
@@ -162,7 +163,7 @@ class MealDetailView(AppAPIView):
         meal = selectors.meal_for(user=request.user, meal_id=id)
         if meal is None:
             raise NotFound()
-        return Response(s.meal_out(meal))
+        return Response(meal_out(meal))
 
     @extend_schema(operation_id="updateMeal", request=s.MealUpdateSerializer)
     def patch(self, request: Request, id: Any) -> Response:  # noqa: A002

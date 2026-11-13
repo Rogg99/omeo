@@ -73,3 +73,7 @@ def recommended_workouts(*, limit: int = 3) -> list[Workout]:
 
 def insights_for(*, user: Any) -> QuerySet[Insight]:
     return Insight.objects.filter(user=user)
+
+
+def latest_unread_insight(*, user: Any) -> Insight | None:
+    return Insight.objects.filter(user=user, read_at__isnull=True).order_by("-week_start").first()

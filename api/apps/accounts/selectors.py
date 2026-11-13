@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from django.core.cache import cache
 from django.db.models import Q, QuerySet
 from django.db.models.fields.json import KT
 
@@ -72,10 +73,22 @@ def app_config() -> dict[str, Any]:
     }
 
 
+_LEGAL_CACHE_KEY = "legal:latest:v1"
+
+
+def invalidate_legal_documents() -> None:
+    cache.delete(_LEGAL_CACHE_KEY)
+
+
 def latest_published_documents() -> dict[str, LegalDocument]:
+    """Dernière version publiée de chaque document légal (en cache ; invalidé à chaque publication)."""
+    cached = cache.get(_LEGAL_CACHE_KEY)
+    if cached is not None:
+        return dict(cached)
     latest: dict[str, LegalDocument] = {}
     for document in LegalDocument.objects.filter(published_at__isnull=False).order_by("kind", "-version"):
         latest.setdefault(document.kind, document)
+    cache.set(_LEGAL_CACHE_KEY, latest, 600)
     return latest
 
 

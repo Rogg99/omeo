@@ -2,24 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import date
+from django.urls import path
 
-from django.urls import path, register_converter
-
+from apps.core.converters import register_converters
 from apps.programs.api import views
 
-
-class IsoDateConverter:
-    regex = r"\d{4}-\d{2}-\d{2}"
-
-    def to_python(self, value: str) -> date:
-        return date.fromisoformat(value)
-
-    def to_url(self, value: date) -> str:
-        return str(value)
-
-
-register_converter(IsoDateConverter, "isodate")
+register_converters()
 
 urlpatterns = [
     path("programs", views.ProgramsView.as_view()),

@@ -15,7 +15,7 @@ from apps.accounts.selectors import latest_published_documents
 from apps.billing.services import entitlement_for
 from apps.content import selectors, services
 from apps.content import serializers as s
-from apps.content.presenters import plant_summary_out, recipe_summary_out
+from apps.content.presenters import plant_summary_out, recipe_summary_out, user_tip_out
 from apps.core.errors import NotFound
 from apps.core.i18n import resolve
 from apps.core.localtime import local_today
@@ -125,7 +125,7 @@ class PreventionView(AppAPIView):
         return Response(
             {
                 "state": "ok" if enough else "not_enough_data",
-                "tips": [s.user_tip_out(t, plus=plus, full_catalog=full) for t in selectors.active_tips(user=user)],
+                "tips": [user_tip_out(t, plus=plus, full_catalog=full) for t in selectors.active_tips(user=user)],
                 "weekly_report": {"week_start": report.week_start, **report.data} if report else None,
                 "weekly_report_locked": not report_allowed,
             }

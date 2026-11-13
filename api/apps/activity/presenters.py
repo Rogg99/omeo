@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from apps.activity.models import Workout
+from apps.activity.models import Insight, Workout
 from apps.core.i18n import resolve
 from apps.core.presenters import image_from_key
 
@@ -25,3 +25,13 @@ def workout_summary_out(workout: Workout, *, locked: bool, estimated_kcal: int |
     if cover:
         body["cover"] = cover
     return body
+
+
+def insight_out(insight: Insight) -> dict[str, Any]:
+    return {
+        "id": insight.id,
+        "week_start": insight.week_start,
+        "kind": insight.kind,
+        "message": resolve(insight.message),
+        "data": insight.data,
+    }

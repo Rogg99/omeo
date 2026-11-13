@@ -235,7 +235,9 @@ def targets_out(target: Any) -> dict[str, Any] | None:
     }
 
 
-def me_out(*, user: Any, age: int, target: Any, entitlement: Any, pending: list[Any]) -> dict[str, Any]:
+def me_out(
+    *, user: Any, age: int, target: Any, entitlement: Any, pending: list[Any], rewards: dict[str, Any]
+) -> dict[str, Any]:
     profile = user.profile
     return {
         "id": user.id,
@@ -270,6 +272,7 @@ def me_out(*, user: Any, age: int, target: Any, entitlement: Any, pending: list[
             "unit_volume": profile.unit_volume,
         },
         "pending_documents": [legal_ref_out(d) for d in pending],
+        "rewards_summary": rewards,
     }
 
 

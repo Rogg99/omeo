@@ -24,6 +24,7 @@ from apps.accounts.models import City, LegalDocument, LegalKind
 from apps.billing.models import Plan, QuotaRule
 from apps.core import settings_store
 from apps.core.models import Setting
+from apps.gamification.models import Badge, Level, PointRule
 
 SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "reference"
 _HTML_COMMENT: Final = re.compile(r"<!--.*?-->", re.DOTALL)
@@ -63,6 +64,9 @@ class Command(BaseCommand):
             ("settings", self.seed_settings),
             ("plans", self.seed_plans),
             ("quotas", self.seed_quotas),
+            ("point_rules", self.seed_point_rules),
+            ("levels", self.seed_levels),
+            ("badges", self.seed_badges),
             ("cities", self.seed_cities),
             ("legal", self.seed_legal),
         ]
@@ -112,6 +116,38 @@ class Command(BaseCommand):
             )
             if created:
                 self._mark(f"quota {row['plan_tier']}.{row['feature']}")
+
+    def seed_point_rules(self) -> None:
+        for row in _load("point_rules.yaml"):
+            _, created = PointRule.objects.get_or_create(
+                action=row["action"],
+                defaults={"points": row["points"], "cap": row["cap"], "cap_period": row["cap_period"]},
+            )
+            if created:
+                self._mark(f"point_rule {row['action']}")
+
+    def seed_levels(self) -> None:
+        for row in _load("levels.yaml"):
+            _, created = Level.objects.get_or_create(
+                rank=row["rank"], defaults={"name": row["name"], "min_points": row["min_points"]}
+            )
+            if created:
+                self._mark(f"level {row['rank']}")
+
+    def seed_badges(self) -> None:
+        for row in _load("badges.yaml"):
+            _, created = Badge.objects.get_or_create(
+                code=row["code"],
+                defaults={
+                    "family": row["family"],
+                    "name": row["name"],
+                    "description": row.get("description", {}),
+                    "condition": row["condition"],
+                    "bonus_points": row.get("bonus_points", 0),
+                },
+            )
+            if created:
+                self._mark(f"badge {row['code']}")
 
     def seed_cities(self) -> None:
         existing = {(c.country, c.name.get("fr")) for c in City.objects.only("country", "name")}

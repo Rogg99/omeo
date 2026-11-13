@@ -20,6 +20,7 @@ from apps.accounts.models import (
 from apps.billing.models import QuotaRule
 from apps.billing.services import entitlement_for
 from apps.core import settings_store
+from apps.gamification.services import rewards_summary
 from apps.core.localtime import local_today
 from apps.nutrition.calculations import age_on
 from apps.nutrition.selectors import target_on
@@ -39,6 +40,7 @@ def me_context(user_id: Any) -> dict[str, Any]:
         "target": target_on(user=user, day=today),
         "entitlement": entitlement_for(user),
         "pending": pending_documents(user),
+        "rewards": rewards_summary(user=user),
     }
 
 

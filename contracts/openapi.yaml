@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Omeo API
-  version: 1.1.0
+  version: 1.1.1
   summary: API unique d'Omeo (mobile, admin, site web).
   description: |
     Contrat cible, écrit avant le code. Conventions : docs/technique/conventions-api.md.
@@ -280,6 +280,7 @@ paths:
     post:
       tags: [auth]
       operationId: verifyEmail
+      summary: Vérifie l'adresse email avec le code reçu
       security: []
       requestBody:
         required: true
@@ -297,6 +298,7 @@ paths:
     post:
       tags: [auth]
       operationId: resendVerificationEmail
+      summary: Renvoie l'email de vérification
       responses:
         "204": { description: Envoyé }
         "429": { $ref: "#/components/responses/RateLimited" }
@@ -391,6 +393,7 @@ paths:
     put:
       tags: [account]
       operationId: setAvatar
+      summary: Définit la photo de profil
       requestBody:
         required: true
         content:
@@ -409,6 +412,7 @@ paths:
     delete:
       tags: [account]
       operationId: deleteAvatar
+      summary: Supprime la photo de profil
       responses:
         "204": { description: Supprimé }
   /me/email:
@@ -452,6 +456,7 @@ paths:
     get:
       tags: [account]
       operationId: listSocialAccounts
+      summary: Comptes Google et Apple liés
       responses:
         "200":
           description: OK
@@ -480,6 +485,7 @@ paths:
     delete:
       tags: [account]
       operationId: revokeSession
+      summary: Révoque une session
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "204": { description: Révoquée }
@@ -537,6 +543,7 @@ paths:
     get:
       tags: [account]
       operationId: listDataExports
+      summary: Exports de données demandés
       responses:
         "200":
           description: OK
@@ -594,6 +601,7 @@ paths:
     post:
       tags: [account]
       operationId: confirmDeletionByEmail
+      summary: Confirme la suppression du compte depuis le lien reçu par email
       security: []
       requestBody:
         required: true
@@ -671,17 +679,13 @@ paths:
           application/json:
             schema:
               oneOf:
-                - type: object
-                  required: [kind, upload_id]
-                  properties:
-                    kind: { type: string, const: photo }
-                    upload_id: { type: string, format: uuid }
-                - type: object
-                  required: [kind, text]
-                  properties:
-                    kind: { type: string, const: text }
-                    text: { type: string, minLength: 3, maxLength: 500 }
-              discriminator: { propertyName: kind }
+                - { $ref: "#/components/schemas/PhotoAnalysisInput" }
+                - { $ref: "#/components/schemas/TextAnalysisInput" }
+              discriminator:
+                propertyName: kind
+                mapping:
+                  photo: "#/components/schemas/PhotoAnalysisInput"
+                  text: "#/components/schemas/TextAnalysisInput"
       responses:
         "202":
           description: Analyse en file
@@ -813,6 +817,7 @@ paths:
     get:
       tags: [meals]
       operationId: getMeal
+      summary: Détail d'un repas
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -841,6 +846,7 @@ paths:
     delete:
       tags: [meals]
       operationId: deleteMeal
+      summary: Supprime un repas
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -856,6 +862,7 @@ paths:
     post:
       tags: [meals]
       operationId: duplicateMeal
+      summary: Duplique un repas
       parameters:
         - { $ref: "#/components/parameters/Id" }
         - { $ref: "#/components/parameters/IdempotencyKey" }
@@ -879,6 +886,7 @@ paths:
     delete:
       tags: [meals]
       operationId: deleteMealPhoto
+      summary: Supprime la photo d'un repas
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "204": { description: Photo supprimée }
@@ -922,6 +930,7 @@ paths:
     get:
       tags: [catalog]
       operationId: searchDishes
+      summary: Recherche dans le catalogue de plats
       parameters:
         - { name: q, in: query, schema: { type: string, maxLength: 60 } }
         - { name: country, in: query, schema: { type: string, minLength: 2, maxLength: 2 } }
@@ -943,6 +952,7 @@ paths:
     get:
       tags: [catalog]
       operationId: getDish
+      summary: Détail d'un plat
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -955,11 +965,13 @@ paths:
     put:
       tags: [catalog]
       operationId: favoriteDish
+      summary: Ajoute un plat aux favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Ajouté } }
     delete:
       tags: [catalog]
       operationId: unfavoriteDish
+      summary: Retire un plat des favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Retiré } }
 
@@ -1058,6 +1070,7 @@ paths:
     delete:
       tags: [tracking]
       operationId: deleteWeight
+      summary: Supprime une pesée
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1137,6 +1150,7 @@ paths:
     get:
       tags: [activity]
       operationId: listActivities
+      summary: Activités physiques
       parameters:
         - { name: from, in: query, schema: { type: string, format: date } }
         - { name: to, in: query, schema: { type: string, format: date } }
@@ -1174,6 +1188,7 @@ paths:
     patch:
       tags: [activity]
       operationId: updateActivity
+      summary: Modifie une activité manuelle
       description: Seules les activités manuelles sont modifiables.
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -1191,6 +1206,7 @@ paths:
     delete:
       tags: [activity]
       operationId: deleteActivity
+      summary: Supprime une activité
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1248,6 +1264,7 @@ paths:
     get:
       tags: [training]
       operationId: listExercises
+      summary: Catalogue d'exercices
       parameters:
         - { name: q, in: query, schema: { type: string, maxLength: 60 } }
         - { name: muscle, in: query, schema: { type: string } }
@@ -1270,6 +1287,7 @@ paths:
     get:
       tags: [training]
       operationId: getExercise
+      summary: Détail d'un exercice
       x-entitlement: { feature: full_catalog, when: "contenu non gratuit" }
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -1284,6 +1302,7 @@ paths:
     get:
       tags: [training]
       operationId: listWorkouts
+      summary: Séances
       parameters:
         - { name: goal, in: query, schema: { type: string, enum: [cardio, strength, mobility] } }
         - { name: level, in: query, schema: { $ref: "#/components/schemas/Level" } }
@@ -1381,6 +1400,7 @@ paths:
     get:
       tags: [programs]
       operationId: listPrograms
+      summary: Programmes
       parameters:
         - { name: goal, in: query, schema: { $ref: "#/components/schemas/Goal" } }
       responses:
@@ -1393,6 +1413,7 @@ paths:
     get:
       tags: [programs]
       operationId: getProgram
+      summary: Détail d'un programme
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1438,6 +1459,7 @@ paths:
     delete:
       tags: [programs]
       operationId: quitProgram
+      summary: Quitte le programme en cours
       responses: { "204": { description: Abandonné } }
   /me/program/tasks/{id}:
     put:
@@ -1474,6 +1496,7 @@ paths:
     get:
       tags: [challenges]
       operationId: listChallenges
+      summary: Challenges
       responses:
         "200":
           description: OK
@@ -1484,6 +1507,7 @@ paths:
     get:
       tags: [challenges]
       operationId: getChallenge
+      summary: Détail d'un challenge
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1510,6 +1534,7 @@ paths:
     get:
       tags: [challenges]
       operationId: listMyChallenges
+      summary: Mes challenges
       parameters:
         - { name: status, in: query, schema: { type: string, enum: [active, finished] } }
       responses:
@@ -1533,6 +1558,7 @@ paths:
     delete:
       tags: [challenges]
       operationId: leaveChallenge
+      summary: Quitte un challenge
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Abandonné } }
   /me/challenges/{id}/days/{date}:
@@ -1581,6 +1607,7 @@ paths:
     get:
       tags: [rewards]
       operationId: listBadges
+      summary: Mes badges
       responses:
         "200":
           description: OK
@@ -1611,6 +1638,7 @@ paths:
     get:
       tags: [content]
       operationId: listRecipes
+      summary: Recettes
       parameters:
         - { name: q, in: query, schema: { type: string, maxLength: 60 } }
         - { name: country, in: query, schema: { type: string, minLength: 2, maxLength: 2 } }
@@ -1635,6 +1663,7 @@ paths:
     get:
       tags: [content]
       operationId: getRecipe
+      summary: Détail d'une recette
       x-entitlement: { feature: full_catalog, when: "contenu non gratuit" }
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -1649,17 +1678,20 @@ paths:
     put:
       tags: [content]
       operationId: favoriteRecipe
+      summary: Ajoute une recette aux favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Ajoutée } }
     delete:
       tags: [content]
       operationId: unfavoriteRecipe
+      summary: Retire une recette des favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Retirée } }
   /plants:
     get:
       tags: [content]
       operationId: listPlants
+      summary: Plantes
       parameters:
         - { name: q, in: query, schema: { type: string, maxLength: 60 } }
         - { name: tag, in: query, schema: { type: string, enum: [traditional_use, nutritional_support, caution] } }
@@ -1681,6 +1713,7 @@ paths:
     get:
       tags: [content]
       operationId: getPlant
+      summary: Détail d'une plante
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "200":
@@ -1693,11 +1726,13 @@ paths:
     put:
       tags: [content]
       operationId: favoritePlant
+      summary: Ajoute une plante aux favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Ajoutée } }
     delete:
       tags: [content]
       operationId: unfavoritePlant
+      summary: Retire une plante des favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses: { "204": { description: Retirée } }
   /me/prevention:
@@ -1715,6 +1750,7 @@ paths:
     patch:
       tags: [content]
       operationId: updateUserTip
+      summary: Met à jour un conseil de prévention (lu, masqué)
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
         required: true
@@ -1730,6 +1766,7 @@ paths:
     get:
       tags: [content]
       operationId: listFaq
+      summary: Questions fréquentes
       security: []
       parameters:
         - { name: audience, in: query, schema: { type: string, enum: [app, web] } }
@@ -1805,18 +1842,13 @@ paths:
           application/json:
             schema:
               oneOf:
-                - type: object
-                  required: [channel, product_id, purchase_token]
-                  properties:
-                    channel: { type: string, const: google_play }
-                    product_id: { type: string }
-                    purchase_token: { type: string }
-                - type: object
-                  required: [channel, signed_transaction]
-                  properties:
-                    channel: { type: string, const: app_store }
-                    signed_transaction: { type: string, description: JWS StoreKit 2 }
-              discriminator: { propertyName: channel }
+                - { $ref: "#/components/schemas/GooglePlayPurchaseInput" }
+                - { $ref: "#/components/schemas/AppStorePurchaseInput" }
+              discriminator:
+                propertyName: channel
+                mapping:
+                  google_play: "#/components/schemas/GooglePlayPurchaseInput"
+                  app_store: "#/components/schemas/AppStorePurchaseInput"
       responses:
         "200":
           description: État à jour
@@ -1829,6 +1861,7 @@ paths:
     post:
       tags: [billing]
       operationId: restorePurchases
+      summary: Restaure les achats du store
       requestBody:
         required: true
         content:
@@ -1849,6 +1882,7 @@ paths:
     get:
       tags: [billing]
       operationId: listPayments
+      summary: Mes paiements
       parameters: [{ $ref: "#/components/parameters/Cursor" }]
       responses:
         "200":
@@ -1898,6 +1932,7 @@ paths:
     post:
       tags: [billing]
       operationId: checkPromoCode
+      summary: Vérifie un code promo
       requestBody:
         required: true
         content:
@@ -1982,6 +2017,7 @@ paths:
     delete:
       tags: [notifications]
       operationId: unregisterPushDevice
+      summary: Désenregistre un appareil des notifications push
       parameters:
         - { name: token, in: path, required: true, schema: { type: string } }
       responses: { "204": { description: Retiré } }
@@ -1989,6 +2025,7 @@ paths:
     get:
       tags: [notifications]
       operationId: getNotificationPreferences
+      summary: Préférences de notification
       responses:
         "200":
           description: OK
@@ -1998,6 +2035,7 @@ paths:
     put:
       tags: [notifications]
       operationId: updateNotificationPreferences
+      summary: Modifie les préférences de notification
       requestBody:
         required: true
         content:
@@ -2013,6 +2051,7 @@ paths:
     get:
       tags: [notifications]
       operationId: listNotifications
+      summary: Mes notifications
       parameters:
         - { name: unread, in: query, schema: { type: boolean } }
         - { $ref: "#/components/parameters/Cursor" }
@@ -2091,6 +2130,7 @@ paths:
     get:
       tags: [support]
       operationId: listMyTickets
+      summary: Mes demandes au support
       responses:
         "200":
           description: OK
@@ -2179,6 +2219,7 @@ paths:
     get:
       tags: [admin-users]
       operationId: adminListUsers
+      summary: Liste des utilisateurs
       x-permission: users.view
       parameters:
         - { name: q, in: query, schema: { type: string, description: "email, nom ou id" } }
@@ -2257,6 +2298,7 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminListContent
+      summary: Liste des contenus d'un type
       x-permission: content.view
       parameters:
         - { $ref: "#/components/parameters/ContentType" }
@@ -2299,6 +2341,7 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminGetContent
+      summary: Détail d'un contenu
       x-permission: content.view
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       responses:
@@ -2368,6 +2411,7 @@ paths:
     get:
       tags: [admin-content]
       operationId: adminListRevisions
+      summary: Historique des versions d'un contenu
       x-permission: content.view
       parameters: [{ $ref: "#/components/parameters/ContentType" }, { $ref: "#/components/parameters/Id" }]
       responses:
@@ -2458,6 +2502,7 @@ paths:
     get:
       tags: [admin-feedback]
       operationId: adminListFeedback
+      summary: Avis sur les analyses
       x-permission: feedback.view
       parameters:
         - { name: rating, in: query, schema: { type: string, enum: [up, down] } }
@@ -2498,6 +2543,7 @@ paths:
     post:
       tags: [admin-feedback]
       operationId: adminResolveFeedback
+      summary: Traite un avis sur une analyse
       x-permission: feedback.resolve
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -2544,6 +2590,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListPlans
+      summary: Offres
       x-permission: billing.view
       responses:
         "200":
@@ -2555,6 +2602,7 @@ paths:
     patch:
       tags: [admin-billing]
       operationId: adminUpdatePlan
+      summary: Modifie une offre
       x-permission: billing.plans_edit
       x-four-eyes: "always"
       parameters:
@@ -2579,6 +2627,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListQuotaRules
+      summary: Règles de quotas
       x-permission: billing.view
       responses:
         "200":
@@ -2589,6 +2638,7 @@ paths:
     put:
       tags: [admin-billing]
       operationId: adminReplaceQuotaRules
+      summary: Remplace les règles de quotas
       x-permission: billing.quotas_edit
       x-four-eyes: "always"
       requestBody:
@@ -2611,6 +2661,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListSubscriptions
+      summary: Abonnements
       x-permission: billing.view
       parameters:
         - { name: status, in: query, schema: { $ref: "#/components/schemas/SubscriptionStatus" } }
@@ -2633,6 +2684,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListPayments
+      summary: Paiements
       x-permission: billing.view
       parameters:
         - { name: status, in: query, schema: { type: string, enum: [succeeded, failed, refunded, pending] } }
@@ -2688,6 +2740,7 @@ paths:
     get:
       tags: [admin-billing]
       operationId: adminListPromoCodes
+      summary: Codes promo
       x-permission: billing.view
       parameters: [{ $ref: "#/components/parameters/Page" }, { $ref: "#/components/parameters/PageSize" }]
       responses:
@@ -2704,6 +2757,7 @@ paths:
     post:
       tags: [admin-billing]
       operationId: adminCreatePromoCode
+      summary: Crée un code promo
       x-permission: billing.promo_manage
       requestBody:
         required: true
@@ -2720,6 +2774,7 @@ paths:
     patch:
       tags: [admin-billing]
       operationId: adminUpdatePromoCode
+      summary: Modifie un code promo
       x-permission: billing.promo_manage
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -2739,6 +2794,7 @@ paths:
     get:
       tags: [admin-support]
       operationId: adminListTickets
+      summary: File des demandes au support
       x-permission: support.view
       parameters:
         - { name: status, in: query, schema: { $ref: "#/components/schemas/TicketStatus" } }
@@ -2762,6 +2818,7 @@ paths:
     get:
       tags: [admin-support]
       operationId: adminGetTicket
+      summary: Détail d'une demande au support
       x-permission: support.view
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -2773,6 +2830,7 @@ paths:
     patch:
       tags: [admin-support]
       operationId: adminUpdateTicket
+      summary: Met à jour une demande (assignation, statut)
       x-permission: support.reply
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -2821,6 +2879,7 @@ paths:
     get:
       tags: [admin-support]
       operationId: adminListReplyTemplates
+      summary: Modèles de réponse du support
       x-permission: support.view
       responses:
         "200":
@@ -2843,6 +2902,7 @@ paths:
     get:
       tags: [admin-campaigns]
       operationId: adminListCampaigns
+      summary: Campagnes
       x-permission: campaigns.view
       parameters: [{ $ref: "#/components/parameters/Page" }, { $ref: "#/components/parameters/PageSize" }]
       responses:
@@ -2859,6 +2919,7 @@ paths:
     post:
       tags: [admin-campaigns]
       operationId: adminCreateCampaign
+      summary: Crée une campagne
       x-permission: campaigns.edit
       requestBody:
         required: true
@@ -2896,6 +2957,7 @@ paths:
     get:
       tags: [admin-campaigns]
       operationId: adminGetCampaign
+      summary: Détail d'une campagne
       x-permission: campaigns.view
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
@@ -2907,6 +2969,7 @@ paths:
     patch:
       tags: [admin-campaigns]
       operationId: adminUpdateCampaign
+      summary: Modifie une campagne
       x-permission: campaigns.edit
       parameters: [{ $ref: "#/components/parameters/Id" }]
       requestBody:
@@ -2925,6 +2988,7 @@ paths:
     post:
       tags: [admin-campaigns]
       operationId: adminCampaignAction
+      summary: Action sur une campagne (programmer, envoyer, annuler…)
       x-permission: campaigns.<action>
       x-access-note: "schedule|cancel : campaigns.schedule + step-up, interdit sur sa propre campagne ; send_test : campaigns.edit (envoi à soi-même uniquement)."
       parameters:
@@ -2948,6 +3012,7 @@ paths:
     get:
       tags: [admin-settings]
       operationId: adminGetSettings
+      summary: Réglages de l'application
       x-permission: settings.view
       responses:
         "200":
@@ -2958,6 +3023,7 @@ paths:
     patch:
       tags: [admin-settings]
       operationId: adminUpdateSettings
+      summary: Modifie les réglages de l'application
       x-permission: settings.edit
       x-step-up: true
       x-four-eyes: "nutrition.* modifié"
@@ -2984,6 +3050,7 @@ paths:
     get:
       tags: [admin-team]
       operationId: adminListTeam
+      summary: Membres de l'équipe
       x-permission: team.manage
       x-step-up: true
       responses:
@@ -3018,6 +3085,7 @@ paths:
     patch:
       tags: [admin-team]
       operationId: adminUpdateStaff
+      summary: Modifie un membre de l'équipe (rôle, état)
       x-permission: team.manage
       x-step-up: true
       parameters: [{ $ref: "#/components/parameters/Id" }]
@@ -3127,6 +3195,7 @@ paths:
     get:
       tags: [admin-team]
       operationId: adminListAudit
+      summary: Journal d'audit
       x-permission: audit.view
       parameters:
         - { name: actor_id, in: query, schema: { type: string, format: uuid } }
@@ -3682,6 +3751,31 @@ components:
         suggested_recipe_id: { type: [string, "null"], format: uuid }
         quota: { $ref: "#/components/schemas/Quota" }
         created_at: { type: string, format: date-time }
+    PhotoAnalysisInput:
+      type: object
+      required: [kind, upload_id]
+      properties:
+        kind: { type: string, const: photo }
+        upload_id: { type: string, format: uuid }
+    TextAnalysisInput:
+      type: object
+      required: [kind, text]
+      properties:
+        kind: { type: string, const: text }
+        text: { type: string, minLength: 3, maxLength: 500 }
+    GooglePlayPurchaseInput:
+      type: object
+      required: [channel, product_id, purchase_token]
+      properties:
+        channel: { type: string, const: google_play }
+        product_id: { type: string }
+        purchase_token: { type: string }
+    AppStorePurchaseInput:
+      type: object
+      required: [channel, signed_transaction]
+      properties:
+        channel: { type: string, const: app_store }
+        signed_transaction: { type: string, description: JWS StoreKit 2 }
     AnalysisAlternative:
       type: object
       required: [label, dish, probability_percent]

@@ -80,9 +80,13 @@ PARCOURS CLÉS :
   - interrogation de GET /me/analyses/{id} en respectant Retry-After, avec une animation d'analyse ;
   - écran « Ingrédients présélectionnés », puis POST /me/meals ;
   - mise à jour du jour avec la réponse (day et rewards), animation des points, avis 👍/👎 ;
-  - si l'analyse a une faible confiance, invitation à vérifier ; sur un 👎 « mauvais plat », choix du
-    bon plat parmi les alternatives renvoyées ou par recherche (corrected_dish_label, dès que
-    l'évolution du contrat est validée).
+  - si l'analyse a une faible confiance, invitation à vérifier ;
+  - rubrique « Pas satisfait ? » en bas de l'écran de vérification (02-saisie-repas.md, maquette
+    MEA-04 et MEA-05) : les alternatives de l'analyse avec leur probability_percent tel que renvoyé,
+    puis « Autre chose » vers la recherche de plats. Un choix appelle POST /me/analyses/{id}/dish et
+    remplace l'écran par l'Analysis renvoyée, avec une transition douce et un toast de remerciement.
+    Repliée si la confiance est élevée, dépliée si elle est faible. Ton léger, jamais culpabilisant.
+    Ces champs sont des évolutions proposées dans contracts/CHANGES.md : à implémenter une fois validées.
 - Quotas : GET /me/quotas affiché avant chaque photo.
 - Santé :
   - permission demandée au moment où elle sert (écran Progression ou Sport), jamais à l'onboarding ;

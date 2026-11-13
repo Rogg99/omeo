@@ -16,6 +16,15 @@ Cas particuliers :
 - Plat présent dans le catalogue : on propose la recette correspondante.
 - La photo est conservée avec le repas et l'utilisateur peut la supprimer.
 
+### « Pas satisfait ? » : les autres plats possibles
+L'écran de vérification met en avant le plat principal détecté. En bas, une rubrique douce, **« Pas satisfait ? »**, propose les autres plats que le modèle a envisagés (3 au plus), du plus probable au moins probable, chacun avec sa probabilité (« 22 % »).
+- Toucher une proposition remplace le plat : l'API recharge sa composition type depuis le catalogue et recalcule les totaux. **Pas de nouvel appel à l'IA, pas de quota décompté.**
+- **« Autre chose »** ouvre la recherche de plats (noms locaux compris), avec un lien pour décrire le plat si on ne le trouve pas.
+- Le choix vaut avis « mauvais plat » : il est enregistré sans étape supplémentaire et nourrit les règles de confusion (voir [foodscan.md](../../technique/foodscan.md)). Un toast léger remercie l'utilisateur.
+- Une proposition absente du catalogue reste affichée. La toucher ouvre la recherche, pré-remplie avec son nom.
+- Ton : léger et bienveillant, jamais culpabilisant (« On hésitait aussi avec… », « Merci, on retient ! »). La rubrique est repliable et reste discrète quand la confiance est élevée. Quand la confiance est faible, elle est dépliée d'office.
+- Les probabilités sont celles du modèle, fournies par l'API. L'app les affiche telles quelles, sans calcul (D1).
+
 ## 2. Saisie vocale ou en texte libre (Plus)
 - L'utilisateur dicte ou tape son repas, par exemple « une assiette de ndolé avec deux plantains frits ».
 - L'IA en extrait les ingrédients et les quantités, puis on arrive sur le même écran de correction que pour la photo.

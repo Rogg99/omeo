@@ -31,18 +31,29 @@
     '<h2 class="h-lg mt-24">On regarde ton assiette…</h2><div class="stack mt-16" style="--gap:12px">' +
     [["Plat reconnu", 1], ["Ingrédients détectés", 1], ["Portions estimées", 0], ["Calcul des apports", 0]].map((x, i) => '<div class="row small" style="color:' + (x[1] ? "var(--text)" : "var(--text-3)") + '">' + (x[1] ? '<span class="check on" style="border-radius:50%;width:22px;height:22px">' + I("check") + "</span>" : i === 2 ? '<span class="spinner" style="width:22px;height:22px;border-width:3px"></span>' : '<span class="check" style="border-radius:50%;width:22px;height:22px"></span>') + x[0] + "</div>").join("") + "</div></div></div>");
 
+  // Rubrique « Pas satisfait ? » : autres plats envisagés par le modèle (probabilités fournies par l'API).
+  const altDish = (ph, name, pct, sub) => '<div class="li" style="gap:12px">' + photo(ph, "", "width:48px;height:48px;border-radius:14px;flex:none") +
+    '<div class="grow"><b>' + name + "</b><small>" + sub + '</small><div style="height:4px;border-radius:999px;background:var(--surface-2);margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:' + pct + '%;background:var(--primary);border-radius:999px"></i></div></div>' +
+    '<span class="num bold small">' + pct + " %</span></div>";
+  const notSatisfied = (open) => '<div class="card mt-24" style="padding:16px">' +
+    '<div class="row between" style="gap:12px"><div class="grow"><h3 class="h-sm">Pas satisfait ? 🤔</h3><p class="small muted mt-4">' +
+    (open ? "On hésitait aussi avec ces plats. Touche le bon, on s'occupe du reste." : "On a aussi pensé à 3 autres plats.") + "</p></div>" + (open ? "" : I("chevR")) + "</div>" +
+    (open ? '<div class="list mt-12">' + altDish("ph-yassa", "Yassa poisson", 22, "Sénégal · 1 assiette") + altDish("ph-poisson", "Riz au poisson braisé", 9, "Afrique de l'Ouest") + altDish("ph-fonio", "Fonio au poisson", 4, "Mali, Burkina Faso") +
+      window.M.li("search", "Autre chose", "Cherche ton plat, noms locaux compris") + "</div>" +
+      '<p class="xs faint mt-8 center">Ton choix nous aide à mieux reconnaître ce plat. Merci ! 💛</p>' : "") + "</div>";
+
   const result = (low) => '<div class="scroll no-nav" style="padding-bottom:120px">' + topbar("Vérifie ton repas", "Analyse photo", iconBtn("more", "Options")) +
     '<div class="pad"><div class="row" style="gap:14px">' + photo("ph-thieb", "", "width:84px;height:84px;border-radius:22px;flex:none") + '<div class="grow"><h2 class="h-md">Thiéboudienne</h2><div class="row mt-4" style="gap:6px">' +
-    (low ? '<span class="tag warn">' + I("alert") + " Confiance moyenne</span>" : '<span class="tag">' + I("sparkles") + " Confiance élevée</span>") + '</div><a class="link small mt-4" style="display:inline-block">Ce n\'est pas ça ?</a></div></div>' +
+    (low ? '<span class="tag warn">' + I("alert") + " Confiance moyenne</span>" : '<span class="tag">' + I("sparkles") + " Confiance élevée</span>") + '</div></div></div>' +
     (low ? '<div class="banner warn mt-16">' + I("alert") + "<span>On n'est pas sûrs de tout. Vérifie les ingrédients marqués et ajuste les quantités.</span></div>" : "") +
     '<div class="card mt-16 black row" style="justify-content:space-around;padding:16px">' + [["640", "kcal"], ["32 g", "prot."], ["86 g", "gluc."], ["18 g", "lip."]].map((x) => '<div class="center"><div class="num" style="font-size:20px;font-weight:600">' + x[0] + '</div><div class="xs" style="opacity:.6">' + x[1] + "</div></div>").join("") + "</div>" +
     '<div class="row between mt-24"><h3 class="h-sm">Ingrédients détectés</h3><a class="link small row" style="gap:4px">' + I("plus") + " Ajouter</a></div>" +
     '<div class="list mt-12">' + ingr("Riz brisé", "180 g", 250, 1) + ingr("Poisson (mérou)", "150 g", 165, 1) + ingr("Huile d'arachide", "15 g", 133, 1, { low: low }) + ingr("Chou", "60 g", 15, 1) + ingr("Carotte", "50 g", 20, 1) + ingr("Manioc", "100 g", 160, low ? 1 : 0, { low: low }) + "</div>" +
-    '<h3 class="h-sm mt-24">Type de repas</h3><div class="mt-12">' + mealTypes(1) + '</div><p class="xs faint mt-8">Proposé selon l\'heure (12:40). Modifiable.</p></div></div>' +
+    '<h3 class="h-sm mt-24">Type de repas</h3><div class="mt-12">' + mealTypes(1) + '</div><p class="xs faint mt-8">Proposé selon l\'heure (12:40). Modifiable.</p>' + notSatisfied(low) + "</div></div>" +
     '<div class="bottom-cta"><button class="btn black">' + I("check") + " Enregistrer · 640 kcal</button></div>";
 
-  S("repas", "MEA-04", "Ingrédients présélectionnés", "Correction en place : décocher, ajuster la quantité (±), ajouter. Totaux recalculés par l'API à chaque modification.", result(false));
-  S("repas", "MEA-05", "Confiance faible", "Bannière d'avertissement et ingrédients à vérifier mis en évidence.", result(true));
+  S("repas", "MEA-04", "Ingrédients présélectionnés", "Correction en place : décocher, ajuster la quantité (±), ajouter. Totaux recalculés par l'API à chaque modification. En bas, « Pas satisfait ? », repliée quand la confiance est élevée.", result(false));
+  S("repas", "MEA-05", "Confiance faible", "Bannière d'avertissement et ingrédients à vérifier mis en évidence. « Pas satisfait ? » est dépliée : les autres plats envisagés avec leur probabilité, ou « Autre chose ». Un geste corrige le plat, sans nouvelle analyse ni quota.", result(true));
 
   S("repas", "MEA-06", "Ajouter un ingrédient", "Recherche dans la base d'aliments, noms locaux inclus. Les valeurs sont celles de la base.",
     '<div class="scroll no-nav">' + topbar("Vérifie ton repas", "Analyse photo", "") + "</div>" + sheet("Ajouter un ingrédient", input("search", "", { state: "focus", value: "plant" }) +

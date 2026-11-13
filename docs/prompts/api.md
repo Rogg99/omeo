@@ -98,8 +98,12 @@ IA (OpenRouter, D3, D37) :
   décide du décompte.
 - Avis : PUT /me/analyses/{id}/feedback appelle services.submit_review dès qu'un plat corrigé est fourni
   (motif wrong_dish). Le commentaire libre est enregistré mais n'entre jamais dans un prompt.
-  corrected_dish_label est une évolution du contrat proposée dans contracts/CHANGES.md : ne l'implémente
-  qu'une fois validée.
+- Alternatives : Analysis.alternatives reprend ScanOutput.alternatives, rapprochées du catalogue de plats
+  (dish null si aucun plat ne correspond), avec probability_percent arrondi par l'API.
+  POST /me/analyses/{id}/dish remplace le plat par un plat du catalogue : composition type rechargée,
+  items et totals recalculés, avis wrong_dish enregistré via submit_review, sans appel IA ni quota.
+- corrected_dish_label, alternatives et POST /me/analyses/{id}/dish sont des évolutions du contrat
+  proposées dans contracts/CHANGES.md : ne les implémente qu'une fois validées.
 - Rapprochement des ingrédients : recherche trigram et unaccent sur Food.name et Food.aliases, plus
   un seuil. Les valeurs nutritionnelles viennent toujours de Food.
 - Le quota est décompté dans la transaction (SELECT FOR UPDATE sur QuotaUsage) et rendu si l'analyse

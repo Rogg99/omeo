@@ -10,7 +10,15 @@ from django.db.models import Exists, OuterRef, Prefetch, QuerySet
 
 from apps.core.models import ContentStatus
 from apps.nutrition import projection, search
-from apps.nutrition.models import DailySummary, Dish, DishComponent, FavoriteDish, Food, NutritionTarget
+from apps.nutrition.models import (
+    DailySummary,
+    Dish,
+    DishComponent,
+    FavoriteDish,
+    Food,
+    NutritionTarget,
+    WaterEntry,
+)
 
 FOOD_SEARCH_THRESHOLD = 0.3
 
@@ -108,3 +116,7 @@ def dish_detail(*, user: Any, dish_id: Any) -> Dish | None:
         .filter(pk=dish_id)
         .first()
     )
+
+
+def export_water(user: Any) -> list[dict[str, Any]]:
+    return list(WaterEntry.objects.filter(user=user).values("date", "amount_ml"))

@@ -11,3 +11,8 @@ class AccountsConfig(AppConfig):
 
         access.register_permissions(permissions_for_user=permissions_for_user, can_decide_domain=can_decide_domain)
         connect_events()
+        from apps.accounts.selectors import export_account, export_consents
+        from apps.core import exports
+
+        exports.register_section("account", export_account)
+        exports.register_section("consents", export_consents)

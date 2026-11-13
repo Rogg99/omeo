@@ -15,6 +15,7 @@ from apps.accounts.models import (
     ConsentKind,
     LegalDocument,
     LegalKind,
+    Profile,
     Session,
     User,
 )
@@ -147,3 +148,27 @@ def search_cities(*, q: str | None, country: str | None, limit: int = 20) -> Que
 
 def active_sessions(user: User) -> QuerySet[Session]:
     return Session.objects.filter(user=user, revoked_at__isnull=True).order_by("-last_used_at")
+
+
+def export_account(user: User) -> list[dict[str, Any]]:
+    profile = (
+        Profile.objects.filter(user=user)
+        .values(
+            "first_name",
+            "last_name",
+            "birth_date",
+            "sex",
+            "country",
+            "timezone",
+            "height_cm",
+            "current_weight_kg",
+            "target_weight_kg",
+            "goals",
+        )
+        .first()
+    )
+    return [{"email": user.email, "locale": user.locale, "created_at": user.created_at, **(profile or {})}]
+
+
+def export_consents(user: User) -> list[dict[str, Any]]:
+    return list(Consent.objects.filter(user=user).values("kind", "granted", "created_at"))

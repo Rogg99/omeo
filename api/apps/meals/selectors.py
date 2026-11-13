@@ -49,3 +49,9 @@ def foods_by_id(ids: Iterable[Any]) -> dict[str, Food]:
     if not wanted:
         return {}
     return {str(f.pk): f for f in Food.objects.filter(pk__in=wanted)}
+
+
+def export_meals(user: Any) -> list[dict[str, Any]]:
+    return list(
+        Meal.objects.filter(user=user).values("date", "meal_type", "title", "kcal", "protein_g", "carbs_g", "fat_g")
+    )

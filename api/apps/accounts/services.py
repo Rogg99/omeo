@@ -39,7 +39,7 @@ from apps.accounts.models import (
 from apps.billing import services as billing
 from apps.billing.selectors import active_store_channel
 from apps.billing.subscriptions import grant_days
-from apps.core import audit, events, settings_store
+from apps.core import audit, events, settings_store, storage
 from apps.core.audit import RequestMeta
 from apps.core.errors import (
     Conflict,
@@ -694,3 +694,14 @@ def _on_referee_progress(event: events.EmailVerified | events.MealLogged) -> Non
 def connect_events() -> None:
     events.subscribe(events.EmailVerified, _on_referee_progress)
     events.subscribe(events.MealLogged, _on_referee_progress)
+
+
+@transaction.atomic
+def purge_account(*, user_id: Any) -> None:
+    """Efface le compte et toutes ses données (cascade), puis les fichiers du stockage après validation."""
+    user = User.objects.select_for_update().filter(pk=user_id, deletion_scheduled_at__lte=timezone.now()).first()
+    if user is None:
+        return
+    keys = list(user.uploads.values_list("storage_key", flat=True))
+    user.delete()
+    transaction.on_commit(lambda: [storage.delete(key=key) for key in keys])

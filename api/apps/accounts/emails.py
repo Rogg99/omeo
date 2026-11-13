@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from celery import current_app
 from django.conf import settings
 from django.utils import translation
 from django.utils.translation import gettext as _
 
 from apps.accounts.models import User
-from apps.accounts.tasks import send_account_email
 from apps.core.i18n import to_django_locale
+
+SEND_ACCOUNT_EMAIL_TASK = "apps.accounts.tasks.send_account_email"
 
 
 def _link(path: str, token: str) -> str:
@@ -40,4 +42,4 @@ def _render(user: User, kind: str, token: str) -> tuple[str, str]:
 
 def send(*, user: User, kind: str, token: str, to: str | None = None) -> None:
     subject, body = _render(user, kind, token)
-    send_account_email.delay(to=to or user.email, subject=subject, body=body)
+    current_app.send_task(SEND_ACCOUNT_EMAIL_TASK, kwargs={"to": to or user.email, "subject": subject, "body": body})

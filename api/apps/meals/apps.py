@@ -10,3 +10,7 @@ class MealsConfig(AppConfig):
 
         projection.register_contributor("meals", services.day_contribution)
         projection.register_recent_dishes(services.recent_dish_ids)
+        from apps.core import exports
+        from apps.meals.selectors import export_meals
+
+        exports.register_section("meals", export_meals)

@@ -74,7 +74,12 @@ class RequiresStepUp(BasePermission):
 
 
 class RequiresVerifiedEmail(BasePermission):
+    """S'applique à toute la vue, ou seulement aux méthodes de `email_verified_methods`."""
+
     def has_permission(self, request: Request, view: APIView) -> bool:
+        scoped: set[str] | None = getattr(view, "email_verified_methods", None)
+        if scoped is not None and (request.method or "").upper() not in scoped:
+            return True
         if getattr(request.user, "email_verified_at", None) is None:
             raise EmailNotVerified()
         return True

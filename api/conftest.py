@@ -17,6 +17,7 @@ from apps.accounts import mfa, services
 from apps.accounts.models import Role, StaffRole, User
 from apps.accounts.tokens import open_session
 from apps.core.audit import RequestMeta
+from config.celery import app as celery_app
 
 PASSWORD = "Sup3r-Secret!"  # noqa: S105 - mot de passe de test
 META = RequestMeta(ip="127.0.0.1", user_agent="pytest")
@@ -53,7 +54,16 @@ def _clear_cache() -> Iterator[None]:
 @pytest.fixture(autouse=True)
 def _email_backend(settings: Any) -> None:
     settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
-    settings.CELERY_TASK_ALWAYS_EAGER = True
+
+
+@pytest.fixture(autouse=True)
+def _eager_tasks(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Exécute immédiatement les tâches envoyées par nom (`send_task`), comme le ferait le worker."""
+
+    def run(name: str, args: Any = None, kwargs: Any = None, **_options: Any) -> Any:
+        return celery_app.tasks[name].apply(args=args or (), kwargs=kwargs or {})
+
+    monkeypatch.setattr(celery_app, "send_task", run)
 
 
 @pytest.fixture

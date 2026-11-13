@@ -131,7 +131,9 @@ def test_markers_applied(op: Operation) -> None:
     applies_step_up = has_step_up and (scoped is None or op.method.upper() in scoped)
     assert applies_step_up is bool(op.spec.get("x-step-up")), f"{op}: x-step-up"
 
-    assert (RequiresVerifiedEmail in classes) is bool(op.spec.get("x-email-verified")), f"{op}: x-email-verified"
+    email_scope: set[str] | None = getattr(view, "email_verified_methods", None)
+    applies_email = RequiresVerifiedEmail in classes and (email_scope is None or op.method.upper() in email_scope)
+    assert applies_email is bool(op.spec.get("x-email-verified")), f"{op}: x-email-verified"
 
     entitlement = op.spec.get("x-entitlement")
     if entitlement:
@@ -214,7 +216,13 @@ def test_free_account_refused(op: Operation, user: User) -> None:
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("op", [op for op in IMPLEMENTED if op.spec.get("security") != []], ids=str)
+def _requires_auth(op: Operation) -> bool:
+    """`security: []` = public ; une alternative vide (`{}`) = authentification facultative."""
+    security = op.spec.get("security")
+    return security != [] and not (security and {} in security)
+
+
+@pytest.mark.parametrize("op", [op for op in IMPLEMENTED if _requires_auth(op)], ids=str)
 def test_authentication_required(op: Operation, reference: None) -> None:
     response = _call(APIClient(), op)
     assert response.status_code == 401

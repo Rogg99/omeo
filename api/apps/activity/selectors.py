@@ -77,3 +77,14 @@ def insights_for(*, user: Any) -> QuerySet[Insight]:
 
 def latest_unread_insight(*, user: Any) -> Insight | None:
     return Insight.objects.filter(user=user, read_at__isnull=True).order_by("-week_start").first()
+
+
+def export_weights(user: Any) -> list[dict[str, Any]]:
+    """Poids déchiffrés pour l'export de l'utilisateur lui-même."""
+    return [
+        {"date": w.date, "weight_kg": w.weight_kg, "source": w.source} for w in WeightEntry.objects.filter(user=user)
+    ]
+
+
+def export_activities(user: Any) -> list[dict[str, Any]]:
+    return list(Activity.objects.filter(user=user).values("date", "type", "duration_s", "kcal", "source"))

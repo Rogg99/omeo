@@ -1,1 +1,1 @@
-{ "FLAVOR": "prod", "DATA_SOURCE": "api", "API_BASE_URL": "https://api.omeo.app/api/v1" }
+{ "FLAVOR": "prod", "DATA_SOURCE": "api", "API_BASE_URL": "https://api.my-omeo.app/api/v1" }

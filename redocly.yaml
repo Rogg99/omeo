@@ -1,0 +1,6 @@
+# Lint du contrat : npx @redocly/cli lint contracts/openapi.yaml
+extends:
+  - recommended
+rules:
+  # Le contrat déclare le serveur de dev http://api.localhost (nginx de la stack Docker) : c'est voulu.
+  no-server-example.com: off

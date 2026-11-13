@@ -1,8 +1,11 @@
 openapi: 3.1.0
 info:
   title: Omeo API
-  version: 1.1.1
+  version: 1.1.2
   summary: API unique d'Omeo (mobile, admin, site web).
+  license:
+    name: Propriétaire, tous droits réservés
+    identifier: LicenseRef-Omeo-Proprietary
   description: |
     Contrat cible, écrit avant le code. Conventions : docs/technique/conventions-api.md.
     Modèle de données : docs/technique/modele-donnees.md.
@@ -39,15 +42,15 @@ tags:
   - { name: notifications, description: "Push et centre de notifications" }
   - { name: support, description: "Demandes de support" }
   - { name: webhooks, description: "Notifications des stores et de l'agrégateur" }
-  - { name: admin-dashboard }
-  - { name: admin-users }
-  - { name: admin-content }
-  - { name: admin-feedback }
-  - { name: admin-billing }
-  - { name: admin-support }
-  - { name: admin-campaigns }
-  - { name: admin-settings }
-  - { name: admin-team }
+  - { name: admin-dashboard, description: "Admin : tableau de bord" }
+  - { name: admin-users, description: "Admin : utilisateurs" }
+  - { name: admin-content, description: "Admin : contenus et traductions" }
+  - { name: admin-feedback, description: "Admin : avis sur les analyses" }
+  - { name: admin-billing, description: "Admin : offres, quotas, abonnements, paiements, codes promo" }
+  - { name: admin-support, description: "Admin : demandes au support" }
+  - { name: admin-campaigns, description: "Admin : campagnes de notifications" }
+  - { name: admin-settings, description: "Admin : réglages de l'application" }
+  - { name: admin-team, description: "Admin : équipe, rôles et journal d'audit" }
 paths:
   # ───────────────────────────── APP ─────────────────────────────
   /app/config:
@@ -62,6 +65,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AppConfig" }
+        "429": { $ref: "#/components/responses/RateLimited" }
   /app/cities:
     get:
       tags: [app]
@@ -81,6 +85,7 @@ paths:
                 required: [results]
                 properties:
                   results: { type: array, items: { $ref: "#/components/schemas/City" } }
+        "429": { $ref: "#/components/responses/RateLimited" }
 
   # ───────────────────────────── AUTH ─────────────────────────────
   /auth/register:
@@ -237,6 +242,8 @@ paths:
                 all_devices: { type: boolean, default: false }
       responses:
         "204": { description: Déconnecté }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /auth/password/forgot:
     post:
       tags: [auth]
@@ -372,6 +379,8 @@ paths:
                   scheduled_for: { type: string, format: date-time }
                   store_subscription_active: { type: boolean }
                   store_channel: { $ref: "#/components/schemas/Channel" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/profile:
     patch:
       tags: [account]
@@ -409,12 +418,15 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Image" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
     delete:
       tags: [account]
       operationId: deleteAvatar
       summary: Supprime la photo de profil
       responses:
         "204": { description: Supprimé }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/email:
     post:
       tags: [account]
@@ -470,6 +482,7 @@ paths:
                   properties:
                     provider: { type: string, enum: [google, apple] }
                     email: { type: [string, "null"] }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/sessions:
     get:
       tags: [account]
@@ -481,6 +494,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/Session" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/sessions/{id}:
     delete:
       tags: [account]
@@ -506,6 +520,7 @@ paths:
                 properties:
                   consents: { type: array, items: { $ref: "#/components/schemas/ConsentState" } }
                   pending_documents: { type: array, items: { $ref: "#/components/schemas/LegalDocumentRef" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
     post:
       tags: [account]
       operationId: updateConsents
@@ -527,6 +542,8 @@ paths:
               schema:
                 type: array
                 items: { $ref: "#/components/schemas/ConsentState" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/exports:
     post:
       tags: [account]
@@ -550,6 +567,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/DataExport" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/uploads:
     post:
       tags: [account]
@@ -628,6 +646,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Home" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/days/{date}:
     get:
       tags: [home]
@@ -640,6 +659,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/DayDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/calendar:
     get:
       tags: [home]
@@ -660,6 +681,7 @@ paths:
                   properties:
                     date: { type: string, format: date }
                     status: { type: string, enum: [empty, partial, on_target, over, under] }
+        "401": { $ref: "#/components/responses/Unauthorized" }
 
   # ───────────────────────────── MEALS ─────────────────────────────
   /me/analyses:
@@ -761,6 +783,9 @@ paths:
                 required: [rewards]
                 properties:
                   rewards: { $ref: "#/components/schemas/RewardDelta" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/quotas:
     get:
       tags: [meals]
@@ -772,6 +797,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/Quota" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/meals:
     get:
       tags: [meals]
@@ -794,6 +820,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/Meal" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
     post:
       tags: [meals]
       operationId: createMeal
@@ -858,6 +885,8 @@ paths:
                 required: [day]
                 properties:
                   day: { $ref: "#/components/schemas/DaySummary" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/meals/{id}/duplicate:
     post:
       tags: [meals]
@@ -882,6 +911,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/MealWriteResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/meals/{id}/photo:
     delete:
       tags: [meals]
@@ -890,6 +922,8 @@ paths:
       parameters: [{ $ref: "#/components/parameters/Id" }]
       responses:
         "204": { description: Photo supprimée }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/meal-type-suggestion:
     get:
       tags: [meals]
@@ -906,6 +940,7 @@ paths:
                 properties:
                   meal_type: { $ref: "#/components/schemas/MealType" }
                   date: { type: string, format: date }
+        "401": { $ref: "#/components/responses/Unauthorized" }
 
   # ───────────────────────────── CATALOG ─────────────────────────────
   /foods:
@@ -926,6 +961,7 @@ paths:
                 required: [results]
                 properties:
                   results: { type: array, items: { $ref: "#/components/schemas/FoodSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /dishes:
     get:
       tags: [catalog]
@@ -948,6 +984,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/DishSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /dishes/{id}:
     get:
       tags: [catalog]
@@ -967,13 +1004,19 @@ paths:
       operationId: favoriteDish
       summary: Ajoute un plat aux favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Ajouté } }
+      responses:
+        "204": { description: Ajouté }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
     delete:
       tags: [catalog]
       operationId: unfavoriteDish
       summary: Retire un plat des favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Retiré } }
+      responses:
+        "204": { description: Retiré }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
 
   # ───────────────────────────── TRACKING ─────────────────────────────
   /me/water:
@@ -1003,6 +1046,8 @@ paths:
                 properties:
                   water: { $ref: "#/components/schemas/Water" }
                   rewards: { $ref: "#/components/schemas/RewardDelta" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/progress:
     get:
       tags: [tracking]
@@ -1039,6 +1084,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/WeightOverview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
     post:
       tags: [tracking]
       operationId: addWeight
@@ -1066,6 +1112,8 @@ paths:
                   overview: { $ref: "#/components/schemas/WeightOverview" }
                   targets: { $ref: "#/components/schemas/Targets" }
                   rewards: { $ref: "#/components/schemas/RewardDelta" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/weights/{id}:
     delete:
       tags: [tracking]
@@ -1078,6 +1126,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/WeightOverview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   # ───────────────────────────── ACTIVITY ─────────────────────────────
   /me/health/connection:
     put:
@@ -1102,11 +1152,15 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/HealthConnection" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
     delete:
       tags: [activity]
       operationId: deleteHealthConnection
       summary: Déconnexion (les données déjà importées sont conservées)
-      responses: { "204": { description: Déconnecté } }
+      responses:
+        "204": { description: Déconnecté }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/health/sync:
     post:
       tags: [activity]
@@ -1134,6 +1188,8 @@ paths:
                   merge_suggestions: { type: array, items: { $ref: "#/components/schemas/MergeSuggestion" } }
                   rewards: { $ref: "#/components/schemas/RewardDelta" }
                   last_sync_at: { type: string, format: date-time }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/activity:
     get:
       tags: [activity]
@@ -1146,6 +1202,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ActivityOverview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/activities:
     get:
       tags: [activity]
@@ -1167,6 +1224,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/Activity" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
     post:
       tags: [activity]
       operationId: createActivity
@@ -1218,6 +1276,8 @@ paths:
                 required: [day]
                 properties:
                   day: { $ref: "#/components/schemas/DaySummary" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/activities/{id}/merge:
     post:
       tags: [activity]
@@ -1239,6 +1299,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ActivityWriteResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/insights:
     get:
       tags: [activity]
@@ -1283,6 +1346,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/ExerciseSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /exercises/{id}:
     get:
       tags: [training]
@@ -1320,6 +1384,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/WorkoutSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /workouts/{id}:
     get:
       tags: [training]
@@ -1394,6 +1459,8 @@ paths:
                   completed: { type: boolean }
                   day: { $ref: "#/components/schemas/DaySummary" }
                   rewards: { $ref: "#/components/schemas/RewardDelta" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
 
   # ───────────────────────────── PROGRAMS ─────────────────────────────
   /programs:
@@ -1409,6 +1476,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/ProgramSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /programs/{id}:
     get:
       tags: [programs]
@@ -1421,6 +1489,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ProgramDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /programs/{id}/enroll:
     post:
       tags: [programs]
@@ -1460,7 +1530,9 @@ paths:
       tags: [programs]
       operationId: quitProgram
       summary: Quitte le programme en cours
-      responses: { "204": { description: Abandonné } }
+      responses:
+        "204": { description: Abandonné }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/program/tasks/{id}:
     put:
       tags: [programs]
@@ -1503,6 +1575,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/ChallengeSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /challenges/{id}:
     get:
       tags: [challenges]
@@ -1515,6 +1588,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ChallengeSummary" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /challenges/{id}/join:
     post:
       tags: [challenges]
@@ -1543,6 +1618,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/Participation" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/challenges/{id}:
     get:
       tags: [challenges]
@@ -1555,12 +1631,17 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Participation" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
     delete:
       tags: [challenges]
       operationId: leaveChallenge
       summary: Quitte un challenge
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Abandonné } }
+      responses:
+        "204": { description: Abandonné }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/challenges/{id}/days/{date}:
     put:
       tags: [challenges]
@@ -1603,6 +1684,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/RewardsOverview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/badges:
     get:
       tags: [rewards]
@@ -1614,6 +1696,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/UserBadge" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/points:
     get:
       tags: [rewards]
@@ -1633,6 +1716,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/PointEvent" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   # ───────────────────────────── CONTENT ─────────────────────────────
   /recipes:
     get:
@@ -1659,6 +1743,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/RecipeSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /recipes/{id}:
     get:
       tags: [content]
@@ -1680,13 +1765,19 @@ paths:
       operationId: favoriteRecipe
       summary: Ajoute une recette aux favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Ajoutée } }
+      responses:
+        "204": { description: Ajoutée }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
     delete:
       tags: [content]
       operationId: unfavoriteRecipe
       summary: Retire une recette des favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Retirée } }
+      responses:
+        "204": { description: Retirée }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /plants:
     get:
       tags: [content]
@@ -1709,6 +1800,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/PlantSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /plants/{id}:
     get:
       tags: [content]
@@ -1728,13 +1820,19 @@ paths:
       operationId: favoritePlant
       summary: Ajoute une plante aux favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Ajoutée } }
+      responses:
+        "204": { description: Ajoutée }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
     delete:
       tags: [content]
       operationId: unfavoritePlant
       summary: Retire une plante des favoris
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: Retirée } }
+      responses:
+        "204": { description: Retirée }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/prevention:
     get:
       tags: [content]
@@ -1746,6 +1844,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PreventionOverview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/prevention/tips/{id}:
     patch:
       tags: [content]
@@ -1761,7 +1860,11 @@ paths:
               properties:
                 read: { type: boolean }
                 dismissed: { type: boolean }
-      responses: { "204": { description: OK } }
+      responses:
+        "204": { description: OK }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /faq:
     get:
       tags: [content]
@@ -1791,6 +1894,7 @@ paths:
                           id: { type: string, format: uuid }
                           question: { type: string }
                           answer: { type: string, description: Markdown }
+        "429": { $ref: "#/components/responses/RateLimited" }
   /legal/{kind}:
     get:
       tags: [content]
@@ -1805,6 +1909,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/LegalDocument" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "429": { $ref: "#/components/responses/RateLimited" }
 
   # ───────────────────────────── BILLING ─────────────────────────────
   /billing/plans:
@@ -1819,6 +1925,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PlanCatalog" }
+        "429": { $ref: "#/components/responses/RateLimited" }
   /me/subscription:
     get:
       tags: [billing]
@@ -1830,6 +1937,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/SubscriptionState" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/subscription/verify:
     post:
       tags: [billing]
@@ -1878,6 +1986,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/SubscriptionState" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/payments:
     get:
       tags: [billing]
@@ -1895,6 +2005,7 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/Payment" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/billing/checkout:
     post:
       tags: [billing]
@@ -1956,6 +2067,8 @@ paths:
                   label: { type: string }
                   original: { $ref: "#/components/schemas/Money" }
                   discounted: { $ref: "#/components/schemas/Money" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/billing/portal:
     post:
       tags: [billing]
@@ -1993,6 +2106,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ReferralOverview" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
 
   # ───────────────────────────── NOTIFICATIONS ─────────────────────────────
   /me/devices:
@@ -2013,6 +2127,8 @@ paths:
                 app_version: { type: string, maxLength: 20 }
       responses:
         "204": { description: Enregistré }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/devices/{token}:
     delete:
       tags: [notifications]
@@ -2020,7 +2136,10 @@ paths:
       summary: Désenregistre un appareil des notifications push
       parameters:
         - { name: token, in: path, required: true, schema: { type: string } }
-      responses: { "204": { description: Retiré } }
+      responses:
+        "204": { description: Retiré }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /me/notification-preferences:
     get:
       tags: [notifications]
@@ -2032,6 +2151,7 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/NotificationPreferences" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
     put:
       tags: [notifications]
       operationId: updateNotificationPreferences
@@ -2047,6 +2167,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/NotificationPreferences" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/notifications:
     get:
       tags: [notifications]
@@ -2069,6 +2191,7 @@ paths:
                     properties:
                       unread_count: { type: integer }
                       results: { type: array, items: { $ref: "#/components/schemas/Notification" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/notifications/read:
     post:
       tags: [notifications]
@@ -2093,13 +2216,18 @@ paths:
                 required: [unread_count]
                 properties:
                   unread_count: { type: integer }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/notifications/{id}/opened:
     post:
       tags: [notifications]
       operationId: trackNotificationOpened
       summary: Ouverture d'une push (statistiques de campagne)
       parameters: [{ $ref: "#/components/parameters/Id" }]
-      responses: { "204": { description: OK } }
+      responses:
+        "204": { description: OK }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
 
   # ───────────────────────────── SUPPORT ─────────────────────────────
   /support/tickets:
@@ -2137,6 +2265,7 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/TicketSummary" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
   /me/tickets/{id}:
     get:
       tags: [support]
@@ -2149,6 +2278,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/TicketDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
 
   # ───────────────────────────── WEBHOOKS ─────────────────────────────
   /webhooks/google-play:
@@ -2194,6 +2325,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/StaffMember" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/dashboard:
     get:
       tags: [admin-dashboard]
@@ -2213,6 +2346,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminDashboard" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 
   # ── Utilisateurs
   /admin/users:
@@ -2240,6 +2375,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AdminUserRow" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/users/{id}:
     get:
       tags: [admin-users]
@@ -2253,6 +2390,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminUserDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /admin/users/{id}/health:
     get:
       tags: [admin-users]
@@ -2269,6 +2409,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminUserHealth" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /admin/users/{id}/actions:
     post:
       tags: [admin-users]
@@ -2319,6 +2462,9 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AdminContentRow" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
     post:
       tags: [admin-content]
       operationId: adminCreateContent
@@ -2350,6 +2496,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminContentItem" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
     patch:
       tags: [admin-content]
       operationId: adminUpdateContent
@@ -2429,6 +2578,9 @@ paths:
                     author: { type: string }
                     created_at: { type: string, format: date-time }
                     snapshot: { type: object }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /admin/content/{type}/{id}/translate:
     post:
       tags: [admin-content]
@@ -2451,6 +2603,10 @@ paths:
           content:
             application/json:
               schema: { type: object, additionalProperties: { $ref: "#/components/schemas/I18nText" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/translations:
     get:
       tags: [admin-content]
@@ -2473,6 +2629,8 @@ paths:
                     total: { type: integer }
                     missing: { type: integer }
                     percent: { type: number }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/media:
     post:
       tags: [admin-content]
@@ -2496,6 +2654,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/UploadTicket" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
 
   # ── Avis sur les analyses
   /admin/feedback:
@@ -2526,6 +2687,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AdminFeedbackRow" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/feedback/{id}:
     get:
       tags: [admin-feedback]
@@ -2539,6 +2702,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminFeedbackDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /admin/feedback/{id}/resolve:
     post:
       tags: [admin-feedback]
@@ -2569,6 +2735,10 @@ paths:
                 properties:
                   status: { type: string }
                   created_content_id: { type: [string, "null"], format: uuid }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/feedback/stats:
     get:
       tags: [admin-feedback]
@@ -2584,6 +2754,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminFeedbackStats" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 
   # ── Abonnements et paiements
   /admin/plans:
@@ -2598,6 +2770,8 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/AdminPlan" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/plans/{code}:
     patch:
       tags: [admin-billing]
@@ -2623,6 +2797,10 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/AdminPlan" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/quotas:
     get:
       tags: [admin-billing]
@@ -2635,6 +2813,8 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/QuotaRule" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
     put:
       tags: [admin-billing]
       operationId: adminReplaceQuotaRules
@@ -2657,6 +2837,9 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/QuotaRule" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/subscriptions:
     get:
       tags: [admin-billing]
@@ -2680,6 +2863,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AdminSubscriptionRow" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/payments:
     get:
       tags: [admin-billing]
@@ -2704,6 +2889,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AdminPaymentRow" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/payments/{id}/refund:
     post:
       tags: [admin-billing]
@@ -2754,6 +2941,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/PromoCode" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
     post:
       tags: [admin-billing]
       operationId: adminCreatePromoCode
@@ -2770,6 +2959,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PromoCode" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/promo-codes/{id}:
     patch:
       tags: [admin-billing]
@@ -2788,6 +2980,10 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PromoCode" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
 
   # ── Support
   /admin/tickets:
@@ -2814,6 +3010,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AdminTicketRow" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/tickets/{id}:
     get:
       tags: [admin-support]
@@ -2827,6 +3025,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/TicketDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
     patch:
       tags: [admin-support]
       operationId: adminUpdateTicket
@@ -2850,6 +3051,10 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/TicketDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/tickets/{id}/messages:
     post:
       tags: [admin-support]
@@ -2875,6 +3080,10 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/TicketDetail" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/reply-templates:
     get:
       tags: [admin-support]
@@ -2896,6 +3105,8 @@ paths:
                     name: { type: string }
                     category: { $ref: "#/components/schemas/TicketCategory" }
                     body: { $ref: "#/components/schemas/I18nText" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 
   # ── Campagnes
   /admin/campaigns:
@@ -2916,6 +3127,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/Campaign" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
     post:
       tags: [admin-campaigns]
       operationId: adminCreateCampaign
@@ -2932,6 +3145,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Campaign" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/campaigns/audience:
     post:
       tags: [admin-campaigns]
@@ -2953,6 +3169,9 @@ paths:
                 required: [count]
                 properties:
                   count: { type: integer }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/campaigns/{id}:
     get:
       tags: [admin-campaigns]
@@ -2966,6 +3185,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Campaign" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
     patch:
       tags: [admin-campaigns]
       operationId: adminUpdateCampaign
@@ -3020,6 +3242,8 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Settings" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
     patch:
       tags: [admin-settings]
       operationId: adminUpdateSettings
@@ -3059,6 +3283,8 @@ paths:
           content:
             application/json:
               schema: { type: array, items: { $ref: "#/components/schemas/StaffMember" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
     post:
       tags: [admin-team]
       operationId: adminInviteStaff
@@ -3081,6 +3307,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/StaffMember" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/team/{id}:
     patch:
       tags: [admin-team]
@@ -3105,6 +3334,10 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/StaffMember" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /admin/mfa/setup:
     post:
       tags: [admin-team]
@@ -3129,6 +3362,9 @@ paths:
                   otpauth_uri: { type: string }
                   recovery_codes: { type: array, items: { type: string } }
                   confirmed: { type: boolean }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   # ── Validation à quatre yeux
   /admin/approvals:
     get:
@@ -3152,6 +3388,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/ApprovalRequest" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /admin/approvals/{id}/decision:
     post:
       tags: [admin-team]
@@ -3191,6 +3429,9 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/ApprovalRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /admin/audit:
     get:
       tags: [admin-team]
@@ -3217,6 +3458,8 @@ paths:
                   - type: object
                     properties:
                       results: { type: array, items: { $ref: "#/components/schemas/AuditEntry" } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 components:
   securitySchemes:
     bearer:

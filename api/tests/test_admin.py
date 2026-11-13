@@ -80,7 +80,7 @@ class TestTeam:
 
 class TestFourEyes:
     def test_nutrition_settings_need_another_person(self, make_staff: StaffFactory) -> None:
-        requester, client = staff_client(make_staff, "superadmin")
+        _requester, client = staff_client(make_staff, "superadmin")
         response = client.patch(
             "/api/v1/admin/settings",
             {"reason": "Nouvelle recommandation", "nutrition": {"salt_max_g": 4}},
@@ -96,7 +96,7 @@ class TestFourEyes:
         assert client.get("/api/v1/admin/settings").json()["nutrition"]["salt_max_g"] == 4
 
     def test_content_publish_by_author_requires_review(self, make_staff: StaffFactory) -> None:
-        author, client = staff_client(make_staff, "content")
+        _author, client = staff_client(make_staff, "content")
         created = client.post(
             "/api/v1/admin/content/foods",
             {

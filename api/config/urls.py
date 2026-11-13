@@ -20,6 +20,9 @@ api_v1 = [
     path("", include("apps.billing.api.urls")),
     path("", include("apps.notifications.api.urls")),
     path("", include("apps.support.api.urls")),
+    # Back-office (/admin/*)
+    path("", include("apps.core.admin_api.urls")),
+    path("", include("apps.accounts.admin_api.urls")),
 ]
 
 urlpatterns = [path("api/v1/", include(api_v1))]

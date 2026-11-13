@@ -25,6 +25,10 @@ AUTHENTICATED_STAFF: Final = "authenticated_staff"
 
 
 def required_permission_for(view: APIView, request: Request) -> str | None:
+    resolver = getattr(view, "resolve_permission", None)
+    if callable(resolver):
+        resolved: str | None = resolver(request)
+        return resolved
     permission_map: dict[str, str] | None = getattr(view, "permission_map", None)
     if permission_map:
         action = getattr(view, "action", None)
@@ -50,6 +54,9 @@ class HasPermission(BasePermission):
             return True
         if permission not in access.permissions_for_user(user):
             raise ForbiddenRole(meta={"permission": permission})
+        dynamic_step_up = getattr(view, "dynamic_step_up", False) and permission in access.step_up_permissions()
+        if dynamic_step_up and not step_up_valid(request):
+            raise StepUpRequired()
         return True
 
 

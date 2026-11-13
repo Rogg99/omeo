@@ -22,6 +22,7 @@ from apps.core.views import AppAPIView, validated
 from apps.support import serializers as s
 from apps.support import services
 from apps.support.models import DataExport, Direction, Ticket
+from apps.support.presenters import ticket_summary_out
 
 
 class TicketCreateView(AppAPIView):
@@ -63,7 +64,7 @@ class MyTicketsView(AppAPIView):
             .annotate(last_reply_at=Max("messages__created_at", filter=Q(messages__direction=Direction.OUTBOUND)))
             .order_by("-updated_at")
         )
-        return Response([s.ticket_summary_out(t) for t in tickets])
+        return Response([ticket_summary_out(t) for t in tickets])
 
 
 class MyTicketDetailView(AppAPIView):
@@ -72,7 +73,7 @@ class MyTicketDetailView(AppAPIView):
         ticket = services.own_ticket(user=request.user, ticket_id=id)
         messages = ticket.messages.exclude(direction=Direction.INTERNAL_NOTE).prefetch_related("attachments")
         body = {
-            **s.ticket_summary_out(ticket),
+            **ticket_summary_out(ticket),
             "email": ticket.email,
             "user_id": ticket.user_id,
             "priority": ticket.priority,

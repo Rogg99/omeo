@@ -18,16 +18,25 @@ class _Providers:
     permissions_for_user: Callable[[Any], frozenset[str]] | None = None
     can_decide_domain: Callable[[Any, str], bool] | None = None
     allows_feature: Callable[[Any, str], bool] | None = None
+    step_up_permissions: frozenset[str] = frozenset()
 
 
 _providers = _Providers()
 
 
 def register_permissions(
-    *, permissions_for_user: Callable[[Any], frozenset[str]], can_decide_domain: Callable[[Any, str], bool]
+    *,
+    permissions_for_user: Callable[[Any], frozenset[str]],
+    can_decide_domain: Callable[[Any, str], bool],
+    step_up_permissions: frozenset[str],
 ) -> None:
     _providers.permissions_for_user = permissions_for_user
     _providers.can_decide_domain = can_decide_domain
+    _providers.step_up_permissions = step_up_permissions
+
+
+def step_up_permissions() -> frozenset[str]:
+    return _providers.step_up_permissions
 
 
 def register_entitlements(*, allows_feature: Callable[[Any, str], bool]) -> None:

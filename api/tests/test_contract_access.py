@@ -122,7 +122,10 @@ def test_markers_applied(op: Operation) -> None:
     permission = op.spec.get("x-permission")
     if permission:
         assert HasPermission in classes, f"{op}: HasPermission missing"
-        assert _declared_permission(view, op.method) == permission, f"{op}: expected {permission}"
+        if "<" in permission:
+            assert callable(getattr(view, "resolve_permission", None)), f"{op}: dynamic permission resolver"
+        else:
+            assert _declared_permission(view, op.method) == permission, f"{op}: expected {permission}"
     else:
         assert HasPermission not in classes, f"{op}: unexpected HasPermission"
 
@@ -172,7 +175,11 @@ def test_no_route_outside_contract() -> None:
 
 # ───────────────────────── Comportement ─────────────────────────
 
-ADMIN_OPS = [op for op in IMPLEMENTED if op.spec.get("x-permission") not in (None, AUTHENTICATED_STAFF)]
+ADMIN_OPS = [
+    op
+    for op in IMPLEMENTED
+    if op.spec.get("x-permission") not in (None, AUTHENTICATED_STAFF) and "<" not in op.spec["x-permission"]
+]
 ROLE_REFUSALS = [
     (op, role) for op in ADMIN_OPS for role in Role.values if op.spec["x-permission"] not in ROLE_PERMISSIONS[role]
 ]

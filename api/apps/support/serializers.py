@@ -7,7 +7,7 @@ from typing import Any
 from rest_framework import serializers
 
 from apps.support import services
-from apps.support.models import DataExport, Ticket, TicketCategory
+from apps.support.models import DataExport, TicketCategory
 
 
 class TicketInputSerializer(serializers.Serializer[Any]):
@@ -19,25 +19,6 @@ class TicketInputSerializer(serializers.Serializer[Any]):
     attachment_ids = serializers.ListField(child=serializers.UUIDField(), max_length=3, required=False, default=list)
     captcha = serializers.CharField(max_length=2048, required=False)
     meta = serializers.DictField(child=serializers.CharField(max_length=80), required=False, default=dict)
-
-
-def _unread(last_reply: Any, read_at: Any) -> bool:
-    return bool(last_reply and (read_at is None or last_reply > read_at))
-
-
-def ticket_summary_out(ticket: Ticket) -> dict[str, Any]:
-    last_reply = getattr(ticket, "last_reply_at", None)
-    return {
-        "id": ticket.id,
-        "number": ticket.number,
-        "subject": ticket.subject,
-        "category": ticket.category,
-        "status": ticket.status,
-        "has_unread_reply": bool(
-            last_reply and (ticket.user_last_read_at is None or last_reply > ticket.user_last_read_at)
-        ),
-        "updated_at": ticket.updated_at,
-    }
 
 
 def export_out(export: DataExport) -> dict[str, Any]:

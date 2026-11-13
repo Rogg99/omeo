@@ -35,7 +35,27 @@ page pour l'admin), `Idempotency-Key`, permissions (`HasPermission`, `RequiresSt
 cache, chiffrement des données de santé, journaux JSON sans données personnelles.
 
 Les applications communiquent par services et événements (`apps/core/events.py`), jamais par leurs vues ou leurs
-sérialiseurs.
+sérialiseurs. Les sorties réutilisées par une autre application sont publiques dans `presenters.py`. Les registres
+du socle évitent les dépendances croisées :
+
+| Registre | Rôle | Enregistré par |
+|---|---|---|
+| `nutrition/projection.py` | parts de `DailySummary` (consommation, activité), plats récents | meals, activity |
+| `meals/providers.py` | composition d'une recette pour un repas | content |
+| `core/access.py` | permissions du staff et droits (Entitlement) | accounts, billing |
+| `core/exports.py` | sections de l'export RGPD | accounts, nutrition, meals, activity |
+| `core/approvals.py` | exécuteurs des validations à quatre yeux | core, billing, content, notifications |
+| `core/rewards.py` | récompenses gagnées pendant une requête (`RewardDelta`) | gamification |
+
+`DailySummary` est la projection lue par tous les écrans ; `recompute_day` est appelé dans la transaction de chaque
+écriture (repas, eau, activité, poids, synchronisation santé). Les écrans agrégés (`/me/home`, `/me/days/{date}`,
+`/me/activity`) font au plus 8 requêtes SQL (vérifié par les tests).
+
+## Tâches planifiées
+
+Le calendrier Celery beat est dans `config/settings.py` (`CELERY_BEAT_SCHEDULE`). Les tâches « par fuseau » tournent
+chaque heure et ne traitent que les utilisateurs dont l'heure locale correspond (clôture des journées et des
+challenges, conseils de prévention). L'analyse IA passe par la file `ai` (`celery -A config worker -Q celery,ai`).
 
 ## Contrôle d'accès
 
@@ -50,6 +70,7 @@ sérialiseurs.
 pip install -r requirements-dev.txt
 ruff check . && ruff format --check . && mypy .
 pytest --cov                     # couverture ≥ 90 % sur services et calculs
+pytest -m contract               # schemathesis sur le schéma généré
 python manage.py spectacular --file /tmp/schema.yaml --validate
 ```
 

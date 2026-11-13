@@ -5,7 +5,7 @@ description: Client généré de l'API Omeo (contracts/openapi.yaml). Ne pas mod
 
 
 environment:
-  sdk: '>=3.8.0 <4.0.0'
+  sdk: ^3.10.0
 
 dependencies:
   dio: '^5.7.0'

@@ -2,7 +2,7 @@
 # Génère le client Dart de l'API (packages/omeo_api) depuis contracts/openapi.yaml.
 # Ne jamais modifier packages/omeo_api à la main : relancer ce script après chaque évolution du contrat.
 #
-# Prérequis : Node (npx), Java 11 ou plus (JAVA_HOME, par exemple le JBR d'Android Studio), Dart.
+# Prérequis : Node (npx), Java 11 ou plus (JAVA_HOME, par exemple le JBR d'Android Studio), FVM (version de Flutter dans .fvmrc).
 # Usage : depuis mobile/, `bash tool/gen_api.sh`
 set -euo pipefail
 
@@ -32,13 +32,13 @@ sed -i \
   -e "s/^version: .*/version: $CONTRACT_VERSION/" \
   -e "s/^description: .*/description: Client généré de l'API Omeo (contracts\/openapi.yaml). Ne pas modifier à la main./" \
   -e "/^homepage: /d" \
-  -e "s/^  sdk: .*/  sdk: '>=3.8.0 <4.0.0'/" \
+  -e "s/^  sdk: .*/  sdk: ^3.10.0/" \
   -e "1a publish_to: none" \
   "$OUT/pubspec.yaml"
 # Les tests émis sont des squelettes vides : on ne les garde pas.
 rm -rf "$OUT/test"
 
 # Fichiers de modèles et de sérialisation (json_serializable)
-(cd "$OUT" && dart pub get && dart run build_runner build --delete-conflicting-outputs && dart fix --apply && dart format lib)
+(cd "$OUT" && fvm dart pub get && fvm dart run build_runner build --delete-conflicting-outputs && fvm dart fix --apply && fvm dart format lib)
 
 echo "Client généré dans $OUT"

@@ -86,7 +86,6 @@ PARCOURS CLÉS :
     puis « Autre chose » vers la recherche de plats. Un choix appelle POST /me/analyses/{id}/dish et
     remplace l'écran par l'Analysis renvoyée, avec une transition douce et un toast de remerciement.
     Repliée si la confiance est élevée, dépliée si elle est faible. Ton léger, jamais culpabilisant.
-    Ces champs sont des évolutions proposées dans contracts/CHANGES.md : à implémenter une fois validées.
 - Quotas : GET /me/quotas affiché avant chaque photo.
 - Santé :
   - permission demandée au moment où elle sert (écran Progression ou Sport), jamais à l'onboarding ;

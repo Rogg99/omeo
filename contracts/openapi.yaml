@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Omeo API
-  version: 1.0.0
+  version: 1.1.0
   summary: API unique d'Omeo (mobile, admin, site web).
   description: |
     Contrat cible, écrit avant le code. Conventions : docs/technique/conventions-api.md.
@@ -705,6 +705,37 @@ paths:
             application/json:
               schema: { $ref: "#/components/schemas/Analysis" }
         "404": { $ref: "#/components/responses/NotFound" }
+  /me/analyses/{id}/dish:
+    post:
+      tags: [meals]
+      operationId: selectAnalysisDish
+      summary: Remplace le plat détecté par un plat du catalogue (« Pas satisfait ? »)
+      description: |
+        Le plat vient d'une alternative de l'analyse ou de la recherche de plats. L'API recharge sa
+        composition type, recalcule `items` et `totals`, et enregistre l'avis `wrong_dish`.
+        Aucun appel à l'IA, aucun décompte de quota.
+        409 `conflict` si l'analyse n'est pas `succeeded` ou est déjà liée à un repas.
+      parameters:
+        - { $ref: "#/components/parameters/Id" }
+        - { $ref: "#/components/parameters/IdempotencyKey" }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [dish_id]
+              properties:
+                dish_id: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Analyse mise à jour
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Analysis" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
   /me/analyses/{id}/feedback:
     put:
       tags: [meals]
@@ -3640,18 +3671,36 @@ components:
         dish_label: { type: [string, "null"] }
         confidence: { type: [number, "null"] }
         low_confidence: { type: boolean }
+        alternatives:
+          type: array
+          maxItems: 3
+          description: Autres plats envisagés, par probabilité décroissante (rubrique « Pas satisfait ? »)
+          items: { $ref: "#/components/schemas/AnalysisAlternative" }
         items: { type: array, items: { $ref: "#/components/schemas/AnalysisItem" } }
         totals: { $ref: "#/components/schemas/Nutrients" }
         suggested_meal_type: { $ref: "#/components/schemas/MealType" }
         suggested_recipe_id: { type: [string, "null"], format: uuid }
         quota: { $ref: "#/components/schemas/Quota" }
         created_at: { type: string, format: date-time }
+    AnalysisAlternative:
+      type: object
+      required: [label, dish, probability_percent]
+      properties:
+        label: { type: string }
+        dish:
+          description: Plat du catalogue correspondant, null s'il est absent (la recherche est alors pré-remplie avec label)
+          anyOf: [{ $ref: "#/components/schemas/DishSummary" }, { type: "null" }]
+        probability_percent: { type: integer, minimum: 0, maximum: 100, description: Arrondie par l'API }
     FeedbackInput:
       type: object
       required: [rating]
       properties:
         rating: { type: string, enum: [up, down] }
         reason: { $ref: "#/components/schemas/FeedbackReason" }
+        corrected_dish_label:
+          type: string
+          maxLength: 80
+          description: Plat réel selon l'utilisateur, attendu quand reason = wrong_dish (nettoyé avant tout usage)
         comment: { type: string, maxLength: 1000 }
     MealItemInput:
       type: object

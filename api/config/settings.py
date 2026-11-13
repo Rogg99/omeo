@@ -240,6 +240,19 @@ GOOGLE_CLIENT_IDS = env.list("GOOGLE_CLIENT_IDS", default=[])
 APPLE_CLIENT_IDS = env.list("APPLE_CLIENT_IDS", default=[])
 TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY", default="")
 
+# ───────────────────────── Paiements et stores ─────────────────────────
+# Agrégateur du paiement web (adaptateur Stripe par défaut, interchangeable)
+PAYMENTS_SECRET_KEY = env("PAYMENTS_SECRET_KEY", default="")
+PAYMENTS_WEBHOOK_SECRET = env("PAYMENTS_WEBHOOK_SECRET", default="")
+# Google Play : compte de service (JSON) de la Play Developer API, et push Pub/Sub des RTDN
+GOOGLE_PLAY_PACKAGE_NAME = env("GOOGLE_PLAY_PACKAGE_NAME", default="app.omeo")
+GOOGLE_PLAY_SERVICE_ACCOUNT_JSON = env("GOOGLE_PLAY_SERVICE_ACCOUNT_JSON", default="")
+GOOGLE_PUBSUB_AUDIENCE = env("GOOGLE_PUBSUB_AUDIENCE", default="")
+GOOGLE_PUBSUB_SERVICE_ACCOUNT = env("GOOGLE_PUBSUB_SERVICE_ACCOUNT", default="")
+# App Store : bundle et certificat racine Apple épinglé (Apple Root CA - G3, PEM)
+APPLE_BUNDLE_ID = env("APPLE_BUNDLE_ID", default="app.omeo")
+APPLE_ROOT_CA_PEM = env("APPLE_ROOT_CA_PEM", default="").replace("\\n", "\n")
+
 # ───────────────────────── Emails ─────────────────────────
 WEB_BASE_URL = env("WEB_BASE_URL", default="http://localhost")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Omeo <no-reply@omeo.app>")

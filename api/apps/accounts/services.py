@@ -28,13 +28,17 @@ from apps.accounts.models import (
     LegalDocument,
     OneTimeTokenPurpose,
     Profile,
+    Referral,
     ReferralCode,
+    ReferralRejection,
+    ReferralStatus,
     Session,
     SocialAccount,
     User,
 )
 from apps.billing import services as billing
 from apps.billing.selectors import active_store_channel
+from apps.billing.subscriptions import grant_days
 from apps.core import audit, events, settings_store
 from apps.core.audit import RequestMeta
 from apps.core.errors import (
@@ -47,9 +51,11 @@ from apps.core.errors import (
 )
 from apps.core.localtime import DEFAULT_TZ, is_valid_timezone
 from apps.core.permissions import STEP_UP_WINDOW
+from apps.gamification import services as gamification
 from apps.meals.services import consume_upload
 from apps.nutrition import services as nutrition
 from apps.nutrition.calculations import age_on
+from apps.nutrition.models import DailySummary
 
 InviteStatus = Literal["none", "valid", "invalid"]
 REFERRAL_ALPHABET: Final = string.ascii_uppercase.replace("O", "").replace("I", "") + "23456789"
@@ -220,6 +226,8 @@ def _bootstrap_account(
     owner = _referral_code_owner(invite_code)
     status: InviteStatus = "none" if not invite_code else ("valid" if owner and owner.user_id != user.pk else "invalid")
     billing.start_trial(user=user, with_invite=status == "valid")
+    if status == "valid" and owner is not None:
+        Referral.objects.create(referrer=owner.user, referee=user, code=owner)
     nutrition.recompute_targets(user=user)
     ensure_referral_code(user)
     fingerprint = _record_fingerprint(user, device)
@@ -633,3 +641,56 @@ def request_deletion_by_email(*, email: str) -> None:
 def confirm_deletion_by_email(*, token: str) -> None:
     consumed = one_time_tokens.consume(raw=token, purpose=OneTimeTokenPurpose.ACCOUNT_DELETION)
     schedule_deletion(user=consumed.user)
+
+
+# ───────────────────────── Parrainage ─────────────────────────
+
+
+@transaction.atomic
+def evaluate_referral(*, referee_id: Any) -> Referral | None:
+    """
+    Valide le parrainage quand le filleul a vérifié son email et enregistré au moins un repas, depuis un appareil
+    différent de ceux du parrain. Récompense : jours de Plus pour le parrain (plafond `referral.cap_days`) et points.
+    """
+    referral = (
+        Referral.objects.select_for_update()
+        .select_related("referrer", "referee")
+        .filter(referee_id=referee_id, status=ReferralStatus.PENDING)
+        .first()
+    )
+    if referral is None:
+        return None
+    referee = referral.referee
+    if referee.email_verified_at is None or not DailySummary.objects.filter(user=referee, meals_count__gt=0).exists():
+        return referral
+    referee_devices = set(DeviceFingerprint.objects.filter(user=referee).values_list("hash", flat=True))
+    referrer_devices = set(DeviceFingerprint.objects.filter(user=referral.referrer).values_list("hash", flat=True))
+    if referee_devices & referrer_devices:
+        return _reject_referral(referral, ReferralRejection.SAME_DEVICE)
+    days = int(settings_store.get("referral.days_per_referral", 7))
+    grant = grant_days(user=referral.referrer, days=days, reason="referral", ref_id=str(referral.pk))
+    if grant is None:
+        return _reject_referral(referral, ReferralRejection.CAP_REACHED)
+    referral.status = ReferralStatus.VALIDATED
+    referral.validated_at = timezone.now()
+    referral.reward_days = grant.days
+    referral.save(update_fields=["status", "validated_at", "reward_days", "updated_at"])
+    gamification.award(user=referral.referrer, action="referral_validated", ref_type="referral", ref_id=referral.pk)
+    gamification.bump(user=referral.referrer, metric="referrals_validated")
+    return referral
+
+
+def _reject_referral(referral: Referral, reason: str) -> Referral:
+    referral.status = ReferralStatus.REJECTED
+    referral.rejected_reason = reason
+    referral.save(update_fields=["status", "rejected_reason", "updated_at"])
+    return referral
+
+
+def _on_referee_progress(event: events.EmailVerified | events.MealLogged) -> None:
+    evaluate_referral(referee_id=event.user_id)
+
+
+def connect_events() -> None:
+    events.subscribe(events.EmailVerified, _on_referee_progress)
+    events.subscribe(events.MealLogged, _on_referee_progress)

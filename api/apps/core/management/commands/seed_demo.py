@@ -31,6 +31,11 @@ from apps.accounts import mfa
 from apps.accounts import services as accounts
 from apps.accounts.models import City, Role, StaffRole, User
 from apps.activity import services as activity
+from apps.billing import services as billing_services
+from apps.billing import subscriptions as billing_subscriptions
+from apps.billing.models import Payment, Plan, Trial
+from apps.billing.providers.base import VerifiedSubscription
+from apps.billing.services import invalidate_entitlement
 from apps.content.models import FaqItem, Plant, PreventionTip, Recipe
 from apps.core.audit import RequestMeta
 from apps.core.localtime import local_today
@@ -181,6 +186,7 @@ class Command(BaseCommand):
             self.seed_water(users)
             self.seed_activity(users)
             self.seed_programs(users)
+            self.seed_billing(users)
         self.stdout.write(self.style.SUCCESS(f"seed_demo : {len(users)} comptes et {len(STAFF)} membres du staff."))
 
     def reset(self) -> None:
@@ -366,6 +372,54 @@ class Command(BaseCommand):
         Enrollment.objects.filter(pk=enrollment.pk).update(started_on=local_today(awa) - timedelta(days=13))
         programs_service.join_challenge(user=awa, challenge_id=challenges[0].pk)
         programs_service.join_challenge(user=users["fatou"], challenge_id=challenges[1].pk)
+
+    def seed_billing(self, users: dict[str, User]) -> None:
+        """Offres de chaque compte : Free (essai terminé), Plus store, Plus web, quota épuisé, paiements variés."""
+        now = timezone.now()
+        for slug in ("moussa", "aicha", "fatou", "koffi"):
+            Trial.objects.filter(user=users[slug]).update(ends_at=now - timedelta(days=10))
+            invalidate_entitlement(users[slug].pk)
+        Plan.objects.filter(code="plus_monthly").update(web_price_id="price_demo_monthly")
+        Plan.objects.filter(code="plus_annual").update(web_price_id="price_demo_annual")
+        store = VerifiedSubscription(
+            channel="google_play",
+            external_id="demo-fatou-token",
+            product_id="omeo_plus_monthly",
+            status="active",
+            period_start=now - timedelta(days=12),
+            period_end=now + timedelta(days=18),
+            auto_renew=True,
+            event_at=now,
+        )
+        billing_subscriptions.apply_verified(user=users["fatou"], verified=store)
+        web = VerifiedSubscription(
+            channel="web",
+            external_id="sub_demo_koffi",
+            product_id="price_demo_annual",
+            status="active",
+            period_start=now - timedelta(days=40),
+            period_end=now + timedelta(days=325),
+            auto_renew=True,
+            event_at=now,
+            raw={"customer": "cus_demo_koffi"},
+        )
+        subscription = billing_subscriptions.apply_verified(user=users["koffi"], verified=web)
+        for index, (status, amount, days_ago) in enumerate(
+            (("succeeded", 4699, 40), ("failed", 449, 75), ("refunded", 449, 70))
+        ):
+            Payment.objects.create(
+                user=users["koffi"],
+                subscription=subscription,
+                channel="web",
+                amount_cents=amount,
+                status=status,
+                external_id=f"pi_demo_koffi_{index}",
+                paid_at=now - timedelta(days=days_ago),
+            )
+        aicha = users["aicha"]
+        limit = billing_services.quota_limit(user=aicha, feature="photo_analysis") or 0
+        for _ in range(limit):
+            billing_services.consume_quota(user=aicha, feature="photo_analysis")
 
     def seed_staff(self) -> None:
         self.stdout.write("Staff de démo (mot de passe commun, TOTP ci-dessous) :")

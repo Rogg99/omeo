@@ -148,6 +148,7 @@ class Subscription(BaseModel):
     auto_renew = models.BooleanField(default=True)
     external_id = models.CharField(max_length=255)
     raw = models.JSONField(default=dict)
+    last_event_at = models.DateTimeField(null=True, blank=True)  # ignore les notifications plus anciennes (désordre)
 
     class Meta:
         constraints: ClassVar[list[models.BaseConstraint]] = [
@@ -159,4 +160,91 @@ class Subscription(BaseModel):
                 condition=Q(status__in=["trial", "active", "grace", "canceled"]),
                 name="subscription_entitling_idx",
             ),
+        ]
+
+
+class PaymentStatus(models.TextChoices):
+    SUCCEEDED = "succeeded"
+    FAILED = "failed"
+    REFUNDED = "refunded"
+    PENDING = "pending"
+
+
+class Payment(BaseModel):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="payments")
+    subscription = models.ForeignKey(
+        Subscription, null=True, blank=True, on_delete=models.SET_NULL, related_name="payments"
+    )
+    channel = models.CharField(max_length=12, choices=Channel.choices)
+    amount_cents = models.IntegerField()
+    currency = models.CharField(max_length=3, default="USD")
+    status = models.CharField(max_length=10, choices=PaymentStatus.choices)
+    external_id = models.CharField(max_length=255, unique=True)
+    paid_at = models.DateTimeField()
+    receipt_url = models.URLField(blank=True)
+    description = models.CharField(max_length=120, blank=True)
+
+    class Meta:
+        indexes: ClassVar[list[models.Index]] = [models.Index(fields=["user", "-paid_at"])]
+
+
+class Refund(BaseModel):
+    payment = models.ForeignKey(Payment, on_delete=models.PROTECT, related_name="refunds")
+    amount_cents = models.PositiveIntegerField()
+    reason = models.CharField(max_length=500)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="+")
+    external_id = models.CharField(max_length=255, blank=True)
+
+
+class PromoKind(models.TextChoices):
+    PERCENT = "percent"
+    AMOUNT = "amount"
+    FREE_DAYS = "free_days"
+
+
+class PromoCode(BaseModel):
+    """Utilisable sur le paiement web uniquement."""
+
+    code = models.CharField(max_length=40, unique=True)
+    kind = models.CharField(max_length=9, choices=PromoKind.choices)
+    value = models.PositiveIntegerField()
+    plans = models.ManyToManyField(Plan, blank=True, related_name="+")
+    max_redemptions = models.PositiveIntegerField(null=True, blank=True)
+    redeemed_count = models.PositiveIntegerField(default=0)
+    valid_from = models.DateTimeField(null=True, blank=True)
+    valid_until = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+
+class PromoRedemption(BaseModel):
+    promo = models.ForeignKey(PromoCode, on_delete=models.PROTECT, related_name="redemptions")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="+")
+    payment = models.ForeignKey(Payment, null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+
+    class Meta:
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(fields=["promo", "user"], name="promo_redemption_uniq"),
+        ]
+
+
+class WebhookProvider(models.TextChoices):
+    GOOGLE_PLAY = "google_play"
+    APP_STORE = "app_store"
+    PAYMENTS = "payments"
+
+
+class WebhookEvent(BaseModel):
+    """Garantit l'idempotence : un événement déjà reçu n'est jamais retraité."""
+
+    provider = models.CharField(max_length=12, choices=WebhookProvider.choices)
+    event_id = models.CharField(max_length=255)
+    type = models.CharField(max_length=80)
+    payload = models.JSONField()
+    occurred_at = models.DateTimeField(null=True, blank=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
+    error = models.TextField(blank=True)
+
+    class Meta:
+        constraints: ClassVar[list[models.BaseConstraint]] = [
+            models.UniqueConstraint(fields=["provider", "event_id"], name="webhook_event_uniq"),
         ]

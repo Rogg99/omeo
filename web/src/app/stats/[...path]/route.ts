@@ -7,10 +7,10 @@ import { clientIpFrom } from "@/server/request";
  * Mesure d'audience servie depuis le domaine du site (Plausible ou Umami) : aucun script tiers,
  * aucune requête vers un autre domaine. Le script n'est chargé qu'après consentement.
  *   GET  /stats/script.js → script du fournisseur
- *   POST /stats/event     → événement relayé au fournisseur
+ *   POST /stats/event (Plausible) ou /stats/api/send (Umami) → événement relayé au fournisseur
  */
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ file: string }> }) {
-  const { file } = await params;
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
+  const file = (await params).path.join("/");
   if (file !== "script.js" || env.ANALYTICS_PROVIDER === "none" || !env.ANALYTICS_SCRIPT_URL) return new Response(null, { status: 404 });
   const upstream = await fetch(env.ANALYTICS_SCRIPT_URL, { next: { revalidate: 86_400 } }).catch(() => undefined);
   if (!upstream?.ok) return new Response(null, { status: 502 });
@@ -19,9 +19,9 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
   });
 }
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ file: string }> }) {
-  const { file } = await params;
-  if (file !== "event" || env.ANALYTICS_PROVIDER === "none" || !env.ANALYTICS_EVENT_URL) return new Response(null, { status: 404 });
+export async function POST(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
+  const file = (await params).path.join("/");
+  if ((file !== "event" && file !== "api/send") || env.ANALYTICS_PROVIDER === "none" || !env.ANALYTICS_EVENT_URL) return new Response(null, { status: 404 });
   const raw = await request.text();
   if (raw.length > 4_096) return new Response(null, { status: 413 });
   const headers = new Headers({ "content-type": "application/json" });

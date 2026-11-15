@@ -4,6 +4,7 @@ Toute modification de [openapi.yaml](openapi.yaml) est d'abord proposée ici, pu
 
 | Date | Endpoint / schéma | Changement | Raison | Compatible ? | Statut |
 |---|---|---|---|---|---|
+| 2026-11-15 | servers | Staging : `https://api.staging.my-omeo.app/api/v1` remplacé par `https://staging-api.my-omeo.app/api/v1` | Plan des domaines révisé : un seul niveau de sous-domaine, couvert par le certificat `*.my-omeo.app` ([domaines.md](../docs/technique/domaines.md)) | Oui (aucun changement de schéma) | Proposé |
 | 2026-11-15 | servers | URL de staging `https://api.staging.my-omeo.app/api/v1` remplacée par `https://staging-api.my-omeo.app/api/v1` (à reporter dans `mobile/config/staging.json`) | Noms de staging sur un seul niveau : couverts par le certificat `*.my-omeo.app` et le proxy Cloudflare ([domaines.md](../docs/technique/domaines.md)) | Oui (aucun changement de schéma) | Proposé |
 | 2026-11-13 | servers | URL de production `https://api.omeo.app/api/v1` remplacée par `https://api.my-omeo.app/api/v1` ; ajout de staging `https://api.staging.my-omeo.app/api/v1` | Nom de domaine acheté : my-omeo.app ([domaines.md](../docs/technique/domaines.md)) | Oui (aucun changement de schéma) | Validé (1.1.4) |
 | 2026-11-13 | NotificationPreferences.categories.subscription ; AdminUserDetail.health_masked | `const: true` remplacé par une description « toujours true » | Le générateur dart-dio produit un enum invalide pour un booléen constant | Oui (aucun changement sur le fil) | Validé (1.1.3) |

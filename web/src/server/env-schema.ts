@@ -21,6 +21,8 @@ const schema = z
     DATA_SOURCE: z.enum(["api", "mock"]).default("api"),
     SITE_URL: z.url().default("http://localhost"),
     API_URL_INTERNAL: optional.pipe(z.url().optional()),
+    // Préfixe des routes de l'API ; vide pour Prism, qui sert le contrat à la racine.
+    API_BASE_PATH: z.string().regex(/^(\/[\w.-]+)*$/).default("/api/v1"),
     REVALIDATE_SECRET: optional.pipe(z.string().min(32).optional()),
     TURNSTILE_SITE_KEY: optional,
     PAYMENT_ORIGINS: z

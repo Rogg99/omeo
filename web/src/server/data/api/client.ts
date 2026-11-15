@@ -13,7 +13,7 @@ import type { AuthedContext, Problem, RequestContext, Result } from "../types";
  * et les jetons ne sont jamais visibles du navigateur.
  */
 export const api = createClient<paths>({
-  baseUrl: `${env.API_URL_INTERNAL ?? ""}/api/v1`,
+  baseUrl: `${env.API_URL_INTERNAL ?? ""}${env.API_BASE_PATH}`,
   headers: { Accept: "application/json" },
 });
 

@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "lighthouse": "lhci autorun",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:contract": "node tests/contract/run.mjs"
   },
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.3.0",

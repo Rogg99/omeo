@@ -59,7 +59,8 @@ export async function ensureSession(ctx: RequestContext): Promise<AuthedContext 
   const refresh = store.get(SESSION_COOKIES.refresh)?.value;
   if (!refresh) return undefined;
   const result = await source.auth.refresh(refresh, ctx);
-  if (!result.ok) {
+  // Jeton renouvelé déjà expiré (horloge décalée, réponse figée) : échec, sinon boucle de redirections.
+  if (!result.ok || !isAccessFresh(String(Date.parse(result.data.access_expires_at)))) {
     clearSession(store);
     return undefined;
   }

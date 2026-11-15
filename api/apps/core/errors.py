@@ -16,7 +16,6 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions as drf_exceptions
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import exception_handler as drf_exception_handler
 
 from apps.core.request_context import current_request_id
 
@@ -259,6 +258,10 @@ def problem_exception_handler(exc: Exception, context: Mapping[str, Any]) -> Res
     for drf_class, api_class in _DRF_MAP.items():
         if isinstance(exc, drf_class):
             return problem_response(api_class())
+    # Import différé : rest_framework.views charge DEFAULT_AUTHENTICATION_CLASSES (apps.accounts), qui importe
+    # ce module ; l'importer au chargement crée un cycle dès que errors est importé avant DRF.
+    from rest_framework.views import exception_handler as drf_exception_handler  # noqa: PLC0415
+
     response = drf_exception_handler(exc, dict(context))
     if response is None:
         return None

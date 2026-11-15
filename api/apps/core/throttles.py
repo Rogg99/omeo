@@ -9,11 +9,15 @@ Limites de débit (conventions-api.md) :
 from __future__ import annotations
 
 import hashlib
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from rest_framework.request import Request
 from rest_framework.throttling import SimpleRateThrottle
-from rest_framework.views import APIView
+
+if TYPE_CHECKING:
+    # Annotations seulement : ce module est chargé par DEFAULT_THROTTLE_CLASSES pendant l'import de
+    # rest_framework.views, qui ne peut donc pas être importé ici à l'exécution.
+    from rest_framework.views import APIView
 
 
 class IpThrottle(SimpleRateThrottle):

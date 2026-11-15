@@ -42,7 +42,8 @@ def sign(secret: str, timestamp: str, body: str) -> str:
 
 def _schedule(tags: tuple[str, ...]) -> Callable[..., None]:
     def handler(**_kwargs: Any) -> None:
-        from apps.core.tasks import revalidate_web
+        # Import différé : apps.core.tasks importe ce module (body_for, sign)
+        from apps.core.tasks import revalidate_web  # noqa: PLC0415
 
         transaction.on_commit(lambda: revalidate_web.delay(list(tags)))
 

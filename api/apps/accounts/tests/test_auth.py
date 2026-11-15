@@ -341,3 +341,21 @@ def test_create_account_service_is_reused_by_seed(reference: None) -> None:
     )
     assert status == "none"
     assert not Session.objects.filter(user=user).exists()
+
+
+def test_lockout_delay_grows() -> None:
+    from apps.accounts import lockout
+
+    assert [lockout.delay_for(n) for n in (4, 5, 6, 7, 30)] == [0, 30, 60, 120, 900]
+
+
+def test_lockout_after_failures(anon: APIClient, user: User) -> None:
+    from apps.accounts import lockout
+    from apps.core.errors import RateLimited
+
+    for _ in range(lockout.FREE_ATTEMPTS):
+        lockout.record_failure(user.email)
+    with pytest.raises(RateLimited):
+        lockout.check(user.email)
+    lockout.reset(user.email)
+    lockout.check(user.email)

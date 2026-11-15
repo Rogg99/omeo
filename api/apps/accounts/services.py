@@ -18,7 +18,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import IntegrityError, transaction
 from django.utils import timezone
 
-from apps.accounts import emails, mfa, one_time_tokens, social, tokens
+from apps.accounts import emails, lockout, mfa, one_time_tokens, social, tokens
 from apps.accounts.models import (
     NON_WITHDRAWABLE_CONSENTS,
     REQUIRED_CONSENTS,
@@ -322,12 +322,16 @@ def suspend_user(*, user: User, actor: User | None, reason: str, request: Any = 
 
 
 def login(*, email: str, password: str, device: dict[str, Any] | None, meta: RequestMeta) -> AuthOutcome:
+    lockout.check(email)
     user = User.objects.filter(email__iexact=_normalize_email(email)).first()
     if user is None or not user.has_usable_password():
         check_password(password, _DUMMY_HASH)
+        lockout.record_failure(email)
         raise InvalidCredentials()
     if not user.check_password(password):
+        lockout.record_failure(email)
         raise InvalidCredentials()
+    lockout.reset(email)
     if not user.is_active:
         raise tokens.suspended_error()
     if user.is_staff:

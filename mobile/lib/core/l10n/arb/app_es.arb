@@ -99,5 +99,15 @@
   "appNavProfile": "Profile",
   "appNavAddMeal": "Add a meal",
   "appNavHelp": "Help and contact",
-  "appNavNotifications": "{count, plural, =0 {Notifications} one {Notifications, {count} unread} other {Notifications, {count} unread}}"
+  "appNavNotifications": "{count, plural, =0 {Notifications} one {Notifications, {count} unread} other {Notifications, {count} unread}}",
+  "appSystemUpgradeTitle": "An update is required",
+  "appSystemUpgradeBody": "This version of Omeo is no longer supported. Update to continue; your data is kept.",
+  "appSystemUpgradeAction": "Update",
+  "appSystemSuspendedTitle": "Your account is suspended",
+  "appSystemSuspendedBody": "You can't use Omeo for now. Contact support to find out more.",
+  "appSystemContactSupport": "Contact support",
+  "appSystemQuotaTitle": "Limit reached",
+  "appSystemQuotaFreeBody": "You've used all your analyses. With Omeo Plus, they're unlimited.",
+  "appSystemQuotaReset": "Your limit resets on {date}.",
+  "appSystemOk": "Got it"
 }

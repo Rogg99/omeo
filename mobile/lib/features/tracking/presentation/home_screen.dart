@@ -9,16 +9,17 @@ import 'package:omeo/features/tracking/application/home_controller.dart';
 import 'package:omeo/features/tracking/presentation/home_sections.dart';
 import 'package:omeo_api/omeo_api.dart';
 
-/// Actions de navigation de l'accueil, fournies par le routeur.
+/// Actions de navigation de l'accueil, fournies par le routeur. Une action
+/// absente rend l'élément correspondant non interactif.
 typedef HomeNavigation = ({
-  VoidCallback openHelp,
-  VoidCallback openNotifications,
-  ValueChanged<HomeQuickActionsInner> quickAction,
-  ValueChanged<DateTime> openJournal,
-  ValueChanged<HomeShortcutsEnum> openShortcut,
-  VoidCallback openProgram,
-  ValueChanged<ChallengeToday> openChallenge,
-  VoidCallback openRewards,
+  VoidCallback? openHelp,
+  VoidCallback? openNotifications,
+  ValueChanged<HomeQuickActionsInner>? quickAction,
+  ValueChanged<DateTime>? openJournal,
+  ValueChanged<HomeShortcutsEnum>? openShortcut,
+  VoidCallback? openProgram,
+  ValueChanged<ChallengeToday>? openChallenge,
+  VoidCallback? openRewards,
 });
 
 /// Accueil : une information clé en haut (calories restantes), puis les
@@ -148,20 +149,22 @@ class _HomeContent extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
             child: FirstPhotoCard(
-              onTakePhoto: () {
-                for (final a in home.quickActions) {
-                  if (a.kind == HomeQuickActionsInnerKindEnum.photo) {
-                    navigation.quickAction(a);
-                  }
-                }
-              },
+              onTakePhoto: navigation.quickAction == null
+                  ? null
+                  : () {
+                      for (final a in home.quickActions) {
+                        if (a.kind == HomeQuickActionsInnerKindEnum.photo) {
+                          navigation.quickAction!(a);
+                        }
+                      }
+                    },
             ),
           ),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
           child: NutritionCard(day: home.day, isToday: isToday),
         ),
-        if (!isToday)
+        if (!isToday && navigation.openJournal != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
             child: OmeoButton(
@@ -169,7 +172,7 @@ class _HomeContent extends StatelessWidget {
               variant: OmeoButtonVariant.outline,
               size: OmeoButtonSize.medium,
               trailingIcon: OmeoIcons.arrowR,
-              onPressed: () => navigation.openJournal(home.date),
+              onPressed: () => navigation.openJournal!(home.date),
             ),
           ),
         if (isToday)
@@ -180,7 +183,9 @@ class _HomeContent extends StatelessWidget {
         if (home.day.balance != null)
           BalanceSection(
             balance: home.day.balance!,
-            onDetails: () => navigation.openJournal(home.date),
+            onDetails: navigation.openJournal == null
+                ? null
+                : () => navigation.openJournal!(home.date),
           ),
         if (home.activeProgram != null || challenges.isNotEmpty)
           InProgressSection(

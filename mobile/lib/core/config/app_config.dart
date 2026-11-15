@@ -11,6 +11,7 @@ final class AppConfig {
     required this.dataSource,
     required this.apiBaseUrl,
     this.pinnedCertificates = const [],
+    this.iosAppStoreId = '',
   });
 
   /// Lit les valeurs passées par --dart-define ou --dart-define-from-file.
@@ -22,6 +23,7 @@ final class AppConfig {
     );
     const apiBaseUrl = String.fromEnvironment('API_BASE_URL');
     const pins = String.fromEnvironment('API_PINS');
+    const iosAppStoreId = String.fromEnvironment('IOS_APP_STORE_ID');
     return AppConfig(
       flavor: Flavor.values.byName(flavorName),
       dataSource: DataSource.values.byName(dataSourceName),
@@ -30,6 +32,9 @@ final class AppConfig {
         for (final p in pins.split(','))
           if (p.trim().isNotEmpty) p.trim(),
       ],
+      // Valeur lue à la compilation, vide par défaut.
+      // ignore: avoid_redundant_argument_values
+      iosAppStoreId: iosAppStoreId,
     );
   }
 
@@ -40,6 +45,12 @@ final class AppConfig {
   /// Empreintes SHA-256 des certificats de l'API (épinglage TLS), dont une
   /// de secours. Obligatoires en staging et en production.
   final List<String> pinnedCertificates;
+
+  /// Identifiant App Store (lien de mise à jour sur iOS).
+  final String iosAppStoreId;
+
+  /// Site public : support, pages légales, liens d'invitation.
+  static const websiteUrl = 'https://my-omeo.app';
 
   /// Refuse de démarrer une configuration dangereuse : en staging et en
   /// production, l'API est en HTTPS et au moins deux empreintes (dont une de

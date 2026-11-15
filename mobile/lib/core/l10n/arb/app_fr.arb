@@ -350,5 +350,31 @@
         "type": "int"
       }
     }
-  }
+  },
+  "appSystemUpgradeTitle": "Une mise à jour est nécessaire",
+  "@appSystemUpgradeTitle": {},
+  "appSystemUpgradeBody": "Cette version d'Omeo n'est plus prise en charge. Mets à jour pour continuer ; tes données sont conservées.",
+  "@appSystemUpgradeBody": {},
+  "appSystemUpgradeAction": "Mettre à jour",
+  "@appSystemUpgradeAction": {},
+  "appSystemSuspendedTitle": "Ton compte est suspendu",
+  "@appSystemSuspendedTitle": {},
+  "appSystemSuspendedBody": "Tu ne peux plus utiliser Omeo pour le moment. Contacte le support pour en savoir plus.",
+  "@appSystemSuspendedBody": {},
+  "appSystemContactSupport": "Contacter le support",
+  "@appSystemContactSupport": {},
+  "appSystemQuotaTitle": "Limite atteinte",
+  "@appSystemQuotaTitle": {},
+  "appSystemQuotaFreeBody": "Tu as utilisé toutes tes analyses. Avec Omeo Plus, elles sont illimitées.",
+  "@appSystemQuotaFreeBody": {},
+  "appSystemQuotaReset": "Ta limite se réinitialise le {date}.",
+  "@appSystemQuotaReset": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appSystemOk": "Compris",
+  "@appSystemOk": {}
 }

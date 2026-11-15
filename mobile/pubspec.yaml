@@ -23,6 +23,7 @@ dependencies:
   omeo_api:
     path: packages/omeo_api
   package_info_plus: ^10.2.2
+  url_launcher: ^6.3.2
   uuid: ^4.6.0
 
 dev_dependencies:

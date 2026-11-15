@@ -125,6 +125,18 @@
       "add_meal": "Ajouter un repas",
       "help": "Aide et contact",
       "notifications": "{count, plural, =0 {Notifications} one {Notifications, # non lue} other {Notifications, # non lues}}"
+    },
+    "system": {
+      "upgrade_title": "Une mise à jour est nécessaire",
+      "upgrade_body": "Cette version d'Omeo n'est plus prise en charge. Mets à jour pour continuer ; tes données sont conservées.",
+      "upgrade_action": "Mettre à jour",
+      "suspended_title": "Ton compte est suspendu",
+      "suspended_body": "Tu ne peux plus utiliser Omeo pour le moment. Contacte le support pour en savoir plus.",
+      "contact_support": "Contacter le support",
+      "quota_title": "Limite atteinte",
+      "quota_free_body": "Tu as utilisé toutes tes analyses. Avec Omeo Plus, elles sont illimitées.",
+      "quota_reset": "Ta limite se réinitialise le {date}.",
+      "ok": "Compris"
     }
   },
   "web": {

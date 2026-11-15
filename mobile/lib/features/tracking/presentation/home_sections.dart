@@ -172,12 +172,12 @@ class NutritionCard extends StatelessWidget {
 class QuickAddSection extends StatelessWidget {
   const QuickAddSection({
     required this.actions,
-    required this.onAction,
+    this.onAction,
     super.key,
   });
 
   final List<HomeQuickActionsInner> actions;
-  final ValueChanged<HomeQuickActionsInner> onAction;
+  final ValueChanged<HomeQuickActionsInner>? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +199,7 @@ class QuickAddSection extends StatelessWidget {
           action.lockedReason ==
           HomeQuickActionsInnerLockedReasonEnum.planRequired;
       return OmeoCard.tight(
-        onTap: () => onAction(action),
+        onTap: onAction == null ? null : () => onAction!(action),
         child: Row(
           children: [
             BadgeIcon(icon, size: BadgeSize.small),
@@ -245,7 +245,7 @@ class QuickAddSection extends StatelessWidget {
                     child: OmeoCard(
                       variant: OmeoCardVariant.black,
                       padding: const EdgeInsets.all(16),
-                      onTap: () => onAction(photo),
+                      onTap: onAction == null ? null : () => onAction!(photo),
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(minHeight: 100),
                         child: Column(
@@ -628,14 +628,10 @@ class RewardsCard extends StatelessWidget {
 
 /// Raccourcis « Explorer » (2 × 2).
 class ShortcutsGrid extends StatelessWidget {
-  const ShortcutsGrid({
-    required this.shortcuts,
-    required this.onTap,
-    super.key,
-  });
+  const ShortcutsGrid({required this.shortcuts, this.onTap, super.key});
 
   final List<HomeShortcutsEnum> shortcuts;
-  final ValueChanged<HomeShortcutsEnum> onTap;
+  final ValueChanged<HomeShortcutsEnum>? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -675,7 +671,7 @@ class ShortcutsGrid extends StatelessWidget {
       final x = spec(s);
       final radius = BorderRadius.circular(OmeoTokens.rLg);
       return Semantics(
-        button: true,
+        button: onTap != null,
         label: x.title,
         container: true,
         excludeSemantics: true,
@@ -684,7 +680,7 @@ class ShortcutsGrid extends StatelessWidget {
           borderRadius: radius,
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () => onTap(s),
+            onTap: onTap == null ? null : () => onTap!(s),
             child: Container(
               constraints: const BoxConstraints(minHeight: 120),
               padding: const EdgeInsets.all(18),
@@ -751,9 +747,9 @@ class ShortcutsGrid extends StatelessWidget {
 
 /// Carte du premier jour : guide vers la première photo (HOM-02).
 class FirstPhotoCard extends StatelessWidget {
-  const FirstPhotoCard({required this.onTakePhoto, super.key});
+  const FirstPhotoCard({this.onTakePhoto, super.key});
 
-  final VoidCallback onTakePhoto;
+  final VoidCallback? onTakePhoto;
 
   @override
   Widget build(BuildContext context) {

@@ -1,1 +1,1 @@
-{ "FLAVOR": "mock", "DATA_SOURCE": "mock", "API_BASE_URL": "", "API_PINS": "" }
+{ "FLAVOR": "mock", "DATA_SOURCE": "mock", "API_BASE_URL": "", "API_PINS": "", "IOS_APP_STORE_ID": "" }

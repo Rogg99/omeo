@@ -1,1 +1,1 @@
-{ "FLAVOR": "dev", "DATA_SOURCE": "api", "API_BASE_URL": "http://10.0.2.2/api/v1", "API_PINS": "" }
+{ "FLAVOR": "dev", "DATA_SOURCE": "api", "API_BASE_URL": "http://10.0.2.2/api/v1", "API_PINS": "", "IOS_APP_STORE_ID": "" }

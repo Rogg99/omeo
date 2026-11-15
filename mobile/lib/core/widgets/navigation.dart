@@ -15,8 +15,8 @@ class OmeoAppBar extends StatelessWidget {
     required this.helpLabel,
     required this.notificationsLabel,
     required this.unreadCount,
-    required this.onHelp,
-    required this.onNotifications,
+    this.onHelp,
+    this.onNotifications,
     super.key,
   });
 
@@ -25,8 +25,8 @@ class OmeoAppBar extends StatelessWidget {
   /// Libellé lu, qui inclut déjà le nombre de non lues.
   final String notificationsLabel;
   final int unreadCount;
-  final VoidCallback onHelp;
-  final VoidCallback onNotifications;
+  final VoidCallback? onHelp;
+  final VoidCallback? onNotifications;
 
   @override
   Widget build(BuildContext context) {

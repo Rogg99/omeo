@@ -216,11 +216,10 @@ const source: DataSource = {
 
   demo: {
     accounts: () => ACCOUNTS.map(({ email, scenario }) => ({ email, scenario })),
-    checkoutSession: (id) => {
+    checkoutSession: (id, locale) => {
       const c = state.checkout(id);
       if (!c) return undefined;
       const discounted = c.promoCode ? PROMO_CODES[c.promoCode]?.[c.plan] : undefined;
-      const locale: Locale = "fr";
       return {
         id: c.id,
         planName: planName(c.plan, locale),

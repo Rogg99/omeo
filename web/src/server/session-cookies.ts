@@ -7,6 +7,8 @@ export const SESSION_COOKIES = {
   refresh: "omeo_rt",
   /** Échéance du jeton d'accès (ms epoch), pour décider d'un renouvellement sans décoder le jeton. */
   expires: "omeo_exp",
+  /** Email du compte (affiché sur la page Abonnement), reçu à la connexion. */
+  email: "omeo_email",
 } as const;
 
 /** Marge avant échéance : un jeton qui expire dans moins de 30 s est déjà considéré comme expiré. */

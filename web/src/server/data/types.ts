@@ -92,7 +92,7 @@ export interface BillingRepository {
 /** Comptes de démonstration et simulateurs, présents uniquement dans l'implémentation mock. */
 export interface DemoControls {
   accounts(): readonly DemoAccount[];
-  checkoutSession(id: string): DemoCheckout | undefined;
+  checkoutSession(id: string, locale: Locale): DemoCheckout | undefined;
   /** Issue d'un paiement simulé : renvoie l'URL de retour vers le site. */
   completeCheckout(id: string, outcome: "success" | "failure" | "abandon"): string | undefined;
   /** Portail simulé : résiliation ou reprise du renouvellement. */

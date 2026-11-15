@@ -22,12 +22,18 @@ type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
 const base = () => ({ httpOnly: true, secure: isSecureSite, sameSite: "lax" as const, path: "/" });
 
-export function writeSession(store: CookieStore, tokens: Tokens): void {
+export function writeSession(store: CookieStore, tokens: Tokens, email?: string): void {
   const expiresAt = Date.parse(tokens.access_expires_at);
   const accessMaxAge = Math.max(60, Math.floor((expiresAt - Date.now()) / 1000));
   store.set(SESSION_COOKIES.access, tokens.access, { ...base(), maxAge: accessMaxAge });
   store.set(SESSION_COOKIES.expires, String(expiresAt), { ...base(), maxAge: accessMaxAge });
   store.set(SESSION_COOKIES.refresh, tokens.refresh, { ...base(), maxAge: REFRESH_MAX_AGE_S });
+  if (email) store.set(SESSION_COOKIES.email, email, { ...base(), maxAge: REFRESH_MAX_AGE_S });
+}
+
+/** Email du compte connecté, s'il est connu. */
+export async function sessionEmail(): Promise<string | undefined> {
+  return (await cookies()).get(SESSION_COOKIES.email)?.value;
 }
 
 export function clearSession(store: CookieStore): void {

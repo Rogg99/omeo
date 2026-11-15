@@ -107,8 +107,9 @@
       "take_photo": "Prendre une photo",
       "see_day_journal": "Voir le journal de ce jour",
       "load_error": "Impossible de charger ta journée.",
-      "kcal_consumed": "kcal consommées",
-      "ring_consumed": "{value, number} kcal consommées"
+      "kcal_over": "kcal en plus",
+      "ring_over": "{value, number} kcal en plus",
+      "over_tag": "+{value, number} kcal"
     },
     "meal": {
       "type": {

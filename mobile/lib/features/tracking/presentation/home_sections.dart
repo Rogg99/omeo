@@ -23,7 +23,7 @@ class NutritionCard extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final kcal = day.kcal;
     final over = kcal.status == GaugeStatusEnum.over;
-    final heroValue = over ? kcal.value : (kcal.remaining ?? 0);
+    final heroValue = over ? (kcal.overBy ?? 0) : (kcal.remaining ?? 0);
     final heroColor = over ? t.accentText : t.text;
 
     Widget macro(String label, Gauge g, Color color) => MacroRow(
@@ -63,10 +63,12 @@ class NutritionCard extends StatelessWidget {
               Expanded(
                 child: Text(l.appHomeNutritionTitle, style: text.titleLarge),
               ),
-              OmeoTag(
-                isToday ? l.appHomeToday : context.shortDate(day.date),
-                tone: over ? OmeoTone.accent : OmeoTone.primary,
-              ),
+              if (over && kcal.overBy != null)
+                OmeoTag(l.appHomeOverTag(kcal.overBy!), tone: OmeoTone.accent)
+              else
+                OmeoTag(
+                  isToday ? l.appHomeToday : context.shortDate(day.date),
+                ),
             ],
           ),
           const SizedBox(height: 14),
@@ -81,7 +83,7 @@ class NutritionCard extends StatelessWidget {
                     progress: _fraction(kcal.percent),
                     color: over ? t.accent : t.primary,
                     semanticLabel: over
-                        ? l.appHomeRingConsumed(kcal.value)
+                        ? l.appHomeRingOver(heroValue)
                         : l.appHomeRingRemaining(heroValue),
                     child: Padding(
                       padding: const EdgeInsets.all(14),
@@ -90,7 +92,9 @@ class NutritionCard extends StatelessWidget {
                         children: [
                           FittedBox(
                             child: Text(
-                              context.number(heroValue),
+                              over
+                                  ? context.signedNumber(heroValue)
+                                  : context.number(heroValue),
                               style: text.displaySmall?.copyWith(
                                 fontSize: 32,
                                 color: heroColor,
@@ -98,9 +102,7 @@ class NutritionCard extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            over
-                                ? l.appHomeKcalConsumed
-                                : l.appHomeKcalRemaining,
+                            over ? l.appHomeKcalOver : l.appHomeKcalRemaining,
                             textAlign: TextAlign.center,
                             style: text.labelSmall,
                           ),

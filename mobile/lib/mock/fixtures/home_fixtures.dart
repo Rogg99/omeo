@@ -50,11 +50,13 @@ Map<String, Object?> _gauge(
   num target,
   int percent, {
   num? remaining,
+  num? overBy,
   String status = 'under',
 }) => {
   'value': value,
   'target': target,
   'remaining': ?remaining,
+  'over_by': ?overBy,
   'percent': percent,
   'status': status,
 };
@@ -119,9 +121,23 @@ Home homeFixture(
     },
     HomeVariant.over => {
       'date': _d(selected),
-      'kcal': _gauge(2520, 2340, 108, remaining: 0, status: 'over'),
+      'kcal': _gauge(
+        2520,
+        2340,
+        108,
+        remaining: 0,
+        overBy: 180,
+        status: 'over',
+      ),
       'protein': _gauge(110, 128, 86, remaining: 18),
-      'carbs': _gauge(301, 270, 111, remaining: 0, status: 'over'),
+      'carbs': _gauge(
+        301,
+        270,
+        111,
+        remaining: 0,
+        overBy: 31,
+        status: 'over',
+      ),
       'fat': _gauge(70, 72, 97, remaining: 2, status: 'on_target'),
       'water': _gauge(1500, 2000, 75, remaining: 500),
       'balance': {

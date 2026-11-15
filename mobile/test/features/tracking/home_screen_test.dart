@@ -172,22 +172,27 @@ void main() {
     expect(_taps, ['quick:photo']);
   });
 
-  testWidgets('dépassement : kcal consommées et message bienveillant', (
-    tester,
-  ) async {
-    _tallView(tester);
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    await tester.pumpWidget(
-      _app(
-        _StubRepository(
-          (_) async => homeFixture(HomeVariant.over, date: yesterday),
+  testWidgets(
+    'dépassement : excédent renvoyé par l’API et message bienveillant',
+    (
+      tester,
+    ) async {
+      _tallView(tester);
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      await tester.pumpWidget(
+        _app(
+          _StubRepository(
+            (_) async => homeFixture(HomeVariant.over, date: yesterday),
+          ),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('kcal consommées'), findsOneWidget);
-    expect(find.textContaining('Ça arrive !'), findsOneWidget);
-  });
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('kcal en plus'), findsOneWidget);
+      expect(find.text(_signed('+', '180')), findsOneWidget);
+      expect(find.text('+180 kcal'), findsOneWidget);
+      expect(find.textContaining('Ça arrive !'), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'jour passé : sélection dans le bandeau et lien vers le journal',

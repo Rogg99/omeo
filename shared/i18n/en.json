@@ -107,8 +107,9 @@
       "take_photo": "Take a photo",
       "see_day_journal": "See this day's journal",
       "load_error": "Couldn't load your day.",
-      "kcal_consumed": "kcal eaten",
-      "ring_consumed": "{value, number} kcal eaten"
+      "kcal_over": "kcal over",
+      "ring_over": "{value, number} kcal over",
+      "over_tag": "+{value, number} kcal"
     },
     "meal": {
       "type": {

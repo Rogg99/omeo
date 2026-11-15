@@ -295,10 +295,19 @@
   "@appHomeSeeDayJournal": {},
   "appHomeLoadError": "Impossible de charger ta journée.",
   "@appHomeLoadError": {},
-  "appHomeKcalConsumed": "kcal consommées",
-  "@appHomeKcalConsumed": {},
-  "appHomeRingConsumed": "{value} kcal consommées",
-  "@appHomeRingConsumed": {
+  "appHomeKcalOver": "kcal en plus",
+  "@appHomeKcalOver": {},
+  "appHomeRingOver": "{value} kcal en plus",
+  "@appHomeRingOver": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appHomeOverTag": "+{value} kcal",
+  "@appHomeOverTag": {
     "placeholders": {
       "value": {
         "type": "num",

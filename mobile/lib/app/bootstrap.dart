@@ -17,7 +17,7 @@ Future<void> bootstrap({
   List<Override> overrides = const [],
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
-  final config = AppConfig.fromEnvironment();
+  final config = AppConfig.fromEnvironment()..validate();
 
   // Les erreurs non gérées ne sortent jamais avec des données utilisateur :
   // seul le type et la pile sont journalisés, et uniquement hors production.

@@ -12,3 +12,7 @@ class CoreConfig(AppConfig):
         from apps.core.models import ApprovalKind
 
         register_executor(ApprovalKind.SETTINGS_NUTRITION, apply_settings_nutrition)
+
+        from apps.core import web_cache
+
+        web_cache.connect()

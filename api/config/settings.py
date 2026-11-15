@@ -264,6 +264,9 @@ FIREBASE_CREDENTIALS_JSON = env("FIREBASE_CREDENTIALS_JSON", default="")
 
 # ───────────────────────── Emails ─────────────────────────
 WEB_BASE_URL = env("WEB_BASE_URL", default="http://localhost")
+# Site public : webhook d'invalidation de son cache (FAQ, pages légales, tarifs) ; vide = désactivé
+WEB_INTERNAL_URL = env("WEB_INTERNAL_URL", default="")
+REVALIDATE_SECRET = env("REVALIDATE_SECRET", default="")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Omeo <no-reply@my-omeo.app>")
 EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
 EMAIL_HOST = env("EMAIL_HOST", default="localhost")

@@ -59,3 +59,9 @@ describe("signature du webhook de revalidation", () => {
     expect(verifySignature(secret, "12a", signature, body, now)).toBe(false);
   });
 });
+
+describe("compatibilité avec l'API (apps/core/web_cache.py)", () => {
+  it("produit la même signature que le vecteur partagé", () => {
+    expect(sign("s".repeat(32), "1700000000", '{"tags":["faq"]}')).toBe("sha256=2354b238d08b33e682eb7f7a3105c795e25c01075441f756a88eeb9c05139808");
+  });
+});

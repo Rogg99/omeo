@@ -135,3 +135,21 @@ class TestImages:
             assert not result.getexif()
         assert (cleaned.width, cleaned.height) == (40, 20)
         assert cleaned.content_type == "image/jpeg"
+
+
+class TestWebCacheSignature:
+    """Même vecteur que web/tests/unit/security.test.ts : les deux côtés signent pareil."""
+
+    def test_matches_web_vector(self) -> None:
+        from apps.core.web_cache import body_for, sign
+
+        body = body_for(["faq"])
+        assert body == '{"tags":["faq"]}'
+        assert sign("s" * 32, "1700000000", body) == (
+            "sha256=2354b238d08b33e682eb7f7a3105c795e25c01075441f756a88eeb9c05139808"
+        )
+
+    def test_body_is_sorted_and_deduplicated(self) -> None:
+        from apps.core.web_cache import body_for
+
+        assert body_for(["plans", "faq", "plans"]) == '{"tags":["faq","plans"]}'

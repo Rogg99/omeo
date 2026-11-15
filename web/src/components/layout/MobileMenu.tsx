@@ -3,7 +3,6 @@
 import { useEffect, useId, useState } from "react";
 
 import { Icon } from "@/components/icons/Icon";
-import { usePathname } from "@/i18n/navigation";
 
 import { NavLinks, type NavItem } from "./NavLinks";
 
@@ -13,9 +12,6 @@ type MobileMenuProps = { items: NavItem[]; openLabel: string; closeLabel: string
 export function MobileMenu({ items, openLabel, closeLabel, navLabel }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
-  const pathname = usePathname();
-
-  useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);

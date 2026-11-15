@@ -237,6 +237,7 @@ const source: DataSource = {
       const s = claims && state.session(claims.sid);
       return s ? state.setAutoRenew(s, autoRenew) : false;
     },
+    lastDeletionToken: () => state.lastDeletionToken(),
     socialIdToken: (accountEmail) => `${SOCIAL_PREFIX}${accountEmail ?? "inconnu@omeo.demo"}`,
   },
 };

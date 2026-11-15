@@ -97,6 +97,8 @@ export interface DemoControls {
   completeCheckout(id: string, outcome: "success" | "failure" | "abandon"): string | undefined;
   /** Portail simulé : résiliation ou reprise du renouvellement. */
   setAutoRenew(accessToken: string, autoRenew: boolean): boolean;
+  /** Dernier lien de suppression « envoyé par email » (affiché sur la page en mode démo). */
+  lastDeletionToken(): string | undefined;
   /** Connexion sociale simulée : le jeton d'identité d'un compte de démo. */
   socialIdToken(accountEmail: string | null): string;
 }

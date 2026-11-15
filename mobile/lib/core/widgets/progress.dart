@@ -37,6 +37,7 @@ class OmeoRing extends StatelessWidget {
     final t = context.omeo;
     return Semantics(
       label: semanticLabel,
+      container: true,
       excludeSemantics: true,
       child: SizedBox.square(
         dimension: size,
@@ -191,6 +192,7 @@ class MacroRow extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     return Semantics(
       label: '$label, $valueText',
+      container: true,
       excludeSemantics: true,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -246,6 +248,7 @@ class StepsBar extends StatelessWidget {
     final t = context.omeo;
     return Semantics(
       label: semanticLabel,
+      container: true,
       excludeSemantics: true,
       child: Row(
         children: [

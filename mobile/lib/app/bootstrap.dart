@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:omeo/core/config/app_config.dart';
+import 'package:omeo/core/l10n/number_symbols.dart';
 
 /// Configuration fournie à toute l'app. Surchargée au démarrage.
 final appConfigProvider = Provider<AppConfig>(
@@ -17,6 +18,7 @@ Future<void> bootstrap({
   List<Override> overrides = const [],
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+  useRenderableGroupSeparators();
   final config = AppConfig.fromEnvironment()..validate();
 
   // Les erreurs non gérées ne sortent jamais avec des données utilisateur :
@@ -31,6 +33,10 @@ Future<void> bootstrap({
 
   runApp(
     ProviderScope(
+      // Pas de nouvel essai automatique : l'écran montre l'erreur selon son
+      // code et propose « Réessayer » (les écritures passent par la file
+      // d'attente hors connexion).
+      retry: (_, _) => null,
       overrides: [appConfigProvider.overrideWithValue(config), ...overrides],
       child: builder(),
     ),

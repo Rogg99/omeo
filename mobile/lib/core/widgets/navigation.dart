@@ -254,6 +254,7 @@ class _TabItem extends StatelessWidget {
       button: true,
       selected: selected,
       label: tab.label,
+      container: true,
       excludeSemantics: true,
       child: InkResponse(
         onTap: onTap,
@@ -310,6 +311,7 @@ class _Fab extends StatelessWidget {
     return Semantics(
       button: true,
       label: label,
+      container: true,
       excludeSemantics: true,
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -413,6 +415,7 @@ class _Day extends StatelessWidget {
       button: !day.isFuture,
       selected: selected,
       label: day.semanticLabel,
+      container: true,
       excludeSemantics: true,
       child: Opacity(
         opacity: day.isFuture && !selected ? 0.45 : 1,

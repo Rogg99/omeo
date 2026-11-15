@@ -173,6 +173,7 @@ class OmeoIconButton extends StatelessWidget {
     return Semantics(
       button: true,
       label: semanticLabel,
+      container: true,
       excludeSemantics: true,
       // La cible tactile reste de 48 dp même quand le cercle est plus petit.
       child: SizedBox.square(

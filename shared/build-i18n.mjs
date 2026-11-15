@@ -112,6 +112,40 @@ if (errors.length) {
   process.exit(1);
 }
 
+/**
+ * flutter gen-l10n ne remplace pas le « # » d'ICU dans les pluriels : on le
+ * remplace par la variable du pluriel (`{count, plural, one {# jour}}` devient
+ * `{count, plural, one {{count} jour}}`). Seul le « # » du niveau de la
+ * branche est concerné : un pluriel imbriqué n'est pas transformé.
+ */
+function pluralHashToVariable(message) {
+  let out = "";
+  let i = 0;
+  const re = /\{\s*(\w+)\s*,\s*plural\s*,/g;
+  for (let m; (m = re.exec(message)); ) {
+    if (m.index < i) continue;
+    const name = m[1];
+    out += message.slice(i, m.index) + m[0];
+    let j = m.index + m[0].length;
+    let depth = 1;
+    let rebuilt = "";
+    while (j < message.length && depth > 0) {
+      const c = message[j];
+      if (c === "{") depth++;
+      if (c === "}") depth--;
+      if (depth === 0) break;
+      // Profondeur 2 : texte d'une branche de ce pluriel. Un pluriel
+      // imbriqué (profondeur 3 et plus) est recopié tel quel.
+      rebuilt += c === "#" && depth === 2 ? `{${name}}` : c;
+      j++;
+    }
+    out += rebuilt + "}";
+    i = j + 1;
+    re.lastIndex = i;
+  }
+  return out + message.slice(i);
+}
+
 /** Message résolu avec repli : langue → en → fr. */
 const resolveMessage = (locale, key) =>
   [locale, ...FALLBACK].map((l) => catalogs[l][key]).find((m) => m !== undefined);
@@ -124,7 +158,7 @@ for (const [app, namespaces] of Object.entries(TARGETS)) {
       const arb = { "@@locale": locale };
       for (const [k, m] of Object.entries(messages)) {
         const id = camel(k);
-        arb[id] = m.replace(/\{\s*(\w+)\s*,\s*number\s*\}/g, "{$1}");
+        arb[id] = pluralHashToVariable(m.replace(/\{\s*(\w+)\s*,\s*number\s*\}/g, "{$1}"));
         if (locale === SOURCE) {
           const vars = sourceVars[k];
           arb[`@${id}`] = Object.keys(vars).length

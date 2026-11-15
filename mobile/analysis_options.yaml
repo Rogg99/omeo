@@ -12,3 +12,5 @@ analyzer:
 linter:
   rules:
     public_member_api_docs: false
+    # Les dépôts sont des interfaces (implémentations Mock et Api), même à une méthode.
+    one_member_abstracts: false

@@ -30,6 +30,7 @@ class OmeoLineChart extends StatelessWidget {
     final t = context.omeo;
     return Semantics(
       label: semanticLabel,
+      container: true,
       excludeSemantics: true,
       child: RepaintBoundary(
         child: SizedBox(
@@ -176,6 +177,7 @@ class OmeoBarChart extends StatelessWidget {
     );
     return Semantics(
       label: semanticLabel,
+      container: true,
       excludeSemantics: true,
       child: RepaintBoundary(
         child: SizedBox(

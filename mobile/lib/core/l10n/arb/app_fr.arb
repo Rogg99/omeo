@@ -42,7 +42,7 @@
       }
     }
   },
-  "commonUnitMinutes": "{count, plural, one {# minute} other {# minutes}}",
+  "commonUnitMinutes": "{count, plural, one {{count} minute} other {{count} minutes}}",
   "@commonUnitMinutes": {
     "placeholders": {
       "count": {
@@ -50,7 +50,7 @@
       }
     }
   },
-  "commonUnitDays": "{count, plural, one {# jour} other {# jours}}",
+  "commonUnitDays": "{count, plural, one {{count} jour} other {{count} jours}}",
   "@commonUnitDays": {
     "placeholders": {
       "count": {
@@ -133,6 +133,179 @@
   },
   "appHomeKcalRemaining": "kcal restantes",
   "@appHomeKcalRemaining": {},
+  "appHomeNutritionTitle": "Nutrition du jour",
+  "@appHomeNutritionTitle": {},
+  "appHomeToday": "Aujourd'hui",
+  "@appHomeToday": {},
+  "appHomeConsumed": "Consommé",
+  "@appHomeConsumed": {},
+  "appHomeTarget": "Objectif",
+  "@appHomeTarget": {},
+  "appHomeMacroProtein": "Protéines",
+  "@appHomeMacroProtein": {},
+  "appHomeMacroCarbs": "Glucides",
+  "@appHomeMacroCarbs": {},
+  "appHomeMacroFat": "Lipides",
+  "@appHomeMacroFat": {},
+  "appHomeMacroValue": "{value}/{target} g",
+  "@appHomeMacroValue": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "target": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appHomeRingRemaining": "{value} kcal restantes",
+  "@appHomeRingRemaining": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appHomeOverMessage": "Ça arrive ! Une petite marche aide à compenser. Demain est un autre jour.",
+  "@appHomeOverMessage": {},
+  "appHomeAddMealTitle": "Ajouter un repas",
+  "@appHomeAddMealTitle": {},
+  "appHomePhotoTitle": "Photo du plat",
+  "@appHomePhotoTitle": {},
+  "appHomePhotoSubtitle": "Analyse en quelques secondes",
+  "@appHomePhotoSubtitle": {},
+  "appHomeVoice": "Vocal",
+  "@appHomeVoice": {},
+  "appHomeCatalog": "Catalogue",
+  "@appHomeCatalog": {},
+  "appHomePlusTag": "Plus",
+  "@appHomePlusTag": {},
+  "appHomeBalanceTitle": "Balance du jour",
+  "@appHomeBalanceTitle": {},
+  "appHomeDetails": "Détails",
+  "@appHomeDetails": {},
+  "appHomeEaten": "Mangé",
+  "@appHomeEaten": {},
+  "appHomeBurned": "Dépensé",
+  "@appHomeBurned": {},
+  "appHomeDifference": "Écart",
+  "@appHomeDifference": {},
+  "appHomeInProgress": "En cours",
+  "@appHomeInProgress": {},
+  "appHomeSeeAll": "Tout voir",
+  "@appHomeSeeAll": {},
+  "appHomeProgramDay": "Programme · jour {day}/{total}",
+  "@appHomeProgramDay": {
+    "placeholders": {
+      "day": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appHomeProgramTasks": "{done, plural, one {{done} tâche sur {total} aujourd'hui} other {{done} tâches sur {total} aujourd'hui}}",
+  "@appHomeProgramTasks": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appHomeChallengeDay": "Challenge · jour {day}/{total}",
+  "@appHomeChallengeDay": {
+    "placeholders": {
+      "day": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appHomeInsightTitle": "Constat de la semaine",
+  "@appHomeInsightTitle": {},
+  "appHomeLevel": "Niveau {rank} · {name}",
+  "@appHomeLevel": {
+    "placeholders": {
+      "rank": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appHomeStreak": "{count, plural, one {{count} jour} other {{count} jours}}",
+  "@appHomeStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appHomePoints": "{count, plural, one {{count} point} other {{count} points}}",
+  "@appHomePoints": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appHomeExplore": "Explorer",
+  "@appHomeExplore": {},
+  "appHomeShortcutNutrition": "Nutrition",
+  "@appHomeShortcutNutrition": {},
+  "appHomeShortcutNutritionSub": "Équilibre et objectifs",
+  "@appHomeShortcutNutritionSub": {},
+  "appHomeShortcutSport": "Sport",
+  "@appHomeShortcutSport": {},
+  "appHomeShortcutSportSub": "Séances et activité",
+  "@appHomeShortcutSportSub": {},
+  "appHomeShortcutRecipes": "Recettes",
+  "@appHomeShortcutRecipes": {},
+  "appHomeShortcutRecipesSub": "Les saveurs de chez nous",
+  "@appHomeShortcutRecipesSub": {},
+  "appHomeShortcutPlants": "Plantes & nutrition",
+  "@appHomeShortcutPlants": {},
+  "appHomeShortcutPlantsSub": "Baobab, moringa…",
+  "@appHomeShortcutPlantsSub": {},
+  "appHomeFirstStep": "Première étape",
+  "@appHomeFirstStep": {},
+  "appHomeFirstPhotoTitle": "Photographie ton prochain repas",
+  "@appHomeFirstPhotoTitle": {},
+  "appHomeFirstPhotoBody": "Omeo reconnaît le plat, estime les portions et calcule tes apports.",
+  "@appHomeFirstPhotoBody": {},
+  "appHomeTakePhoto": "Prendre une photo",
+  "@appHomeTakePhoto": {},
+  "appHomeSeeDayJournal": "Voir le journal de ce jour",
+  "@appHomeSeeDayJournal": {},
+  "appHomeLoadError": "Impossible de charger ta journée.",
+  "@appHomeLoadError": {},
+  "appHomeKcalConsumed": "kcal consommées",
+  "@appHomeKcalConsumed": {},
+  "appHomeRingConsumed": "{value} kcal consommées",
+  "@appHomeRingConsumed": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
   "appMealTypeName": "{type, select, breakfast {Petit-déjeuner} lunch {Déjeuner} snack {Collation} dinner {Dîner} other {Repas}}",
   "@appMealTypeName": {
     "placeholders": {
@@ -141,8 +314,28 @@
       }
     }
   },
-  "appMealAnalysesLeft": "{count, plural, =0 {Plus d'analyse aujourd'hui} one {# analyse restante} other {# analyses restantes}}",
+  "appMealAnalysesLeft": "{count, plural, =0 {Plus d'analyse aujourd'hui} one {{count} analyse restante} other {{count} analyses restantes}}",
   "@appMealAnalysesLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appNavHome": "Accueil",
+  "@appNavHome": {},
+  "appNavProgress": "Progression",
+  "@appNavProgress": {},
+  "appNavJournal": "Journal",
+  "@appNavJournal": {},
+  "appNavProfile": "Profil",
+  "@appNavProfile": {},
+  "appNavAddMeal": "Ajouter un repas",
+  "@appNavAddMeal": {},
+  "appNavHelp": "Aide et contact",
+  "@appNavHelp": {},
+  "appNavNotifications": "{count, plural, =0 {Notifications} one {Notifications, {count} non lue} other {Notifications, {count} non lues}}",
+  "@appNavNotifications": {
     "placeholders": {
       "count": {
         "type": "int"

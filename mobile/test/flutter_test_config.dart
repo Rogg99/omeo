@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:alchemist/alchemist.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:omeo/core/l10n/number_symbols.dart';
 
 /// Configuration commune des tests : polices de l'app chargées pour que les
 /// goldens « plateforme » ressemblent à l'écran réel. Les goldens CI
@@ -12,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
   await _loadFonts();
+  useRenderableGroupSeparators();
   return AlchemistConfig.runWithConfig(
     config: AlchemistConfig(
       platformGoldensConfig: PlatformGoldensConfig(

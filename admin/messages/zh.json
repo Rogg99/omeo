@@ -1,62 +1,62 @@
 {
   "common": {
     "action": {
-      "continue": "Continue",
-      "back": "Back",
-      "cancel": "Cancel",
-      "save": "Save",
-      "delete": "Delete",
-      "retry": "Retry",
-      "close": "Close",
-      "confirm": "Confirm"
+      "continue": "继续",
+      "back": "返回",
+      "cancel": "取消",
+      "save": "保存",
+      "delete": "删除",
+      "retry": "重试",
+      "close": "关闭",
+      "confirm": "确认"
     },
     "state": {
-      "loading": "Loading…",
-      "offline": "No connection. Your data will be sent when you're back online.",
-      "pending_sync": "Calculating",
-      "empty": "Nothing yet"
+      "loading": "加载中…",
+      "offline": "无网络连接。恢复联网后会自动发送你的数据。",
+      "pending_sync": "计算中",
+      "empty": "暂无内容"
     },
     "unit": {
-      "kcal": "{value, number} kcal",
-      "grams": "{value, number} g",
-      "minutes": "{count, plural, one {# minute} other {# minutes}}",
-      "days": "{count, plural, one {# day} other {# days}}"
+      "kcal": "{value, number} 千卡",
+      "grams": "{value, number} 克",
+      "minutes": "{count, plural, other {# 分钟}}",
+      "days": "{count, plural, other {# 天}}"
     },
     "plus": {
       "name": "Omeo Plus",
-      "discover": "Discover Omeo Plus"
+      "discover": "了解 Omeo Plus"
     }
   },
   "errors": {
-    "validation_error": "Some information is invalid.",
-    "invalid_credentials": "Incorrect email or password.",
-    "token_expired": "Your session has expired. Please sign in again.",
-    "not_authenticated": "Sign in to continue.",
-    "plan_required": "This feature is part of Omeo Plus.",
-    "quota_exceeded": "You've reached your limit. It resets {resetsAt}.",
-    "email_not_verified": "Verify your email to continue.",
-    "account_suspended": "Your account is suspended. Please contact support.",
-    "upgrade_required": "A new version of Omeo is required.",
-    "rate_limited": "Too many attempts. Try again in a moment.",
-    "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
-    "server_error": "Something went wrong on our side. Please try again.",
-    "step_up_required": "Enter your authentication code to confirm.",
-    "self_approval_forbidden": "Someone else must approve this action.",
-    "conflict": "This action isn't possible in your account's current state.",
-    "not_found": "Not found.",
-    "forbidden": "You don't have access to this action.",
-    "mfa_required": "This account can only sign in from the admin area.",
-    "captcha_failed": "The anti-bot check failed. Please try again.",
-    "network_error": "We can't reach our servers. Check your connection and try again."
+    "validation_error": "部分信息无效。",
+    "invalid_credentials": "邮箱或密码错误。",
+    "token_expired": "登录已过期，请重新登录。",
+    "not_authenticated": "请先登录。",
+    "plan_required": "此功能属于 Omeo Plus。",
+    "quota_exceeded": "你已达到上限，将于{resetsAt}重置。",
+    "email_not_verified": "请先验证你的邮箱。",
+    "account_suspended": "你的账户已被暂停，请联系客服。",
+    "upgrade_required": "需要更新到新版 Omeo。",
+    "rate_limited": "尝试次数过多，请稍后再试。",
+    "analysis_rejected": "无法识别这道菜，请换一张更清晰的照片。",
+    "server_error": "我们这边出了点问题，请重试。",
+    "step_up_required": "请输入验证码以确认。",
+    "self_approval_forbidden": "此操作需要由其他人批准。",
+    "conflict": "你的账户当前状态无法进行此操作。",
+    "not_found": "未找到。",
+    "forbidden": "你无权进行此操作。",
+    "mfa_required": "此账户只能从管理后台登录。",
+    "captcha_failed": "人机验证失败，请重试。",
+    "network_error": "无法连接到服务器，请检查网络后重试。"
   },
   "admin": {
     "nav": {
-      "dashboard": "Dashboard",
-      "users": "Users",
-      "approvals": "Approvals"
+      "dashboard": "仪表板",
+      "users": "用户",
+      "approvals": "审批"
     },
     "approval": {
-      "pending": "Waiting for approval by someone else."
+      "pending": "等待其他人审批。"
     }
   }
 }

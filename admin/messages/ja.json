@@ -1,62 +1,62 @@
 {
   "common": {
     "action": {
-      "continue": "Continue",
-      "back": "Back",
-      "cancel": "Cancel",
-      "save": "Save",
-      "delete": "Delete",
-      "retry": "Retry",
-      "close": "Close",
-      "confirm": "Confirm"
+      "continue": "続ける",
+      "back": "戻る",
+      "cancel": "キャンセル",
+      "save": "保存",
+      "delete": "削除",
+      "retry": "再試行",
+      "close": "閉じる",
+      "confirm": "確認"
     },
     "state": {
-      "loading": "Loading…",
-      "offline": "No connection. Your data will be sent when you're back online.",
-      "pending_sync": "Calculating",
-      "empty": "Nothing yet"
+      "loading": "読み込み中…",
+      "offline": "接続がありません。オンラインに戻るとデータが送信されます。",
+      "pending_sync": "計算中",
+      "empty": "まだ何もありません"
     },
     "unit": {
       "kcal": "{value, number} kcal",
       "grams": "{value, number} g",
-      "minutes": "{count, plural, one {# minute} other {# minutes}}",
-      "days": "{count, plural, one {# day} other {# days}}"
+      "minutes": "{count, plural, other {#分}}",
+      "days": "{count, plural, other {#日}}"
     },
     "plus": {
       "name": "Omeo Plus",
-      "discover": "Discover Omeo Plus"
+      "discover": "Omeo Plusを見る"
     }
   },
   "errors": {
-    "validation_error": "Some information is invalid.",
-    "invalid_credentials": "Incorrect email or password.",
-    "token_expired": "Your session has expired. Please sign in again.",
-    "not_authenticated": "Sign in to continue.",
-    "plan_required": "This feature is part of Omeo Plus.",
-    "quota_exceeded": "You've reached your limit. It resets {resetsAt}.",
-    "email_not_verified": "Verify your email to continue.",
-    "account_suspended": "Your account is suspended. Please contact support.",
-    "upgrade_required": "A new version of Omeo is required.",
-    "rate_limited": "Too many attempts. Try again in a moment.",
-    "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
-    "server_error": "Something went wrong on our side. Please try again.",
-    "step_up_required": "Enter your authentication code to confirm.",
-    "self_approval_forbidden": "Someone else must approve this action.",
-    "conflict": "This action isn't possible in your account's current state.",
-    "not_found": "Not found.",
-    "forbidden": "You don't have access to this action.",
-    "mfa_required": "This account can only sign in from the admin area.",
-    "captcha_failed": "The anti-bot check failed. Please try again.",
-    "network_error": "We can't reach our servers. Check your connection and try again."
+    "validation_error": "入力内容に誤りがあります。",
+    "invalid_credentials": "メールアドレスまたはパスワードが正しくありません。",
+    "token_expired": "セッションの有効期限が切れました。もう一度ログインしてください。",
+    "not_authenticated": "続けるにはログインしてください。",
+    "plan_required": "この機能はOmeo Plusに含まれています。",
+    "quota_exceeded": "上限に達しました。{resetsAt}にリセットされます。",
+    "email_not_verified": "続けるにはメールアドレスを確認してください。",
+    "account_suspended": "アカウントは停止されています。サポートにお問い合わせください。",
+    "upgrade_required": "Omeoの新しいバージョンが必要です。",
+    "rate_limited": "試行回数が多すぎます。しばらくしてからもう一度お試しください。",
+    "analysis_rejected": "料理を認識できませんでした。もっと鮮明な写真でお試しください。",
+    "server_error": "こちら側で問題が発生しました。もう一度お試しください。",
+    "step_up_required": "確認のため認証コードを入力してください。",
+    "self_approval_forbidden": "この操作は別の人による承認が必要です。",
+    "conflict": "現在のアカウントの状態ではこの操作はできません。",
+    "not_found": "見つかりません。",
+    "forbidden": "この操作へのアクセス権がありません。",
+    "mfa_required": "このアカウントは管理画面からのみログインできます。",
+    "captcha_failed": "ボット対策の確認に失敗しました。もう一度お試しください。",
+    "network_error": "サーバーに接続できません。接続を確認して、もう一度お試しください。"
   },
   "admin": {
     "nav": {
-      "dashboard": "Dashboard",
-      "users": "Users",
-      "approvals": "Approvals"
+      "dashboard": "ダッシュボード",
+      "users": "ユーザー",
+      "approvals": "承認"
     },
     "approval": {
-      "pending": "Waiting for approval by someone else."
+      "pending": "別の人の承認待ちです。"
     }
   }
 }

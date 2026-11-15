@@ -1,62 +1,62 @@
 {
   "common": {
     "action": {
-      "continue": "Continue",
-      "back": "Back",
-      "cancel": "Cancel",
-      "save": "Save",
-      "delete": "Delete",
-      "retry": "Retry",
-      "close": "Close",
-      "confirm": "Confirm"
+      "continue": "متابعة",
+      "back": "رجوع",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "delete": "حذف",
+      "retry": "إعادة المحاولة",
+      "close": "إغلاق",
+      "confirm": "تأكيد"
     },
     "state": {
-      "loading": "Loading…",
-      "offline": "No connection. Your data will be sent when you're back online.",
-      "pending_sync": "Calculating",
-      "empty": "Nothing yet"
+      "loading": "جارٍ التحميل…",
+      "offline": "لا يوجد اتصال. ستُرسَل بياناتك عند عودة الشبكة.",
+      "pending_sync": "جارٍ الحساب",
+      "empty": "لا شيء حتى الآن"
     },
     "unit": {
-      "kcal": "{value, number} kcal",
-      "grams": "{value, number} g",
-      "minutes": "{count, plural, one {# minute} other {# minutes}}",
-      "days": "{count, plural, one {# day} other {# days}}"
+      "kcal": "{value, number} سعرة",
+      "grams": "{value, number} غ",
+      "minutes": "{count, plural, zero {# دقيقة} one {دقيقة واحدة} two {دقيقتان} few {# دقائق} many {# دقيقة} other {# دقيقة}}",
+      "days": "{count, plural, zero {# يوم} one {يوم واحد} two {يومان} few {# أيام} many {# يومًا} other {# يوم}}"
     },
     "plus": {
       "name": "Omeo Plus",
-      "discover": "Discover Omeo Plus"
+      "discover": "اكتشف Omeo Plus"
     }
   },
   "errors": {
-    "validation_error": "Some information is invalid.",
-    "invalid_credentials": "Incorrect email or password.",
-    "token_expired": "Your session has expired. Please sign in again.",
-    "not_authenticated": "Sign in to continue.",
-    "plan_required": "This feature is part of Omeo Plus.",
-    "quota_exceeded": "You've reached your limit. It resets {resetsAt}.",
-    "email_not_verified": "Verify your email to continue.",
-    "account_suspended": "Your account is suspended. Please contact support.",
-    "upgrade_required": "A new version of Omeo is required.",
-    "rate_limited": "Too many attempts. Try again in a moment.",
-    "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
-    "server_error": "Something went wrong on our side. Please try again.",
-    "step_up_required": "Enter your authentication code to confirm.",
-    "self_approval_forbidden": "Someone else must approve this action.",
-    "conflict": "This action isn't possible in your account's current state.",
-    "not_found": "Not found.",
-    "forbidden": "You don't have access to this action.",
-    "mfa_required": "This account can only sign in from the admin area.",
-    "captcha_failed": "The anti-bot check failed. Please try again.",
-    "network_error": "We can't reach our servers. Check your connection and try again."
+    "validation_error": "بعض المعلومات غير صالحة.",
+    "invalid_credentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    "token_expired": "انتهت صلاحية جلستك. سجّل الدخول مجددًا.",
+    "not_authenticated": "سجّل الدخول للمتابعة.",
+    "plan_required": "هذه الميزة جزء من Omeo Plus.",
+    "quota_exceeded": "لقد بلغت الحد المسموح. يُعاد ضبطه {resetsAt}.",
+    "email_not_verified": "أكّد بريدك الإلكتروني للمتابعة.",
+    "account_suspended": "حسابك معلّق. تواصل مع الدعم.",
+    "upgrade_required": "يلزم إصدار جديد من Omeo.",
+    "rate_limited": "محاولات كثيرة جدًا. أعد المحاولة بعد قليل.",
+    "analysis_rejected": "تعذّر التعرّف على الطبق. جرّب صورة أوضح.",
+    "server_error": "حدثت مشكلة من جهتنا. أعد المحاولة.",
+    "step_up_required": "أدخل رمز المصادقة للتأكيد.",
+    "self_approval_forbidden": "يجب أن يوافق شخص آخر على هذا الإجراء.",
+    "conflict": "لا يمكن تنفيذ هذا الإجراء في الحالة الحالية لحسابك.",
+    "not_found": "غير موجود.",
+    "forbidden": "ليست لديك صلاحية لهذا الإجراء.",
+    "mfa_required": "لا يمكن لهذا الحساب تسجيل الدخول إلا من مساحة الإدارة.",
+    "captcha_failed": "فشل التحقق من أنك لست روبوتًا. أعد المحاولة.",
+    "network_error": "تعذّر الوصول إلى خوادمنا. تحقّق من اتصالك وأعد المحاولة."
   },
   "admin": {
     "nav": {
-      "dashboard": "Dashboard",
-      "users": "Users",
-      "approvals": "Approvals"
+      "dashboard": "لوحة التحكم",
+      "users": "المستخدمون",
+      "approvals": "الموافقات"
     },
     "approval": {
-      "pending": "Waiting for approval by someone else."
+      "pending": "بانتظار موافقة شخص آخر."
     }
   }
 }

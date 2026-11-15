@@ -1,62 +1,62 @@
 {
   "common": {
     "action": {
-      "continue": "Continue",
-      "back": "Back",
-      "cancel": "Cancel",
-      "save": "Save",
-      "delete": "Delete",
-      "retry": "Retry",
-      "close": "Close",
-      "confirm": "Confirm"
+      "continue": "Continuar",
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "retry": "Reintentar",
+      "close": "Cerrar",
+      "confirm": "Confirmar"
     },
     "state": {
-      "loading": "Loading…",
-      "offline": "No connection. Your data will be sent when you're back online.",
-      "pending_sync": "Calculating",
-      "empty": "Nothing yet"
+      "loading": "Cargando…",
+      "offline": "Sin conexión. Tus datos se enviarán cuando vuelva la red.",
+      "pending_sync": "Calculando",
+      "empty": "Nada por ahora"
     },
     "unit": {
       "kcal": "{value, number} kcal",
       "grams": "{value, number} g",
-      "minutes": "{count, plural, one {# minute} other {# minutes}}",
-      "days": "{count, plural, one {# day} other {# days}}"
+      "minutes": "{count, plural, one {# minuto} other {# minutos}}",
+      "days": "{count, plural, one {# día} other {# días}}"
     },
     "plus": {
       "name": "Omeo Plus",
-      "discover": "Discover Omeo Plus"
+      "discover": "Descubre Omeo Plus"
     }
   },
   "errors": {
-    "validation_error": "Some information is invalid.",
-    "invalid_credentials": "Incorrect email or password.",
-    "token_expired": "Your session has expired. Please sign in again.",
-    "not_authenticated": "Sign in to continue.",
-    "plan_required": "This feature is part of Omeo Plus.",
-    "quota_exceeded": "You've reached your limit. It resets {resetsAt}.",
-    "email_not_verified": "Verify your email to continue.",
-    "account_suspended": "Your account is suspended. Please contact support.",
-    "upgrade_required": "A new version of Omeo is required.",
-    "rate_limited": "Too many attempts. Try again in a moment.",
-    "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
-    "server_error": "Something went wrong on our side. Please try again.",
-    "step_up_required": "Enter your authentication code to confirm.",
-    "self_approval_forbidden": "Someone else must approve this action.",
-    "conflict": "This action isn't possible in your account's current state.",
-    "not_found": "Not found.",
-    "forbidden": "You don't have access to this action.",
-    "mfa_required": "This account can only sign in from the admin area.",
-    "captcha_failed": "The anti-bot check failed. Please try again.",
-    "network_error": "We can't reach our servers. Check your connection and try again."
+    "validation_error": "Algunos datos no son válidos.",
+    "invalid_credentials": "Email o contraseña incorrectos.",
+    "token_expired": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
+    "not_authenticated": "Inicia sesión para continuar.",
+    "plan_required": "Esta función forma parte de Omeo Plus.",
+    "quota_exceeded": "Has alcanzado tu límite. Se reinicia {resetsAt}.",
+    "email_not_verified": "Verifica tu email para continuar.",
+    "account_suspended": "Tu cuenta está suspendida. Contacta con el soporte.",
+    "upgrade_required": "Se necesita una nueva versión de Omeo.",
+    "rate_limited": "Demasiados intentos. Vuelve a intentarlo en unos instantes.",
+    "analysis_rejected": "No hemos podido reconocer el plato. Prueba con una foto más nítida.",
+    "server_error": "Ha ocurrido un problema por nuestra parte. Vuelve a intentarlo.",
+    "step_up_required": "Introduce tu código de autenticación para confirmar.",
+    "self_approval_forbidden": "Otra persona debe aprobar esta acción.",
+    "conflict": "Esta acción no es posible en el estado actual de tu cuenta.",
+    "not_found": "No encontrado.",
+    "forbidden": "No tienes acceso a esta acción.",
+    "mfa_required": "Esta cuenta solo puede iniciar sesión desde el espacio de administración.",
+    "captcha_failed": "La verificación antirrobots ha fallado. Vuelve a intentarlo.",
+    "network_error": "No podemos contactar con nuestros servidores. Comprueba tu conexión y vuelve a intentarlo."
   },
   "admin": {
     "nav": {
-      "dashboard": "Dashboard",
-      "users": "Users",
-      "approvals": "Approvals"
+      "dashboard": "Panel",
+      "users": "Usuarios",
+      "approvals": "Validaciones"
     },
     "approval": {
-      "pending": "Waiting for approval by someone else."
+      "pending": "Pendiente de validación por otra persona."
     }
   }
 }

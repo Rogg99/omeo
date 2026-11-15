@@ -1,62 +1,62 @@
 {
   "common": {
     "action": {
-      "continue": "Continue",
-      "back": "Back",
-      "cancel": "Cancel",
-      "save": "Save",
-      "delete": "Delete",
-      "retry": "Retry",
-      "close": "Close",
-      "confirm": "Confirm"
+      "continue": "Weiter",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "delete": "Löschen",
+      "retry": "Erneut versuchen",
+      "close": "Schließen",
+      "confirm": "Bestätigen"
     },
     "state": {
-      "loading": "Loading…",
-      "offline": "No connection. Your data will be sent when you're back online.",
-      "pending_sync": "Calculating",
-      "empty": "Nothing yet"
+      "loading": "Wird geladen…",
+      "offline": "Keine Verbindung. Deine Daten werden gesendet, sobald du wieder online bist.",
+      "pending_sync": "Wird berechnet",
+      "empty": "Noch nichts"
     },
     "unit": {
       "kcal": "{value, number} kcal",
       "grams": "{value, number} g",
-      "minutes": "{count, plural, one {# minute} other {# minutes}}",
-      "days": "{count, plural, one {# day} other {# days}}"
+      "minutes": "{count, plural, one {# Minute} other {# Minuten}}",
+      "days": "{count, plural, one {# Tag} other {# Tage}}"
     },
     "plus": {
       "name": "Omeo Plus",
-      "discover": "Discover Omeo Plus"
+      "discover": "Omeo Plus entdecken"
     }
   },
   "errors": {
-    "validation_error": "Some information is invalid.",
-    "invalid_credentials": "Incorrect email or password.",
-    "token_expired": "Your session has expired. Please sign in again.",
-    "not_authenticated": "Sign in to continue.",
-    "plan_required": "This feature is part of Omeo Plus.",
-    "quota_exceeded": "You've reached your limit. It resets {resetsAt}.",
-    "email_not_verified": "Verify your email to continue.",
-    "account_suspended": "Your account is suspended. Please contact support.",
-    "upgrade_required": "A new version of Omeo is required.",
-    "rate_limited": "Too many attempts. Try again in a moment.",
-    "analysis_rejected": "We couldn't recognise the dish. Try a sharper photo.",
-    "server_error": "Something went wrong on our side. Please try again.",
-    "step_up_required": "Enter your authentication code to confirm.",
-    "self_approval_forbidden": "Someone else must approve this action.",
-    "conflict": "This action isn't possible in your account's current state.",
-    "not_found": "Not found.",
-    "forbidden": "You don't have access to this action.",
-    "mfa_required": "This account can only sign in from the admin area.",
-    "captcha_failed": "The anti-bot check failed. Please try again.",
-    "network_error": "We can't reach our servers. Check your connection and try again."
+    "validation_error": "Einige Angaben sind ungültig.",
+    "invalid_credentials": "E-Mail oder Passwort ist falsch.",
+    "token_expired": "Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.",
+    "not_authenticated": "Melde dich an, um fortzufahren.",
+    "plan_required": "Diese Funktion gehört zu Omeo Plus.",
+    "quota_exceeded": "Du hast dein Limit erreicht. Es wird {resetsAt} zurückgesetzt.",
+    "email_not_verified": "Bestätige deine E-Mail-Adresse, um fortzufahren.",
+    "account_suspended": "Dein Konto ist gesperrt. Bitte wende dich an den Support.",
+    "upgrade_required": "Eine neue Version von Omeo ist erforderlich.",
+    "rate_limited": "Zu viele Versuche. Versuche es gleich noch einmal.",
+    "analysis_rejected": "Das Gericht konnte nicht erkannt werden. Versuche es mit einem schärferen Foto.",
+    "server_error": "Bei uns ist ein Problem aufgetreten. Bitte versuche es erneut.",
+    "step_up_required": "Gib deinen Authentifizierungscode ein, um zu bestätigen.",
+    "self_approval_forbidden": "Eine andere Person muss diese Aktion freigeben.",
+    "conflict": "Diese Aktion ist im aktuellen Zustand deines Kontos nicht möglich.",
+    "not_found": "Nicht gefunden.",
+    "forbidden": "Du hast keinen Zugriff auf diese Aktion.",
+    "mfa_required": "Dieses Konto kann sich nur im Administrationsbereich anmelden.",
+    "captcha_failed": "Die Anti-Bot-Prüfung ist fehlgeschlagen. Bitte versuche es erneut.",
+    "network_error": "Unsere Server sind nicht erreichbar. Prüfe deine Verbindung und versuche es erneut."
   },
   "admin": {
     "nav": {
-      "dashboard": "Dashboard",
-      "users": "Users",
-      "approvals": "Approvals"
+      "dashboard": "Übersicht",
+      "users": "Nutzer",
+      "approvals": "Freigaben"
     },
     "approval": {
-      "pending": "Waiting for approval by someone else."
+      "pending": "Wartet auf Freigabe durch eine andere Person."
     }
   }
 }

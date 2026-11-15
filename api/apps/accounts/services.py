@@ -493,6 +493,16 @@ def verify_email(*, token: str) -> User:
 
 
 @transaction.atomic
+def verify_email_directly(*, user: User) -> User:
+    """Marque l'email comme vérifié sans jeton (support, données de démo) ; mêmes effets qu'une vérification."""
+    if user.email_verified_at is None:
+        user.email_verified_at = timezone.now()
+        user.save(update_fields=["email_verified_at", "updated_at"])
+        events.publish(events.EmailVerified(user_id=user.pk))
+    return user
+
+
+@transaction.atomic
 def request_email_change(*, user: User, new_email: str, password: str | None) -> None:
     new_email = _normalize_email(new_email)
     if user.has_usable_password() and not user.check_password(password or ""):

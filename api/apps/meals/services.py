@@ -242,11 +242,11 @@ def run_analysis(*, analysis_id: Any) -> Analysis | None:
             model="",
             prompt_version="",
         )
-    return _store_result(analysis_id=analysis.pk, result=result)
+    return store_result(analysis_id=analysis.pk, result=result)
 
 
 @transaction.atomic
-def _store_result(*, analysis_id: Any, result: foodscan.ScanResult) -> Analysis:
+def store_result(*, analysis_id: Any, result: foodscan.ScanResult) -> Analysis:
     analysis = Analysis.objects.select_for_update().select_related("user__profile").get(pk=analysis_id)
     country = analysis.user.profile.country or None
     analysis.model = result.model

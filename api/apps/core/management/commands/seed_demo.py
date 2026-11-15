@@ -29,7 +29,7 @@ from django.utils import timezone
 
 from apps.accounts import mfa
 from apps.accounts import services as accounts
-from apps.accounts.models import City, Role, StaffRole, User
+from apps.accounts.models import City, ReferralCode, Role, StaffRole, User
 from apps.activity import services as activity
 from apps.billing import services as billing_services
 from apps.billing import subscriptions as billing_subscriptions
@@ -37,9 +37,15 @@ from apps.billing.models import Payment, Plan, Trial
 from apps.billing.providers.base import VerifiedSubscription
 from apps.billing.services import invalidate_entitlement
 from apps.content.models import FaqItem, Plant, PreventionTip, Recipe
+from apps.core.approvals import ApprovalService
 from apps.core.audit import RequestMeta
-from apps.core.localtime import local_today
-from apps.core.models import ContentStatus
+from apps.core.localtime import day_bounds, local_today
+from apps.core.models import ApprovalKind, ApprovalRequest, ContentStatus
+from apps.foodscan.schemas import ScanOutput
+from apps.foodscan.services import ScanResult
+from apps.meals import services as meals_service
+from apps.notifications.models import Campaign
+from apps.notifications.services import notify
 from apps.nutrition import services as nutrition
 from apps.nutrition.calculations import NUTRIENT_KEYS
 from apps.nutrition.models import Dish, DishComponent, Food
@@ -53,11 +59,51 @@ from apps.programs.models import (
     ProgramTask,
     Rule,
 )
+from apps.support import services as support_services
+from apps.support.models import Ticket
 
 DEMO_DOMAIN: Final = "demo.my-omeo.app"
 DEMO_SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "demo"
 HISTORY_DAYS: Final = 60
 SYNC_DAYS: Final = 30  # la synchronisation santé n'accepte que les 30 derniers jours
+STREAK_DAYS: Final = 12  # série en cours d'Awa dans les maquettes
+TODAY_STEPS: Final[dict[str, int]] = {"awa": 6420}  # valeurs des maquettes (accueil d'Awa)
+MealPlan = list[tuple[str, str | None, float, list[tuple[str, int]]]]
+# Journées types : (type de repas, plat du catalogue ou None, portions, aliments si pas de plat)
+DAY_PATTERNS: Final[dict[str, MealPlan]] = {
+    "complete": [
+        ("breakfast", None, 1, [("pain", 80), ("oeuf", 100), ("the_sucre", 150)]),
+        ("lunch", "Attiéké poisson braisé", 1, []),
+        ("snack", None, 1, [("mangue", 150)]),
+        ("dinner", "Riz au niébé", 1, []),
+    ],
+    "salty": [
+        ("breakfast", None, 1, [("mil", 300)]),
+        ("lunch", "Thiéboudienne", 1.25, []),
+        ("dinner", "Mafé", 1, []),
+    ],
+    "partial": [("lunch", "Ndolé", 1, [])],
+    "heavy": [
+        ("breakfast", None, 1, [("pain", 120), ("arachide_pate", 30)]),
+        ("lunch", "Foutou sauce graine", 1.5, []),
+        ("snack", None, 1, [("plantain_frit", 200)]),
+        ("dinner", "Poulet yassa", 1.25, []),
+    ],
+}
+# Aujourd'hui pour Awa : petit-déjeuner et déjeuner (journée en cours, environ 1 450 kcal comme dans les maquettes)
+AWA_TODAY: Final[MealPlan] = [
+    ("breakfast", None, 1, [("mil", 250), ("banane", 120)]),
+    ("lunch", "Ndolé", 1.3, []),
+]
+_REFEREE_PROFILE: Final[dict[str, Any]] = {
+    "first_name": "Kofi",
+    "last_name": "Filleul",
+    "sex": "male",
+    "height_cm": 176,
+    "weight_kg": 74,
+    "target_weight_kg": 72,
+    "goals": ["eat_balanced"],
+}
 DEMO_PASSWORD: Final = "Demo-Omeo-2026!"
 DEMO_META: Final = RequestMeta(ip=None, user_agent="seed_demo")
 ALL_CONSENTS: Final = [
@@ -187,9 +233,14 @@ class Command(BaseCommand):
             self.seed_activity(users)
             self.seed_programs(users)
             self.seed_billing(users)
+            self.seed_meals(users)
+            self.seed_engagement(users)
         self.stdout.write(self.style.SUCCESS(f"seed_demo : {len(users)} comptes et {len(STAFF)} membres du staff."))
 
     def reset(self) -> None:
+        demo_users = User.objects.filter(email__endswith=f"@{DEMO_DOMAIN}")
+        Campaign.objects.filter(created_by__in=demo_users).delete()
+        ApprovalRequest.objects.filter(requested_by__in=demo_users).delete()
         Enrollment.objects.filter(user__email__endswith=f"@{DEMO_DOMAIN}").delete()
         ChallengeParticipation.objects.filter(user__email__endswith=f"@{DEMO_DOMAIN}").delete()
         Program.objects.filter(is_demo=True).delete()
@@ -314,7 +365,9 @@ class Command(BaseCommand):
             sync_days = [
                 {
                     "date": today - timedelta(days=offset),
-                    "steps": self.rng.choice((2500, 4800, 6200, 8300, 9700, 12100)),
+                    "steps": TODAY_STEPS[slug]
+                    if offset == 0 and slug in TODAY_STEPS
+                    else self.rng.choice((2500, 4800, 6200, 8300, 9700, 12100)),
                     "active_kcal": self.rng.choice((120, 210, 340, 460)),
                 }
                 for offset in range(SYNC_DAYS - 1, -1, -1)
@@ -420,6 +473,152 @@ class Command(BaseCommand):
         limit = billing_services.quota_limit(user=aicha, feature="photo_analysis") or 0
         for _ in range(limit):
             billing_services.consume_quota(user=aicha, feature="photo_analysis")
+
+    def _log(self, user: User, day: date, meals: MealPlan) -> None:
+        """Enregistre une journée de repas par `create_meal` (heures locales réalistes, jamais dans le futur)."""
+        hours = {"breakfast": 8, "lunch": 13, "snack": 16, "dinner": 20}
+        foods = {f.source_ref: f for f in Food.objects.filter(source="demo")}
+        dishes = {d.name.get("fr"): d for d in Dish.objects.filter(status=ContentStatus.PUBLISHED)}
+        start, _end = day_bounds(user, day)
+        for meal_type, dish_name, portions, items in meals:
+            eaten_at = start + timedelta(hours=hours[meal_type], minutes=self.rng.randint(0, 40))
+            if eaten_at > timezone.now():
+                continue
+            if dish_name:
+                meals_service.create_meal(
+                    user=user,
+                    source="dish",
+                    meal_type=meal_type,
+                    day=day,
+                    eaten_at=eaten_at,
+                    dish_id=dishes[dish_name].pk,
+                    portions=Decimal(str(portions)),
+                )
+            else:
+                meals_service.create_meal(
+                    user=user,
+                    source="foods",
+                    meal_type=meal_type,
+                    day=day,
+                    eaten_at=eaten_at,
+                    items=[{"food_id": foods[key].pk, "grams": grams} for key, grams in items],
+                )
+
+    def seed_meals(self, users: dict[str, User]) -> None:
+        """60 jours de repas variés (complets, vides, salés, excès), par les services : projection et points réels."""
+        for slug, user in users.items():
+            demo = next(d for d in DEMO_USERS if d.slug == slug)
+            if demo.situation in ("new", "suspended"):
+                continue
+            today = local_today(user)
+            for offset in range(HISTORY_DAYS, 0, -1):
+                if slug == "awa" and offset <= STREAK_DAYS:
+                    pattern = "complete"
+                else:
+                    pattern = self.rng.choices(
+                        ["complete", "salty", "partial", "heavy", "empty"], weights=[45, 15, 15, 10, 15]
+                    )[0]
+                if pattern != "empty":
+                    self._log(user, today - timedelta(days=offset), DAY_PATTERNS[pattern])
+            self._log(user, today, AWA_TODAY if slug == "awa" else DAY_PATTERNS["partial"])
+
+    def _seed_feedback(self, user: User) -> None:
+        for rating, label, correction in (("up", "Ndolé", None), ("down", "Sauce gombo", "Eru")):
+            created = meals_service.create_analysis(user=user, kind="text", text=f"{label} avec du manioc")
+            meals_service.store_result(
+                analysis_id=created.analysis.pk,
+                result=ScanResult(
+                    succeeded=True,
+                    failure_reason=None,
+                    output=ScanOutput.model_validate(
+                        {"contains_food": True, "dish_label": label, "confidence": 0.72, "items": []}
+                    ),
+                    low_confidence=False,
+                    model="demo",
+                    prompt_version="meal-v1",
+                ),
+            )
+            meals_service.submit_feedback(
+                user=user,
+                analysis_id=created.analysis.pk,
+                rating=rating,
+                reason="wrong_dish" if correction else None,
+                corrected_dish_label=correction,
+                comment="Ce n'est pas le bon plat" if correction else None,
+            )
+
+    def _seed_tickets(self, user: User) -> None:
+        statuses = (("question", "new"), ("technical", "open"), ("billing", "waiting_user"), ("suggestion", "resolved"))
+        for index, (category, status_value) in enumerate(statuses):
+            ticket = support_services.create_ticket(
+                user=user,
+                category=category,
+                subject=f"Demande de démonstration n°{index + 1}",
+                message="Bonjour, j'ai une question sur l'application Omeo.",
+                email=None,
+                name="",
+                attachment_ids=[],
+                meta={"app_version": "1.0.0", "os": "android 15"},
+                channel="app",
+            )
+            Ticket.objects.filter(pk=ticket.pk).update(status=status_value)
+
+    def _seed_referrals(self, referrer: User) -> None:
+        """Un filleul validé (email vérifié et premier repas), un autre en attente."""
+        code = ReferralCode.objects.get(user=referrer).code
+        for index in range(2):
+            referee, _status = accounts.create_account(
+                email=demo_email(f"filleul{index + 1}"),
+                password=DEMO_PASSWORD,
+                profile={**_REFEREE_PROFILE, "birth_date": birth_date_for(26, self.today, self.rng)},
+                consents=ALL_CONSENTS,
+                invite_code=code,
+                device={"fingerprint": f"demo-referee-{index}"},
+                meta=DEMO_META,
+            )
+            if index == 0:
+                accounts.verify_email_directly(user=referee)
+                self._log(referee, local_today(referee), DAY_PATTERNS["partial"])
+
+    def _seed_staff_work(self) -> None:
+        """Campagnes à chaque statut et une demande de publication en attente de relecture."""
+        author = User.objects.get(email=demo_email("staff.content"))
+        for status_value, offset in (("draft", None), ("scheduled", 2), ("sent", -3)):
+            Campaign.objects.create(
+                title={"fr": "Nouvelles recettes", "en": "New recipes"},
+                body={"fr": "Découvre 3 recettes légères de la semaine.", "en": "Discover 3 light recipes this week."},
+                segment={"locales": ["fr"]},
+                scheduled_at=timezone.now() + timedelta(days=offset) if offset is not None else None,
+                status=status_value,
+                sent_count=120 if status_value == "sent" else 0,
+                opened_count=41 if status_value == "sent" else 0,
+                created_by=author,
+            )
+        recipe = Recipe.objects.filter(is_demo=True).first()
+        if recipe is not None:
+            ApprovalService.create(
+                kind=ApprovalKind.CONTENT_PUBLISH,
+                payload={"type": "recipes", "id": str(recipe.pk)},
+                diff={"before": {"status": "review"}, "after": {"status": "published"}},
+                target_type="recipes",
+                target_id=str(recipe.pk),
+                reason="Nouvelle recette à relire",
+                requested_by=author,
+            )
+
+    def seed_engagement(self, users: dict[str, User]) -> None:
+        """Avis IA, demandes de support, parrainages, travail du staff et notifications lues et non lues."""
+        self._seed_feedback(users["awa"])
+        self._seed_tickets(users["moussa"])
+        self._seed_referrals(users["awa"])
+        self._seed_staff_work()
+        for index, title in enumerate(("Badge obtenu : premier repas", "Ton challenge Hydratation a commencé")):
+            notification = notify(
+                user=users["awa"], category="reward", title=title, body="Bravo, continue comme ça !", push=False
+            )
+            if notification is not None and index == 0:
+                notification.read_at = timezone.now()
+                notification.save(update_fields=["read_at"])
 
     def seed_staff(self) -> None:
         self.stdout.write("Staff de démo (mot de passe commun, TOTP ci-dessous) :")

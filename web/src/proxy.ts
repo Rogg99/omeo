@@ -101,7 +101,7 @@ export default function proxy(request: NextRequest) {
   const response = intl(request);
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
   const csp = contentSecurityPolicy(nonce);
-  forwardRequestHeaders(response, request, { "x-nonce": nonce, "content-security-policy": csp });
+  forwardRequestHeaders(response, request, { "x-nonce": nonce, "content-security-policy": csp, "x-pathname": pathname });
   response.headers.set("Content-Security-Policy", csp);
   return response;
 }

@@ -68,7 +68,7 @@ export default async function LegalPage({ params }: PageProps<"/[locale]/legal/[
               })}
             </p>
             <div className="prose mt24">
-              <Markdown headingIds>{doc.data.body}</Markdown>
+              <Markdown headingIds locale={locale}>{doc.data.body}</Markdown>
             </div>
           </>
         ) : (

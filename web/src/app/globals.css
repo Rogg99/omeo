@@ -1334,3 +1334,27 @@ select.input {
     display: none !important;
   }
 }
+
+/* Menus de l'en-tête en <details> natifs (langue, menu mobile) */
+.dropdown > summary {
+  list-style: none;
+}
+.dropdown > summary::-webkit-details-marker {
+  display: none;
+}
+.dropdown:not(.only-m) {
+  position: relative;
+}
+.dropdown > .menu {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: calc(100% + var(--space-2));
+  list-style: none;
+  margin: 0;
+}
+.dropdown[open] > summary .ico {
+  rotate: 45deg;
+}
+.dropdown:not(.only-m)[open] > summary .ico {
+  rotate: none;
+}

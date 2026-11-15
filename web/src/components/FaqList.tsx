@@ -4,7 +4,7 @@ import { Icon } from "./icons/Icon";
 import { Markdown } from "./Markdown";
 
 /** Questions-réponses en `<details>` natifs : accessibles au clavier sans JavaScript. */
-export function FaqItems({ items }: { items: FaqCategory["items"] }) {
+export function FaqItems({ items, locale }: { items: FaqCategory["items"]; locale: string }) {
   return (
     <div>
       {items.map((item) => (
@@ -14,7 +14,7 @@ export function FaqItems({ items }: { items: FaqCategory["items"] }) {
             <Icon name="plus" />
           </summary>
           <div className="answer">
-            <Markdown>{item.answer}</Markdown>
+            <Markdown locale={locale}>{item.answer}</Markdown>
           </div>
         </details>
       ))}

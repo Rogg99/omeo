@@ -10,7 +10,7 @@
         "http://localhost:3000/fr/contact"
       ],
       "numberOfRuns": 1,
-      "settings": { "preset": "mobile", "throttlingMethod": "simulate" }
+      "settings": { "formFactor": "mobile", "throttlingMethod": "simulate" }
     },
     "assert": {
       "assertions": {

@@ -11,8 +11,9 @@ test.describe("langue", () => {
     const page = await context.newPage();
     await page.goto("/");
     await expect(page).toHaveURL(/\/en$/);
-    await page.getByRole("button", { name: /language/i }).click();
-    await page.getByRole("menuitem", { name: "Français" }).click();
+    // Menu natif <details> : le résumé ouvre la liste des langues
+    await page.locator("summary", { hasText: "EN" }).first().click();
+    await page.getByRole("link", { name: "Français" }).first().click();
     await expect(page).toHaveURL(/\/fr$/);
     await page.goto("/");
     await expect(page).toHaveURL(/\/fr$/);

@@ -47,8 +47,23 @@ type TurnstileProps = {
 export function Turnstile({ siteKey, locale, action, reset }: TurnstileProps) {
   const container = useRef<HTMLDivElement>(null);
   const [token, setToken] = useState("");
+  // Script tiers chargé à la première interaction avec le formulaire, pas à l'ouverture de la page
+  const [armed, setArmed] = useState(false);
 
   useEffect(() => {
+    const form = container.current?.closest("form");
+    if (!form || armed) return;
+    const arm = () => setArmed(true);
+    form.addEventListener("focusin", arm, { once: true });
+    form.addEventListener("pointerdown", arm, { once: true });
+    return () => {
+      form.removeEventListener("focusin", arm);
+      form.removeEventListener("pointerdown", arm);
+    };
+  }, [armed]);
+
+  useEffect(() => {
+    if (!armed) return;
     let widget: string | undefined;
     let api: TurnstileApi | undefined;
     let cancelled = false;
@@ -72,7 +87,7 @@ export function Turnstile({ siteKey, locale, action, reset }: TurnstileProps) {
       if (api && widget) api.remove(widget);
       setToken("");
     };
-  }, [siteKey, locale, action, reset]);
+  }, [armed, siteKey, locale, action, reset]);
 
   return (
     <>

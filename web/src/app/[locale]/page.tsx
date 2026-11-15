@@ -386,7 +386,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               {t("home.faq_title")}
             </h2>
             <div className="mt32">
-              <FaqItems items={faqItems} />
+              <FaqItems items={faqItems} locale={locale} />
             </div>
             <p className="center mt32">
               <Link className="btn ghost" href="/faq">

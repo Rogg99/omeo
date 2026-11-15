@@ -55,7 +55,7 @@ export default async function FaqPage({ params }: PageProps<"/[locale]/faq">) {
                   <h2 id={slugify(c.category)} className="h3" style={{ scrollMarginBlockStart: 96 }}>
                     {c.category}
                   </h2>
-                  <FaqItems items={c.items} />
+                  <FaqItems items={c.items} locale={locale} />
                 </section>
               ))}
             </div>

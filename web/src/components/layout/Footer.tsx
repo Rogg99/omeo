@@ -1,9 +1,8 @@
 import { cacheLife } from "next/cache";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { Logo } from "@/components/Logo";
 import { StoreButtons } from "@/components/StoreButtons";
-import { Link } from "@/i18n/navigation";
 import { LOCALE_NAMES, LOCALES } from "@/i18n/routing";
 import { env } from "@/server/env";
 
@@ -19,7 +18,9 @@ async function currentYear(): Promise<number> {
 }
 
 export async function Footer() {
-  const [t, year] = await Promise.all([getTranslations("web"), currentYear()]);
+  const [t, year, locale] = await Promise.all([getTranslations("web"), currentYear(), getLocale()]);
+  // Liens ordinaires : le pied de page n'envoie aucun composant client au navigateur
+  const href = (path: string) => `/${locale}${path}`;
   const analytics = env.ANALYTICS_PROVIDER !== "none";
   return (
     <footer className="foot">
@@ -40,16 +41,16 @@ export async function Footer() {
             <h2 id="foot-product">{t("footer.product")}</h2>
             <ul>
               <li>
-                <Link href="/features">{t("nav.features")}</Link>
+                <a href={href("/features")}>{t("nav.features")}</a>
               </li>
               <li>
-                <Link href="/pricing">{t("nav.pricing")}</Link>
+                <a href={href("/pricing")}>{t("nav.pricing")}</a>
               </li>
               <li>
-                <Link href="/subscription">{t("nav.subscription")}</Link>
+                <a href={href("/subscription")}>{t("nav.subscription")}</a>
               </li>
               <li>
-                <Link href="/faq">{t("nav.faq")}</Link>
+                <a href={href("/faq")}>{t("nav.faq")}</a>
               </li>
             </ul>
           </nav>
@@ -57,13 +58,13 @@ export async function Footer() {
             <h2 id="foot-help">{t("footer.help")}</h2>
             <ul>
               <li>
-                <Link href="/contact">{t("nav.contact")}</Link>
+                <a href={href("/contact")}>{t("nav.contact")}</a>
               </li>
               <li>
-                <Link href="/delete-account">{t("footer.delete_account")}</Link>
+                <a href={href("/delete-account")}>{t("footer.delete_account")}</a>
               </li>
               <li>
-                <Link href="/credits">{t("footer.credits")}</Link>
+                <a href={href("/credits")}>{t("footer.credits")}</a>
               </li>
             </ul>
           </nav>
@@ -72,7 +73,7 @@ export async function Footer() {
             <ul>
               {LEGAL_KINDS.map((kind) => (
                 <li key={kind}>
-                  <Link href={`/legal/${kind}`}>{t(`legal_kind.${kind}`)}</Link>
+                  <a href={href(`/legal/${kind}`)}>{t(`legal_kind.${kind}`)}</a>
                 </li>
               ))}
               {analytics ? (
@@ -89,9 +90,9 @@ export async function Footer() {
           <ul className="row wrapf" aria-label={t("a11y.choose_language")} style={{ display: "flex" }}>
             {LOCALES.map((l) => (
               <li key={l}>
-                <Link href="/" locale={l} hrefLang={l} lang={l}>
+                <a href={`/${l}`} hrefLang={l} lang={l}>
                   {LOCALE_NAMES[l]}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>

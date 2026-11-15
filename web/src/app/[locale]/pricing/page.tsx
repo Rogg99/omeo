@@ -61,7 +61,10 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
           <span className="tag orange">{t("trial_tag")}</span>
         </p>
       </header>
-      <section className="wrap" aria-label={tm("pricing_title")}>
+      <section className="wrap" aria-labelledby="plans-title">
+        <h2 id="plans-title" className="sr-only">
+          {tm("pricing_title")}
+        </h2>
         {catalog.ok ? <PlanCards plans={catalog.data.plans} comparison={catalog.data.comparison} /> : <p className="note warn">{t("unavailable")}</p>}
         <p className="small muted center mt24">{t("payment_note")}</p>
       </section>
@@ -81,7 +84,7 @@ export default async function PricingPage({ params }: PageProps<"/[locale]/prici
             {t("faq_title")}
           </h2>
           <div className="mt32">
-            <FaqItems items={subscriptionFaq.items} />
+            <FaqItems items={subscriptionFaq.items} locale={locale} />
           </div>
         </section>
       ) : null}

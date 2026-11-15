@@ -45,6 +45,9 @@ export default function config(phase: string): NextConfig {
     output: "standalone",
     // Police lue à l'exécution par les images Open Graph (non détectée par le traçage)
     outputFileTracingIncludes: {
+      // Bibliothèques natives de sharp (libvips) : non détectées par le traçage, sans elles les
+      // images sont servies sans optimisation (AVIF/WebP, redimensionnement)
+      "*": ["./node_modules/.pnpm/@img+sharp-*/node_modules/@img/**/*"],
       "/[locale]/opengraph-image": ["./node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff"],
       "/[locale]/i/[code]/opengraph-image": ["./node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff"],
     },

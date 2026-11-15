@@ -1,15 +1,15 @@
 import type { ComponentProps } from "react";
 import ReactMarkdown from "react-markdown";
 
-import { Link } from "@/i18n/navigation";
 
 /**
  * Markdown publié depuis l'admin (FAQ, pages légales), rendu sur le serveur. Pas de HTML brut
  * (react-markdown l'ignore par défaut) ; les liens internes gardent la langue, les liens externes
  * s'ouvrent dans un nouvel onglet.
  */
-function MarkdownLink({ href = "", children }: ComponentProps<"a">) {
-  if (href.startsWith("/") && !href.startsWith("//")) return <Link href={href}>{children}</Link>;
+function MarkdownLink({ href = "", children, locale }: ComponentProps<"a"> & { locale: string }) {
+  // Lien ordinaire (pas d'îlot client à hydrater), préfixé par la langue
+  if (href.startsWith("/") && !href.startsWith("//")) return <a href={`/${locale}${href}`}>{children}</a>;
   if (/^(https?:|mailto:)/.test(href)) {
     return (
       <a href={href} rel="noopener noreferrer" target={href.startsWith("mailto:") ? undefined : "_blank"}>
@@ -20,7 +20,7 @@ function MarkdownLink({ href = "", children }: ComponentProps<"a">) {
   return <>{children}</>;
 }
 
-type MarkdownProps = { children: string; headingIds?: boolean };
+type MarkdownProps = { children: string; locale: string; headingIds?: boolean };
 
 export function slugify(text: string): string {
   return text
@@ -37,12 +37,12 @@ function textOf(node: unknown): string {
   return "";
 }
 
-export function Markdown({ children, headingIds = false }: MarkdownProps) {
+export function Markdown({ children, locale, headingIds = false }: MarkdownProps) {
   return (
     <ReactMarkdown
       skipHtml
       components={{
-        a: MarkdownLink,
+        a: (props) => <MarkdownLink {...props} locale={locale} />,
         h2: ({ children: c }) => <h2 id={headingIds ? slugify(textOf(c)) : undefined}>{c}</h2>,
         img: () => null,
       }}

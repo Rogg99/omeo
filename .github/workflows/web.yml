@@ -1,0 +1,80 @@
+name: Site web
+
+on:
+  push:
+    branches: [main]
+    paths: ["web/**", "shared/**", "contracts/**", ".github/workflows/web.yml"]
+  pull_request:
+    paths: ["web/**", "shared/**", "contracts/**", ".github/workflows/web.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: web
+
+env:
+  NEXT_TELEMETRY_DISABLED: 1
+  # Valeurs factices pour le build de production (aucun appel à l'API pendant le build)
+  BUILD_ENV: >-
+    DATA_SOURCE=api API_URL_INTERNAL=http://127.0.0.1:4010 SITE_URL=http://localhost:3000
+    REVALIDATE_SECRET=ci-revalidate-secret-0123456789abcdef TURNSTILE_SITE_KEY=1x00000000000000000000AA
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: web/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - name: Catalogues de traduction à jour
+        working-directory: shared
+        run: pnpm install --frozen-lockfile && pnpm build:i18n && git diff --exit-code -- ../web/messages
+      - name: Client généré à jour avec le contrat
+        run: pnpm gen:api && git diff --exit-code -- src/lib/api/schema.d.ts
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: web/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - name: Le build refuse le mode mock
+        run: "! DATA_SOURCE=mock pnpm build"
+      - name: Build de production
+        run: env $BUILD_ENV pnpm build
+      - name: Aucune donnée simulée dans le build
+        run: "! grep -rl 'omeo-mock-data-source' .next/standalone .next/static"
+      - name: Préparation du serveur standalone
+        run: cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
+      - name: Lighthouse (mobile, 95 minimum sur les quatre axes)
+        run: env $BUILD_ENV PORT=3000 pnpm lighthouse
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: web/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Parcours de bout en bout (mode mock, axe)
+        run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: web/playwright-report, retention-days: 7 }

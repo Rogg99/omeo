@@ -58,6 +58,14 @@ services:
 
   web:
     <<: *next
+    # Variables du site : web/.env (modèle : web/.env.example). Sans fichier, mode mock.
+    env_file:
+      - path: ./web/.env
+        required: false
+    environment:
+      API_URL_INTERNAL: http://api:8000
+      DATA_SOURCE: ${WEB_DATA_SOURCE:-mock}
+      SITE_URL: http://localhost
     build:
       context: ./web
       dockerfile: ../docker/next.Dockerfile

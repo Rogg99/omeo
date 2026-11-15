@@ -12,16 +12,16 @@ export async function StoreButtons({ raised = false, inviteCode, id }: StoreButt
   const className = `store${raised ? " raised" : ""}`;
   return (
     <div className="row wrapf" id={id}>
-      <a className={className} href={playStoreUrl(inviteCode)} aria-label={t("play_label")} data-store="android">
+      <a className={className} href={playStoreUrl(inviteCode)} data-store="android">
         <PlayIcon />
-        <span aria-hidden="true">
+        <span>
           <small>{t("play_small")}</small>
           <b>{t("play_name")}</b>
         </span>
       </a>
-      <a className={className} href={appStoreUrl()} aria-label={t("apple_label")} data-store="ios">
+      <a className={className} href={appStoreUrl()} data-store="ios">
         <AppleIcon />
-        <span aria-hidden="true">
+        <span>
           <small>{t("apple_small")}</small>
           <b>{t("apple_name")}</b>
         </span>

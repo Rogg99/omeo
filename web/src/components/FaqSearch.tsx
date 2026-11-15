@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import { Icon } from "./icons/Icon";
 
@@ -22,13 +22,12 @@ export function normalize(text: string): string {
 
 /** Filtre les questions déjà affichées (aucune requête) ; le nombre de résultats est annoncé. */
 export function FaqSearch({ label, placeholder, results, target }: FaqSearchProps) {
-  const [query, setQuery] = useState("");
   const [count, setCount] = useState<number | null>(null);
   const id = useId();
+  const input = useRef<HTMLInputElement>(null);
 
   /** Filtre le DOM rendu par le serveur (système externe) au fil de la saisie. */
   const search = (value: string) => {
-    setQuery(value);
     const root = document.getElementById(target);
     if (!root) return;
     const terms = normalize(value).split(/\s+/).filter(Boolean);
@@ -45,6 +44,12 @@ export function FaqSearch({ label, placeholder, results, target }: FaqSearchProp
     setCount(terms.length > 0 ? visible : null);
   };
 
+  // Texte saisi avant l'hydratation (réseau lent) : appliqué dès que le script est prêt.
+  useEffect(() => {
+    if (input.current?.value) search(input.current.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div role="search">
       <label htmlFor={id} className="sr-only">
@@ -55,7 +60,7 @@ export function FaqSearch({ label, placeholder, results, target }: FaqSearchProp
           id={id}
           className="input"
           type="search"
-          value={query}
+          ref={input}
           placeholder={placeholder}
           autoComplete="off"
           onChange={(event) => search(event.target.value)}

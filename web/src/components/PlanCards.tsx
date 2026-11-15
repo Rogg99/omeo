@@ -80,7 +80,8 @@ export async function ComparisonTable({ rows }: { rows: ComparisonRow[] }) {
   const t = await getTranslations("web.pricing");
   const hasTrial = rows.some((r) => r.trial !== undefined);
   return (
-    <div className="table-scroll card" style={{ padding: "var(--space-2)" }}>
+    // Zone défilante atteignable au clavier (petits écrans)
+    <div className="table-scroll card" style={{ padding: "var(--space-2)" }} tabIndex={0} role="region" aria-label={t("compare_caption")}>
       <table className="cmp">
         <caption className="sr-only">{t("compare_caption")}</caption>
         <thead>

@@ -363,7 +363,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             {([1, 2, 3] as const).map((n) => (
               <li key={n} className="card">
                 <figure style={{ margin: 0 }}>
-                  <p aria-label={t("a11y.rating", { stars: 5 })} style={{ color: "var(--accent)" }}>
+                  <p role="img" aria-label={t("a11y.rating", { stars: 5 })} style={{ color: "var(--accent)" }}>
                     <span aria-hidden="true">★★★★★</span>
                   </p>
                   <blockquote className="mt16" style={{ margin: 0, fontSize: "var(--text-lg)" }}>

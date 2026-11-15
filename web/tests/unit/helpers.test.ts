@@ -64,3 +64,15 @@ describe("texte", () => {
     expect(normalize("Ndolé")).toBe("ndole");
   });
 });
+
+describe("adresse IP du visiteur", () => {
+  it("préfère X-Real-IP posée par nginx", async () => {
+    const { clientIpFrom } = await import("@/server/request");
+    expect(clientIpFrom(new Headers({ "x-real-ip": "203.0.113.9", "x-forwarded-for": "1.2.3.4, 203.0.113.9" }))).toBe("203.0.113.9");
+  });
+  it("ignore les adresses falsifiables en tête de X-Forwarded-For", async () => {
+    const { clientIpFrom } = await import("@/server/request");
+    expect(clientIpFrom(new Headers({ "x-forwarded-for": "6.6.6.6, 203.0.113.9" }))).toBe("203.0.113.9");
+    expect(clientIpFrom(new Headers())).toBeUndefined();
+  });
+});

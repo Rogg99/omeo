@@ -36,11 +36,11 @@ export async function Header() {
         <Link className="btn sm ghost hide-m" href="/subscription">
           {t("nav.subscription")}
         </Link>
-        <Link className="btn sm green" href="/#download">
+        <Link className="btn sm green nav-download" href="/#download">
           {t("nav.download")}
         </Link>
         <MobileMenu
-          items={[...items, { href: "/subscription", label: t("nav.subscription") }]}
+          items={[...items, { href: "/subscription", label: t("nav.subscription") }, { href: "/#download", label: t("nav.download") }]}
           openLabel={t("a11y.open_menu")}
           closeLabel={t("a11y.close_menu")}
           navLabel={t("a11y.main_nav")}

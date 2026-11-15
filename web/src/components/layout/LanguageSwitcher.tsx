@@ -13,7 +13,7 @@ export function LanguageSwitcher({ label, chooseLabel }: { label: string; choose
   const pathname = usePathname();
   return (
     <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger className="lang" aria-label={label}>
+      <DropdownMenu.Trigger className="lang" aria-label={`${locale.toUpperCase()} · ${label}`}>
         <Icon name="globe" />
         <span aria-hidden="true">{locale.toUpperCase()}</span>
       </DropdownMenu.Trigger>

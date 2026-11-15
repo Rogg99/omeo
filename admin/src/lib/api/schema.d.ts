@@ -2689,6 +2689,8 @@ export interface components {
             target: number;
             /** @description target - value, borné à 0 côté API */
             remaining?: number;
+            /** @description value - target, borné à 0 côté API (dépassement de l'objectif) */
+            over_by?: number;
             /** @description 0-100+ (arrondi API) */
             percent: number;
             /** @enum {string} */

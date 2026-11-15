@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **value** | **num** |  | 
 **target** | **num** |  | 
 **remaining** | **num** | target - value, borné à 0 côté API | [optional] 
+**overBy** | **num** | value - target, borné à 0 côté API (dépassement de l'objectif) | [optional] 
 **percent** | **int** | 0-100+ (arrondi API) | 
 **status** | **String** |  | [optional] 
 

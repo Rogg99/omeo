@@ -24,6 +24,8 @@ class Gauge {
 
     this.remaining,
 
+    this.overBy,
+
     required this.percent,
 
     this.status,
@@ -39,6 +41,10 @@ class Gauge {
   @JsonKey(name: r'remaining', required: false, includeIfNull: false)
   final num? remaining;
 
+  /// value - target, borné à 0 côté API (dépassement de l'objectif)
+  @JsonKey(name: r'over_by', required: false, includeIfNull: false)
+  final num? overBy;
+
   /// 0-100+ (arrondi API)
   @JsonKey(name: r'percent', required: true, includeIfNull: false)
   final int percent;
@@ -53,6 +59,7 @@ class Gauge {
           other.value == value &&
           other.target == target &&
           other.remaining == remaining &&
+          other.overBy == overBy &&
           other.percent == percent &&
           other.status == status;
 
@@ -61,6 +68,7 @@ class Gauge {
       value.hashCode +
       target.hashCode +
       remaining.hashCode +
+      overBy.hashCode +
       percent.hashCode +
       status.hashCode;
 

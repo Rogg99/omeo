@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Omeo API
-  version: 1.1.4
+  version: 1.1.5
   summary: API unique d'Omeo (mobile, admin, site web).
   license:
     name: Propriétaire, tous droits réservés
@@ -20,7 +20,7 @@ info:
 servers:
   - url: http://api.localhost/api/v1
     description: Développement (nginx)
-  - url: https://api.staging.my-omeo.app/api/v1
+  - url: https://staging-api.my-omeo.app/api/v1
     description: Staging
   - url: https://api.my-omeo.app/api/v1
     description: Production
@@ -3606,6 +3606,7 @@ components:
         value: { type: number }
         target: { type: number }
         remaining: { type: number, description: "target - value, borné à 0 côté API" }
+        over_by: { type: number, description: "value - target, borné à 0 côté API (dépassement de l'objectif)" }
         percent: { type: integer, description: "0-100+ (arrondi API)" }
         status: { type: string, enum: [under, on_target, over] }
     RewardDelta:

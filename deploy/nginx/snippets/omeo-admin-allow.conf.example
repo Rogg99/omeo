@@ -1,0 +1,3 @@
+# Copier en /etc/nginx/snippets/omeo-admin-allow.conf (hors dépôt) : IP autorisées sur l'admin et le staging.
+allow 203.0.113.10;   # exemple : IP fixe ou sortie VPN
+deny  all;

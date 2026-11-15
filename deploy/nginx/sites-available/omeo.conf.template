@@ -1,0 +1,99 @@
+# Vhosts Omeo, rendus par deploy/nginx/install.sh pour chaque environnement.
+# Les marqueurs entre doubles accolades (hôtes, ports des conteneurs sur 127.0.0.1) sont remplacés par install.sh.
+# Tout le trafic arrive par le proxy Cloudflare ; le pare-feu n'ouvre 80/443 qu'à ses IP.
+
+# HTTP -> HTTPS (Cloudflare le fait déjà ; filet de sécurité)
+server {
+    listen 80;
+    listen [::]:80;
+    server_name {{SITE}} {{WWW}} {{API}} {{ADMIN}} {{MEDIA}};
+    return 301 https://$host$request_uri;
+}
+
+# www -> domaine nu
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{WWW}};
+    include snippets/omeo-tls.conf;
+    return 301 https://{{SITE}}$request_uri;
+}
+
+# Site vitrine
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{SITE}};
+    include snippets/omeo-tls.conf;
+    {{SITE_ACCESS}}
+    {{NOINDEX}}
+
+    client_max_body_size 1m;
+
+    location / {
+        limit_req zone=omeo_site burst=60 nodelay;
+        include snippets/omeo-proxy.conf;
+        proxy_pass http://127.0.0.1:{{PORT_WEB}};
+    }
+}
+
+# API
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{API}};
+    include snippets/omeo-tls.conf;
+    {{SITE_ACCESS}}
+    {{NOINDEX}}
+
+    client_max_body_size 20m;  # photos de repas
+
+    # Connexion, inscription, MFA, mots de passe : force brute
+    location ~ ^/api/v1/auth/(login|register|social|mfa/|password/|email/resend) {
+        limit_req zone=omeo_auth burst=10 nodelay;
+        include snippets/omeo-proxy.conf;
+        proxy_pass http://127.0.0.1:{{PORT_API}};
+    }
+
+    location / {
+        limit_req zone=omeo_api burst=40 nodelay;
+        include snippets/omeo-proxy.conf;
+        proxy_pass http://127.0.0.1:{{PORT_API}};
+    }
+}
+
+# Back-office : réservé aux IP de l'équipe
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{ADMIN}};
+    include snippets/omeo-tls.conf;
+    include snippets/omeo-admin-allow.conf;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+
+    client_max_body_size 5m;
+
+    location / {
+        include snippets/omeo-proxy.conf;
+        proxy_pass http://127.0.0.1:{{PORT_ADMIN}};
+    }
+}
+
+# Médias (MinIO) : lecture publique et envois présignés.
+# Le Host doit arriver intact : il fait partie de la signature des URL présignées.
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name {{MEDIA}};
+    include snippets/omeo-tls.conf;
+    {{NOINDEX}}
+
+    client_max_body_size 600m;  # vidéos d'exercices (attention : 100 Mo max via Cloudflare gratuit)
+    proxy_request_buffering off;
+    proxy_buffering off;
+
+    location / {
+        include snippets/omeo-proxy.conf;
+        proxy_pass http://127.0.0.1:{{PORT_MEDIA}};
+    }
+}

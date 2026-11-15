@@ -138,7 +138,8 @@ const source: DataSource = {
     },
     social: (_provider, idToken, _nonce, ctx) => {
       const account = idToken.startsWith(SOCIAL_PREFIX) ? findAccount(idToken.slice(SOCIAL_PREFIX.length)) : undefined;
-      if (!account) return fail(problem(401, "invalid_credentials"));
+      // Compte social sans compte Omeo : le site ne crée pas de compte (inscription dans l'app).
+      if (!account) return fail(problem(idToken.startsWith(SOCIAL_PREFIX) ? 404 : 401, idToken.startsWith(SOCIAL_PREFIX) ? "not_found" : "invalid_credentials"));
       return respond(signIn(account, ctx.locale));
     },
     refresh: (refreshToken) => {
@@ -236,7 +237,7 @@ const source: DataSource = {
       const s = claims && state.session(claims.sid);
       return s ? state.setAutoRenew(s, autoRenew) : false;
     },
-    socialIdToken: (accountEmail) => `${SOCIAL_PREFIX}${accountEmail ?? ACCOUNTS[0]!.email}`,
+    socialIdToken: (accountEmail) => `${SOCIAL_PREFIX}${accountEmail ?? "inconnu@omeo.demo"}`,
   },
 };
 

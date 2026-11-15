@@ -1,6 +1,7 @@
 """
 Tests de contrat avec schemathesis sur le schéma généré (`/api/v1/schema/`) : pour chaque opération, des requêtes
-générées ne doivent jamais provoquer d'erreur serveur, et les réponses doivent respecter le schéma déclaré.
+générées ne doivent jamais provoquer d'erreur serveur, et les codes et corps de réponse doivent respecter le schéma
+publié, c'est-à-dire le contrat (apps/core/schema.py).
 
 Lancement : `pytest -m contract` (requiert la base de test et les données de référence).
 """
@@ -26,4 +27,10 @@ def _reference(db: Any) -> None:
 @pytest.mark.contract
 @schema.parametrize()
 def test_api_conforms_to_generated_schema(case: Any) -> None:
-    case.call_and_validate(checks=[schemathesis.checks.not_a_server_error])
+    case.call_and_validate(
+        checks=[
+            schemathesis.checks.not_a_server_error,
+            schemathesis.checks.status_code_conformance,
+            schemathesis.checks.response_schema_conformance,
+        ]
+    )

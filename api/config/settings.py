@@ -224,11 +224,15 @@ SIMPLE_JWT = {
     "JTI_CLAIM": "jti",
     "UPDATE_LAST_LOGIN": False,
 }
+# Contrat OpenAPI servi par /api/v1/schema/ (monté en lecture seule dans le conteneur, voir compose.yml)
+OPENAPI_CONTRACT_PATH = env("OPENAPI_CONTRACT_PATH", default=str(BASE_DIR.parent / "contracts" / "openapi.yaml"))
 SPECTACULAR_SETTINGS = {
     "TITLE": "Omeo API",
     "DESCRIPTION": "API unique d'Omeo (mobile, admin, site). Tous les calculs sont faits ici.",
     "VERSION": "1.1.3",
     "SCHEMA_PATH_PREFIX": "/api/v1",
+    # Le contrat fait foi : ses définitions remplacent celles déduites des vues (apps/core/schema.py)
+    "POSTPROCESSING_HOOKS": ["apps.core.schema.align_with_contract"],
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
 }

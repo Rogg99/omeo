@@ -9,8 +9,10 @@ x-api: &api
   environment:
     DATABASE_URL: postgres://omeo:omeo@db:5432/omeo
     REDIS_URL: redis://redis:6379/0
+    OPENAPI_CONTRACT_PATH: /contracts/openapi.yaml
   volumes:
     - ./api:/app
+    - ./contracts:/contracts:ro
   depends_on:
     db:
       condition: service_healthy

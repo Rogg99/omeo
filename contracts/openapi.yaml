@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Omeo API
-  version: 1.1.3
+  version: 1.1.4
   summary: API unique d'Omeo (mobile, admin, site web).
   license:
     name: Propriétaire, tous droits réservés
@@ -20,7 +20,9 @@ info:
 servers:
   - url: http://api.localhost/api/v1
     description: Développement (nginx)
-  - url: https://api.omeo.app/api/v1
+  - url: https://api.staging.my-omeo.app/api/v1
+    description: Staging
+  - url: https://api.my-omeo.app/api/v1
     description: Production
 security:
   - bearer: []

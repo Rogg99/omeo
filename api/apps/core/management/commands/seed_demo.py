@@ -4,7 +4,7 @@
 - Interdite en production.
 - Déterministe : graine fixe, dates relatives à aujourd'hui.
 - Passe par les VRAIS services (création de compte, objectifs, suspension…), jamais par des insertions directes.
-- `--reset` ne supprime que les comptes `@demo.omeo.app` (et, plus tard, les contenus étiquetés `demo`).
+- `--reset` ne supprime que les comptes `@demo.my-omeo.app` (et, plus tard, les contenus étiquetés `demo`).
 
 Chaque module ajoute sa section (repas, eau, activité, challenges, paiements…) à `SECTIONS`.
 """
@@ -54,7 +54,7 @@ from apps.programs.models import (
     Rule,
 )
 
-DEMO_DOMAIN: Final = "demo.omeo.app"
+DEMO_DOMAIN: Final = "demo.my-omeo.app"
 DEMO_SEED_DIR: Final = Path(settings.BASE_DIR) / "seeds" / "demo"
 HISTORY_DAYS: Final = 60
 SYNC_DAYS: Final = 30  # la synchronisation santé n'accepte que les 30 derniers jours

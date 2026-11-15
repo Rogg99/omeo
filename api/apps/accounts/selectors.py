@@ -69,7 +69,7 @@ def app_config() -> dict[str, Any]:
         },
         "quotas_display": quotas,
         "legal_versions": {kind: doc.version for kind, doc in latest_published_documents().items()},
-        "support_email": app.get("support_email", "support@omeo.app"),
+        "support_email": app.get("support_email", "support@my-omeo.app"),
         "store_urls": app.get("store_urls", {}),
     }
 

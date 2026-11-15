@@ -24,4 +24,4 @@ Voir la [politique de confidentialité](privacy) et la [politique de cookies](co
 Les informations fournies par Omeo sont données à titre informatif et ne remplacent pas un avis médical. Voir les [conditions d'utilisation](terms), article 6.
 
 ## Contact
-[EMAIL DE CONTACT] ou omeo.app/contact
+[EMAIL DE CONTACT] ou my-omeo.app/contact

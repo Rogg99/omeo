@@ -179,7 +179,7 @@ class TestSeedReference:
             call_command("seed_reference", verbosity=0)
 
     def test_placeholder_detection(self) -> None:
-        text = clean_legal_markdown("<!-- [commentaire] -->Éditeur : [Raison sociale]. Voir [CGU](https://omeo.app).")
+        text = clean_legal_markdown("<!-- [commentaire] -->Éditeur : [Raison sociale]. Voir [CGU](https://my-omeo.app).")
         assert placeholders_in(text) == ["[Raison sociale]"]
 
 
@@ -192,12 +192,12 @@ class TestSeedDemo:
     def test_deterministic_accounts(self, reference: None) -> None:
         call_command("seed_demo", verbosity=0)
         first = sorted(
-            User.objects.filter(email__endswith="@demo.omeo.app").values_list("email", "profile__birth_date")
+            User.objects.filter(email__endswith="@demo.my-omeo.app").values_list("email", "profile__birth_date")
         )
         call_command("seed_demo", "--reset", verbosity=0)
         second = sorted(
-            User.objects.filter(email__endswith="@demo.omeo.app").values_list("email", "profile__birth_date")
+            User.objects.filter(email__endswith="@demo.my-omeo.app").values_list("email", "profile__birth_date")
         )
         assert first == second
-        assert not User.objects.get(email="suspendu@demo.omeo.app").is_active
-        assert User.objects.get(email="awa@demo.omeo.app").profile.city is not None
+        assert not User.objects.get(email="suspendu@demo.my-omeo.app").is_active
+        assert User.objects.get(email="awa@demo.my-omeo.app").profile.city is not None

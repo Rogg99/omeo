@@ -27,7 +27,7 @@ STAFF_ACCESS_TTL: Final = timedelta(minutes=10)
 REFRESH_TTL: Final = timedelta(days=30)
 STAFF_SESSION_MAX: Final = timedelta(hours=12)
 STAFF_IDLE_TIMEOUT: Final = timedelta(minutes=30)
-SUPPORT_URL: Final = "https://omeo.app/support"
+SUPPORT_URL: Final = "https://my-omeo.app/support"
 
 
 @dataclass(frozen=True, slots=True)

@@ -123,7 +123,7 @@ def anon() -> APIClient:
 def make_staff(reference: None) -> Callable[..., tuple[User, str]]:
     def _make(*roles: str, email: str | None = None) -> tuple[User, str]:
         staff = User.objects.create_user(
-            email=email or f"{'-'.join(roles) or 'none'}-{User.objects.count()}@staff.omeo.app",
+            email=email or f"{'-'.join(roles) or 'none'}-{User.objects.count()}@staff.my-omeo.app",
             password=PASSWORD,
             is_staff=True,
         )

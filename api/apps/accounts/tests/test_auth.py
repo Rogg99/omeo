@@ -103,7 +103,7 @@ class TestRegister:
         response = anon.post("/api/v1/auth/register", {}, format="json")
         assert response["Content-Type"].startswith("application/problem+json")
         body = response.json()
-        assert body["type"] == "https://omeo.app/errors/validation_error"
+        assert body["type"] == "https://my-omeo.app/errors/validation_error"
         assert body["status"] == 400
         assert body["request_id"] == response["X-Request-Id"]
 

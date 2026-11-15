@@ -15,7 +15,7 @@ const TITLES: Record<string, string> = {
 
 export function problem(status: number, code: string, extra?: Partial<Problem>): Problem {
   return {
-    type: `https://api.omeo.app/problems/${code}`,
+    type: `https://my-omeo.app/errors/${code}`,
     title: TITLES[code] ?? code,
     status,
     code,

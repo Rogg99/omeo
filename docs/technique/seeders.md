@@ -60,7 +60,7 @@ Pour développer, tester et faire des démos, avec les mêmes données que les m
 | Données | Contenu |
 |---|---|
 | Mini-catalogue | Environ 150 aliments (extrait WAFCT), 40 plats (ndolé, thiéboudienne, attiéké poisson, mafé, yassa, alloco, foutou sauce graine, eru, kedjenou…), 30 recettes, 20 plantes, 40 exercices, 10 séances, 3 programmes, 6 challenges, 10 conseils de prévention, la FAQ. **Tout est publié** |
-| Comptes utilisateurs, avec le mot de passe `Demo-Omeo-2026!` | `awa@demo.omeo.app` (essai), `moussa@…` (Free), `fatou@…` (Plus mensuel, store), `koffi@…` (Plus annuel, web), `aicha@…` (Free, quota épuisé), `nouveau@…` (compte neuf, aucune donnée), `suspendu@…` (suspendu) |
+| Comptes utilisateurs, avec le mot de passe `Demo-Omeo-2026!` | `awa@demo.my-omeo.app` (essai), `moussa@…` (Free), `fatou@…` (Plus mensuel, store), `koffi@…` (Plus annuel, web), `aicha@…` (Free, quota épuisé), `nouveau@…` (compte neuf, aucune donnée), `suspendu@…` (suspendu) |
 | Comptes staff, TOTP de démo affiché par la commande | Un compte par rôle (superadmin, content, support, finance, moderation), plus un second compte content et un second finance, pour tester les quatre yeux |
 | Historique | 60 jours par compte actif : repas variés, eau, poids en baisse ou stable, activité. Les jours sont mélangés : complets, vides, excès de sel, objectif atteint. On y trouve aussi une série en cours, un challenge actif, un programme à mi-parcours, des badges obtenus et en cours |
 | Situations particulières | Avis IA 👍/👎 avec photos et corrections, demandes de support à tous les statuts, paiements (dont un échoué et un remboursé), parrainages validés et en attente, campagnes (brouillon, programmée, envoyée), demandes de validation en attente, notifications lues et non lues |
@@ -68,7 +68,7 @@ Pour développer, tester et faire des démos, avec les mêmes données que les m
 **Règles :**
 - **Déterministe** : factory_boy avec une graine fixe (`--seed 42`). Les mêmes données reviennent à chaque exécution, ce qui permet les comparaisons avec les maquettes, les tests de bout en bout et les captures de référence.
 - **Passe par les vrais services** (`log_meal`, `add_water`, `sync_health`, `recompute_day`, `award_points`…), jamais par des insertions directes : la démo vérifie les calculs au lieu de les contourner. Les dates sont relatives à aujourd'hui (aujourd'hui moins N jours).
-- `--reset` vide uniquement les données de démo (comptes `@demo.omeo.app` et contenus étiquetés `demo`), jamais les données de référence.
+- `--reset` vide uniquement les données de démo (comptes `@demo.my-omeo.app` et contenus étiquetés `demo`), jamais les données de référence.
 - Durée cible : moins de 60 secondes.
 
 ## Tests

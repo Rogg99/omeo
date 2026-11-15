@@ -109,7 +109,7 @@ En cas de violation de données présentant un risque pour toi, nous te préveno
 Tu peux à tout moment :
 - **accéder** à tes données et **en obtenir une copie** : *Profil › Paramètres › Exporter mes données* (archive envoyée par email) ;
 - **corriger** ton profil directement dans l'app ;
-- **supprimer** ton compte et tes données : *Profil › Paramètres › Supprimer mon compte*, ou omeo.app/suppression-compte ;
+- **supprimer** ton compte et tes données : *Profil › Paramètres › Supprimer mon compte*, ou my-omeo.app/suppression-compte ;
 - **retirer un consentement** : *Profil › Paramètres › Confidentialité* (marketing), réglages du système (Health Connect / Apple Health, notifications) ;
 - **t'opposer** à l'utilisation de tes avis pour améliorer le Service, ou **demander la limitation** d'un traitement ;
 - **définir des directives** sur le sort de tes données après ton décès, lorsque la loi le prévoit.
@@ -122,4 +122,4 @@ Omeo est réservé aux personnes d'au moins [ÂGE MINIMUM] ans. Si tu as moins d
 
 ## 11. Modifications
 
-Si cette politique change de façon importante, nous te prévenons dans l'app et, si nécessaire, nous te demandons ton accord à nouveau. La version en vigueur et son historique sont disponibles sur omeo.app/legal.
+Si cette politique change de façon importante, nous te prévenons dans l'app et, si nécessaire, nous te demandons ton accord à nouveau. La version en vigueur et son historique sont disponibles sur my-omeo.app/legal.

@@ -20,7 +20,7 @@ from rest_framework.views import exception_handler as drf_exception_handler
 
 from apps.core.request_context import current_request_id
 
-ERROR_TYPE_BASE = "https://omeo.app/errors/"
+ERROR_TYPE_BASE = "https://my-omeo.app/errors/"
 PROBLEM_CONTENT_TYPE = "application/problem+json"
 
 

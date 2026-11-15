@@ -1,4 +1,4 @@
-<!-- Politique de cookies du site omeo.app, version 1. BROUILLON À FAIRE VALIDER PAR UN·E JURISTE. -->
+<!-- Politique de cookies du site my-omeo.app, version 1. BROUILLON À FAIRE VALIDER PAR UN·E JURISTE. -->
 
 # Cookies et traceurs
 
@@ -6,7 +6,7 @@
 
 > **En bref** : le site n'utilise que les cookies nécessaires à son fonctionnement et, si tu l'acceptes, une mesure d'audience respectueuse de la vie privée. **Aucun cookie publicitaire.** L'application mobile n'utilise pas de cookies.
 
-## Cookies utilisés sur omeo.app
+## Cookies utilisés sur my-omeo.app
 
 | Cookie | Rôle | Durée | Consentement |
 |---|---|---|---|

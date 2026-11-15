@@ -31,7 +31,7 @@
 
   S("plus", "PLS-05", "Paiement en échec", "Période de grâce : bannière claire, accès conservé, action unique pour corriger.",
     '<div class="scroll">' + topbar("Mon abonnement", "", "") + '<div class="pad"><div class="banner danger">' + I("alert") + '<span class="grow"><b>Ton paiement n\'est pas passé.</b> Mets à jour ton moyen de paiement avant le 16 novembre pour garder Omeo Plus.</span></div>' +
-    '<div class="card mt-12"><div class="row between"><span class="tag warn">Période de grâce</span><span class="small faint">Site web · Carte</span></div><div class="num mt-12" style="font-size:24px;font-weight:600">Plus mensuel · 4,49 $</div><p class="small muted mt-4">Tentative du 9 novembre refusée par ta banque.</p><button class="btn black md mt-16">Mettre à jour sur omeo.app</button></div>' +
+    '<div class="card mt-12"><div class="row between"><span class="tag warn">Période de grâce</span><span class="small faint">Site web · Carte</span></div><div class="num mt-12" style="font-size:24px;font-weight:600">Plus mensuel · 4,49 $</div><p class="small muted mt-4">Tentative du 9 novembre refusée par ta banque.</p><button class="btn black md mt-16">Mettre à jour sur my-omeo.app</button></div>' +
     '<p class="xs faint mt-12">Abonnement pris sur le site : il se gère sur le site, depuis ton compte Omeo.</p></div></div>', { nav: "profile" });
 
   S("plus", "PLS-06", "Historique des paiements", "Tous canaux confondus, montants en USD, reçus.",

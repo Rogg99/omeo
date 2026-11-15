@@ -260,7 +260,7 @@ FIREBASE_CREDENTIALS_JSON = env("FIREBASE_CREDENTIALS_JSON", default="")
 
 # ───────────────────────── Emails ─────────────────────────
 WEB_BASE_URL = env("WEB_BASE_URL", default="http://localhost")
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Omeo <no-reply@omeo.app>")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="Omeo <no-reply@my-omeo.app>")
 EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
 EMAIL_HOST = env("EMAIL_HOST", default="localhost")
 EMAIL_PORT = env.int("EMAIL_PORT", default=587)

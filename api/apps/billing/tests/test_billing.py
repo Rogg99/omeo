@@ -174,8 +174,8 @@ class TestWebCheckout:
     def _post(self, client: APIClient, **body: Any) -> Any:
         payload = {
             "plan_code": "plus_monthly",
-            "success_url": "https://omeo.app/ok",
-            "cancel_url": "https://omeo.app/ko",
+            "success_url": "https://my-omeo.app/ok",
+            "cancel_url": "https://my-omeo.app/ko",
             **body,
         }
         return client.post(

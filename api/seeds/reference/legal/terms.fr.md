@@ -17,7 +17,7 @@
 
 ## 1. Qui sommes-nous
 
-L'application mobile Omeo et le site omeo.app (ensemble, « le Service ») sont édités par [RAISON SOCIALE], [FORME JURIDIQUE] au capital de [MONTANT], immatriculée sous le numéro [RCCM / RCS], dont le siège est situé [ADRESSE] (« Omeo », « nous »).
+L'application mobile Omeo et le site my-omeo.app (ensemble, « le Service ») sont édités par [RAISON SOCIALE], [FORME JURIDIQUE] au capital de [MONTANT], immatriculée sous le numéro [RCCM / RCS], dont le siège est situé [ADRESSE] (« Omeo », « nous »).
 Contact : [EMAIL DE CONTACT].
 
 ## 2. Objet et acceptation
@@ -61,7 +61,7 @@ Si nous modifions ces conditions de façon importante, nous te prévenons dans l
 - **Free** : après l'essai, Omeo reste gratuit avec des fonctionnalités et des quotas limités (par exemple 3 analyses photo par jour).
 - **Omeo Plus** : abonnement mensuel ou annuel qui débloque toutes les fonctionnalités, dans la limite des quotas indiqués dans l'app.
 
-Le détail des fonctionnalités et des quotas de chaque offre est affiché dans l'app et sur omeo.app/tarifs. Une analyse qui échoue de notre fait ne compte pas dans ton quota.
+Le détail des fonctionnalités et des quotas de chaque offre est affiché dans l'app et sur my-omeo.app/tarifs. Une analyse qui échoue de notre fait ne compte pas dans ton quota.
 
 ### 7.2 Prix et paiement
 - Les prix sont fixés en **dollars américains (USD)**, toutes taxes applicables comprises selon le canal d'achat. Google Play et l'App Store peuvent afficher un montant converti dans ta monnaie ; le montant débité est celui indiqué par le store au moment de l'achat.
@@ -72,7 +72,7 @@ Le détail des fonctionnalités et des quotas de chaque offre est affiché dans 
 - L'abonnement se **renouvelle automatiquement** à la fin de chaque période, au prix en vigueur, jusqu'à ce que tu le résilies.
 - Tu peux le résilier à tout moment, au plus tard 24 heures avant la date de renouvellement :
   - abonnement Google Play ou App Store : dans les réglages d'abonnement du store ;
-  - abonnement pris sur le site : depuis la page Abonnement d'omeo.app.
+  - abonnement pris sur le site : depuis la page Abonnement d'my-omeo.app.
 - La résiliation prend effet à la fin de la période déjà payée. Tu gardes l'accès à Omeo Plus jusqu'à cette date.
 - Si nous augmentons un prix, nous te prévenons au moins 30 jours avant ton prochain renouvellement. Tu peux résilier avant.
 - **Supprimer ton compte ne résilie pas un abonnement pris dans un store** : il faut le résilier dans le store.
@@ -125,7 +125,7 @@ Nous faisons notre possible pour que le Service soit disponible et fiable, mais 
 
 ## 14. Suppression du compte
 
-Tu peux supprimer ton compte depuis **Profil › Paramètres › Supprimer mon compte**, ou depuis omeo.app/suppression-compte. Tes données sont effacées dans un délai de 30 jours, à l'exception de celles que la loi nous oblige à conserver (voir la politique de confidentialité).
+Tu peux supprimer ton compte depuis **Profil › Paramètres › Supprimer mon compte**, ou depuis my-omeo.app/suppression-compte. Tes données sont effacées dans un délai de 30 jours, à l'exception de celles que la loi nous oblige à conserver (voir la politique de confidentialité).
 
 ## 15. Droit applicable et litiges
 
@@ -133,4 +133,4 @@ Ces conditions sont soumises au droit [PAYS DU SIÈGE]. En cas de difficulté, c
 
 ## 16. Contact
 
-Support : depuis l'app (**Profil › Aide et contact**), sur omeo.app/contact, ou à [EMAIL DE CONTACT].
+Support : depuis l'app (**Profil › Aide et contact**), sur my-omeo.app/contact, ou à [EMAIL DE CONTACT].

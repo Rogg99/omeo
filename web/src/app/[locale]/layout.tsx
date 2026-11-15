@@ -9,7 +9,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { direction, isLocale } from "@/i18n/routing";
+import { direction, isLocale, LOCALES } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
 import source from "@/server/data/source";
 import { env, siteOrigin } from "@/server/env";
@@ -21,6 +21,11 @@ import { accent, arabic, body, display } from "../fonts";
  * serveur (instant = false) ; les contenus de l'API restent en cache (`use cache`, 10 min + tags).
  */
 export const instant = false;
+
+/** Paramètre racine : une valeur par langue (exigé par Next pour un segment racine dynamique). */
+export function generateStaticParams() {
+  return LOCALES.map((locale) => ({ locale }));
+}
 
 export const viewport: Viewport = {
   width: "device-width",

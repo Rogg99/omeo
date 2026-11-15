@@ -87,5 +87,5 @@ def dish_detail_out(dish: Dish) -> dict[str, Any]:
         "nutrients_per_portion": nutrients_out(
             calculations.scale_nutrients(dish.nutrients_per_100g, dish.standard_portion_g)
         ),
-        "recipe_id": None,
+        "recipe_id": dish.recipe_id,
     }

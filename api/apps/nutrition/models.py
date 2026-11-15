@@ -71,6 +71,8 @@ class Dish(BaseModel):
     country = models.CharField(max_length=2, blank=True, db_index=True)
     standard_portion_g = models.DecimalField(max_digits=6, decimal_places=1)
     image = models.ForeignKey("meals.Upload", null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
+    # Recette de référence (content), sans clé étrangère : nutrition ne dépend pas de content
+    recipe_id = models.UUIDField(null=True, blank=True)
     # Recalculé à chaque modification de la composition (nutrition.services.refresh_dish_nutrients)
     nutrients_per_100g = models.JSONField(default=dict)
     status = models.CharField(max_length=10, choices=ContentStatus.choices, default=ContentStatus.DRAFT)

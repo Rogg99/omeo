@@ -20,8 +20,10 @@ from apps.accounts.models import City, LegalDocument
 from apps.activity.models import Exercise, Workout, WorkoutStep
 from apps.content.models import FaqItem, Plant, PreventionTip, Recipe, RecipeIngredient, RecipeStep
 from apps.content.services import refresh_recipe_nutrients
+from apps.core.errors import ValidationFailed
 from apps.core.i18n import LOCALES, validate_i18n_text
 from apps.gamification.models import Badge, Level, PointRule
+from apps.meals.models import Upload, UploadKind
 from apps.nutrition import services as nutrition
 from apps.nutrition.models import Dish, DishComponent, Food
 from apps.programs.models import Challenge, Program, ProgramDay, ProgramTask, Rule
@@ -46,6 +48,8 @@ class ContentType:
     computed: Callable[[Any], dict[str, Any]] = lambda obj: {}
     has_status: bool = True
     prepare: Callable[[Any, dict[str, Any]], None] = lambda obj, data: None
+    # champ du payload (`image_upload_id`) → champ du modèle recevant la clé du média (`image_key`)
+    media: tuple[tuple[str, str], ...] = ()
     after_save: Callable[[Any], None] = lambda obj: None
 
     def status_of(self, obj: Any) -> str:
@@ -63,6 +67,7 @@ class ContentType:
             if name in data:
                 setattr(obj, name, data[name])
         self.prepare(obj, data)
+        attach_media(obj, data, self.media)
         obj.save()
         self.write_nested(obj, data)
         self.after_save(obj)
@@ -73,6 +78,27 @@ class ContentType:
         if not isinstance(title, dict):
             return []
         return [locale for locale in LOCALES if not title.get(locale)]
+
+
+def _media_key(upload_id: Any) -> str:
+    upload = Upload.objects.filter(pk=upload_id, kind=UploadKind.MEDIA).only("storage_key").first()
+    if upload is None:
+        raise ValidationFailed(errors={"upload_id": [{"code": "not_found", "message": str(upload_id)}]})
+    return upload.storage_key
+
+
+def attach_media(obj: Any, data: dict[str, Any], media: tuple[tuple[str, str], ...]) -> None:
+    """Rattache les médias téléversés (bucket public) : la clé de stockage est copiée dans le contenu."""
+    for payload_field, model_field in media:
+        if payload_field not in data:
+            continue
+        value = data[payload_field]
+        if model_field == "subtitles":
+            obj.subtitles = {locale: _media_key(upload_id) for locale, upload_id in (value or {}).items()}
+        elif model_field == "image":
+            obj.image = Upload.objects.filter(pk=value, kind=UploadKind.MEDIA).first() if value else None
+        else:
+            setattr(obj, model_field, _media_key(value) if value else "")
 
 
 def _plain(value: Any) -> Any:
@@ -108,6 +134,8 @@ class ItemData(serializers.Serializer[Any]):
 
 
 class DishData(serializers.Serializer[Any]):
+    image_upload_id = serializers.UUIDField(required=False, allow_null=True)
+    recipe_id = serializers.UUIDField(required=False, allow_null=True)
     name = i18n()
     aliases = serializers.ListField(child=serializers.CharField(max_length=80), required=False, default=list)
     country = serializers.CharField(max_length=2)
@@ -126,6 +154,7 @@ class RecipeStepData(serializers.Serializer[Any]):
 
 
 class RecipeData(serializers.Serializer[Any]):
+    image_upload_id = serializers.UUIDField(required=False, allow_null=True)
     name = i18n()
     description = i18n(required=False)
     country = serializers.CharField(max_length=2, required=False, allow_blank=True)
@@ -141,6 +170,7 @@ class RecipeData(serializers.Serializer[Any]):
 
 
 class PlantData(serializers.Serializer[Any]):
+    image_upload_id = serializers.UUIDField(required=False, allow_null=True)
     common_name = i18n()
     scientific_name = serializers.CharField(max_length=120)
     tags = serializers.ListField(child=serializers.CharField(max_length=30), required=False)
@@ -152,6 +182,10 @@ class PlantData(serializers.Serializer[Any]):
 
 
 class ExerciseData(serializers.Serializer[Any]):
+    video_upload_id = serializers.UUIDField(required=False, allow_null=True)
+    thumbnail_upload_id = serializers.UUIDField(required=False, allow_null=True)
+    download_upload_id = serializers.UUIDField(required=False, allow_null=True)
+    subtitle_upload_ids = serializers.DictField(child=serializers.UUIDField(), required=False)
     name = i18n()
     instructions = i18n()
     muscles = serializers.ListField(child=serializers.CharField(max_length=30), required=False)
@@ -170,6 +204,7 @@ class WorkoutStepData(serializers.Serializer[Any]):
 
 
 class WorkoutData(serializers.Serializer[Any]):
+    cover_upload_id = serializers.UUIDField(required=False, allow_null=True)
     name = i18n()
     description = i18n(required=False)
     goal = serializers.ChoiceField(choices=["cardio", "strength", "mobility"])
@@ -210,6 +245,7 @@ class ProgramDayData(serializers.Serializer[Any]):
 
 
 class ProgramData(serializers.Serializer[Any]):
+    cover_upload_id = serializers.UUIDField(required=False, allow_null=True)
     name = i18n()
     description = i18n(required=False)
     goal = serializers.CharField(max_length=24)
@@ -220,6 +256,7 @@ class ProgramData(serializers.Serializer[Any]):
 
 
 class ChallengeData(serializers.Serializer[Any]):
+    cover_upload_id = serializers.UUIDField(required=False, allow_null=True)
     name = i18n()
     description = i18n(required=False)
     duration_days = serializers.IntegerField(min_value=7, max_value=30)
@@ -233,6 +270,7 @@ class ChallengeData(serializers.Serializer[Any]):
 
 
 class BadgeData(serializers.Serializer[Any]):
+    icon_upload_id = serializers.UUIDField(required=False, allow_null=True)
     code = serializers.RegexField(r"^[a-z0-9_]+$")
     family = serializers.ChoiceField(
         choices=["streak", "nutrition", "hydration", "activity", "challenge", "program", "discovery", "referral"]
@@ -244,6 +282,7 @@ class BadgeData(serializers.Serializer[Any]):
 
 
 class LevelData(serializers.Serializer[Any]):
+    icon_upload_id = serializers.UUIDField(required=False, allow_null=True)
     rank = serializers.IntegerField(min_value=1)
     name = i18n()
     min_points = serializers.IntegerField(min_value=0)
@@ -457,13 +496,14 @@ REGISTRY: dict[str, ContentType] = {
         "name",
         ("name",),
         DishData,
-        ("name", "aliases", "country", "standard_portion_g"),
+        ("name", "aliases", "country", "standard_portion_g", "recipe_id"),
         write_nested=_dish_write,
         read_nested=lambda d: {
             "components": [{"food_id": c.food_id, "grams": float(c.grams)} for c in d.components.all()]
         },
         computed=lambda d: {"nutrients_per_100g": d.nutrients_per_100g},
         after_save=lambda dish: nutrition.refresh_dish(dish=dish),
+        media=(("image_upload_id", "image"),),
     ),
     "recipes": ContentType(
         "recipes",
@@ -491,6 +531,7 @@ REGISTRY: dict[str, ContentType] = {
             "steps": [{"text": s.text} for s in r.steps.all()],
         },
         computed=lambda r: {"nutrients_per_serving": r.nutrients_per_serving},
+        media=(("image_upload_id", "image_key"),),
     ),
     "plants": ContentType(
         "plants",
@@ -509,6 +550,7 @@ REGISTRY: dict[str, ContentType] = {
         ),
         write_nested=_plant_write,
         read_nested=lambda p: {"related_recipe_ids": [r.pk for r in p.related_recipes.all()]},
+        media=(("image_upload_id", "image_key"),),
     ),
     "exercises": ContentType(
         "exercises",
@@ -517,6 +559,12 @@ REGISTRY: dict[str, ContentType] = {
         ("name", "instructions"),
         ExerciseData,
         ("name", "instructions", "muscles", "level", "equipment", "met", "is_free"),
+        media=(
+            ("video_upload_id", "video_key"),
+            ("thumbnail_upload_id", "thumbnail_key"),
+            ("download_upload_id", "download_key"),
+            ("subtitle_upload_ids", "subtitles"),
+        ),
     ),
     "workouts": ContentType(
         "workouts",
@@ -539,6 +587,7 @@ REGISTRY: dict[str, ContentType] = {
             ]
         },
         computed=lambda w: {"duration_s": w.duration_s},
+        media=(("cover_upload_id", "cover_key"),),
     ),
     "programs": ContentType(
         "programs",
@@ -561,6 +610,7 @@ REGISTRY: dict[str, ContentType] = {
                 for d in p.days.all()
             ],
         },
+        media=(("cover_upload_id", "cover_key"),),
     ),
     "challenges": ContentType(
         "challenges",
@@ -571,6 +621,7 @@ REGISTRY: dict[str, ContentType] = {
         ("name", "description", "duration_days", "success_threshold", "points_per_day", "points_completion"),
         write_nested=_challenge_write,
         read_nested=lambda c: {"rule": _rule_out(c.rule), "badge_id": c.badge_id},
+        media=(("cover_upload_id", "cover_key"),),
     ),
     "badges": ContentType(
         "badges",
@@ -579,9 +630,17 @@ REGISTRY: dict[str, ContentType] = {
         ("name", "description"),
         BadgeData,
         ("code", "family", "name", "description", "condition", "bonus_points"),
+        media=(("icon_upload_id", "icon_key"),),
     ),
     "levels": ContentType(
-        "levels", Level, "name", ("name",), LevelData, ("rank", "name", "min_points"), has_status=False
+        "levels",
+        Level,
+        "name",
+        ("name",),
+        LevelData,
+        ("rank", "name", "min_points"),
+        has_status=False,
+        media=(("icon_upload_id", "icon_key"),),
     ),
     "point-rules": ContentType(
         "point-rules",

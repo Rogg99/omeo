@@ -123,10 +123,10 @@ void main() {
 
   group('OmeoTabBar', () {
     const tabs = <OmeoTab>[
-      (icon: OmeoIcons.home, label: 'Accueil'),
-      (icon: OmeoIcons.chart, label: 'Progression'),
-      (icon: OmeoIcons.calendar, label: 'Journal'),
-      (icon: OmeoIcons.user, label: 'Profil'),
+      (icon: OmeoIcons.home, label: 'Accueil', enabled: true),
+      (icon: OmeoIcons.chart, label: 'Progression', enabled: true),
+      (icon: OmeoIcons.calendar, label: 'Journal', enabled: true),
+      (icon: OmeoIcons.user, label: 'Profil', enabled: true),
     ];
 
     testWidgets('sélection et action centrale', (tester) async {

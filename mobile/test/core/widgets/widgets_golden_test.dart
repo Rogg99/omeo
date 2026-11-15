@@ -147,10 +147,10 @@ class _Navigation extends StatelessWidget {
         const SizedBox(height: 40),
         OmeoTabBar(
           tabs: const [
-            (icon: OmeoIcons.home, label: 'Accueil'),
-            (icon: OmeoIcons.chart, label: 'Progression'),
-            (icon: OmeoIcons.calendar, label: 'Journal'),
-            (icon: OmeoIcons.user, label: 'Profil'),
+            (icon: OmeoIcons.home, label: 'Accueil', enabled: true),
+            (icon: OmeoIcons.chart, label: 'Progression', enabled: true),
+            (icon: OmeoIcons.calendar, label: 'Journal', enabled: true),
+            (icon: OmeoIcons.user, label: 'Profil', enabled: true),
           ],
           currentIndex: 0,
           onSelect: (_) {},

@@ -143,8 +143,9 @@ class Eyebrow extends StatelessWidget {
   }
 }
 
-/// Onglet de la barre principale.
-typedef OmeoTab = ({OmeoIcons icon, String label});
+/// Onglet de la barre principale. `enabled` à faux : onglet visible mais
+/// inactif (module pas encore disponible).
+typedef OmeoTab = ({OmeoIcons icon, String label, bool enabled});
 
 /// Barre d'onglets flottante avec action centrale (`tabbar` + `fab`).
 /// Quatre onglets : deux de chaque côté du bouton d'ajout.
@@ -154,7 +155,7 @@ class OmeoTabBar extends StatelessWidget {
     required this.currentIndex,
     required this.onSelect,
     required this.fabLabel,
-    required this.onFab,
+    this.onFab,
     super.key,
   }) : assert(tabs.length == 4, 'La barre a exactement quatre onglets.');
 
@@ -162,7 +163,9 @@ class OmeoTabBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onSelect;
   final String fabLabel;
-  final VoidCallback onFab;
+
+  /// Action centrale ; inactive si `null`.
+  final VoidCallback? onFab;
 
   @override
   Widget build(BuildContext context) {
@@ -172,10 +175,14 @@ class OmeoTabBar extends StatelessWidget {
       child: _TabItem(
         tab: tabs[i],
         selected: i == currentIndex,
-        onTap: () {
-          if (i != currentIndex) unawaited(HapticFeedback.selectionClick());
-          onSelect(i);
-        },
+        onTap: tabs[i].enabled
+            ? () {
+                if (i != currentIndex) {
+                  unawaited(HapticFeedback.selectionClick());
+                }
+                onSelect(i);
+              }
+            : null,
       ),
     );
 
@@ -244,7 +251,7 @@ class _TabItem extends StatelessWidget {
 
   final OmeoTab tab;
   final bool selected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -252,6 +259,7 @@ class _TabItem extends StatelessWidget {
     final color = selected ? t.primaryText : t.text3;
     return Semantics(
       button: true,
+      enabled: onTap != null,
       selected: selected,
       label: tab.label,
       container: true,
@@ -259,40 +267,43 @@ class _TabItem extends StatelessWidget {
       child: InkResponse(
         onTap: onTap,
         radius: 36,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedContainer(
-              duration: OmeoTokens.durationBase,
-              width: 52,
-              height: 30,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: selected ? t.primarySoft : Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
+        child: Opacity(
+          opacity: onTap == null && !selected ? 0.4 : 1,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedContainer(
+                duration: OmeoTokens.durationBase,
+                width: 52,
+                height: 30,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: selected ? t.primarySoft : Colors.transparent,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: OmeoIcon(tab.icon, size: 22, color: color),
               ),
-              child: OmeoIcon(tab.icon, size: 22, color: color),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              tab.label,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: selected
-                    ? OmeoTokens.weightBold
-                    : OmeoTokens.weightMedium,
-                color: color,
+              const SizedBox(height: 3),
+              Text(
+                tab.label,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: selected
+                      ? OmeoTokens.weightBold
+                      : OmeoTokens.weightMedium,
+                  color: color,
+                ),
+                // La barre garde sa hauteur : le texte des onglets ne grossit
+                // pas au-delà de 1,3 fois.
+                textScaler: MediaQuery.textScalerOf(
+                  context,
+                ).clamp(maxScaleFactor: 1.3),
               ),
-              // La barre garde sa hauteur : le texte des onglets ne grossit
-              // pas au-delà de 1,3 fois.
-              textScaler: MediaQuery.textScalerOf(
-                context,
-              ).clamp(maxScaleFactor: 1.3),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -303,13 +314,14 @@ class _Fab extends StatelessWidget {
   const _Fab({required this.label, required this.onTap});
 
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = context.omeo;
     return Semantics(
       button: true,
+      enabled: onTap != null,
       label: label,
       container: true,
       excludeSemantics: true,
@@ -330,10 +342,12 @@ class _Fab extends StatelessWidget {
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
-            onTap: () {
-              unawaited(HapticFeedback.mediumImpact());
-              onTap();
-            },
+            onTap: onTap == null
+                ? null
+                : () {
+                    unawaited(HapticFeedback.mediumImpact());
+                    onTap!();
+                  },
             child: SizedBox.square(
               dimension: 62,
               child: Center(

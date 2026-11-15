@@ -10,6 +10,7 @@ import 'package:omeo/core/l10n/gen/app_localizations.dart';
 import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/core/widgets/widgets.dart';
 import 'package:omeo/features/support/presentation/system_screens.dart';
+import 'package:omeo/features/support/support_paths.dart';
 
 /// Racine de l'application : thème, langues, navigation et erreurs globales.
 class OmeoApp extends ConsumerWidget {
@@ -80,11 +81,11 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
   void _handle(GlobalErrorEvent event) {
     switch (event) {
       case UpgradeRequired():
-        widget.router.go(Routes.upgrade);
+        widget.router.go(SupportPaths.upgrade);
       case AccountSuspended(:final supportUrl):
         widget.router.go(
           Uri(
-            path: Routes.suspended,
+            path: SupportPaths.suspended,
             queryParameters: {'support': ?supportUrl},
           ).toString(),
         );

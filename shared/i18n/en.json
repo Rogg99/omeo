@@ -258,7 +258,11 @@
       "quote3_city": "Abidjan",
       "faq_title": "Frequently asked questions",
       "faq_cta": "See the full FAQ",
-      "final_title": "Your next meal could be <accent>the first.</accent>"
+      "final_title": "Your next meal could be <accent>the first.</accent>",
+      "tile3_meal1": "Breakfast",
+      "tile3_meal2": "Lunch",
+      "tile3_meal3": "Snack",
+      "tile3_meal4": "Dinner"
     },
     "features": {
       "eyebrow": "Features",
@@ -329,7 +333,8 @@
       "plan_free": "Free",
       "plan_plus": "Plus",
       "faq_title": "Subscription questions",
-      "unavailable": "Pricing is temporarily unavailable. Please try again shortly."
+      "unavailable": "Pricing is temporarily unavailable. Please try again shortly.",
+      "plan_trial": "Trial"
     },
     "faq": {
       "eyebrow": "Help",
@@ -502,7 +507,8 @@
       "social_title": "Simulated {provider} sign-in",
       "social_lead": "Choose the account to sign in with.",
       "social_unknown": "Unknown account (not signed up yet)",
-      "scenario": "{scenario, select, trial {Plus trial} free {Free} plus_web {Plus paid on the website} plus_store {Plus paid in a store} past_due {Payment failed} unverified {Email not verified} granted {Plus granted} rate_limited {Error 429} server_error {Error 500} other {Other}}"
+      "scenario": "{scenario, select, trial {Plus trial} free {Free} plus_web {Plus paid on the website} plus_store {Plus paid in a store} past_due {Payment failed} unverified {Email not verified} granted {Plus granted} rate_limited {Error 429} server_error {Error 500} other {Other}}",
+      "deletion_link": "Open the confirmation link (demo)"
     },
     "credits": {
       "title": "Photo credits",

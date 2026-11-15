@@ -258,7 +258,11 @@
       "quote3_city": "Abidjan",
       "faq_title": "Questions fréquentes",
       "faq_cta": "Toute la FAQ",
-      "final_title": "Ton prochain repas peut être <accent>le premier.</accent>"
+      "final_title": "Ton prochain repas peut être <accent>le premier.</accent>",
+      "tile3_meal1": "Petit-déjeuner",
+      "tile3_meal2": "Déjeuner",
+      "tile3_meal3": "Collation",
+      "tile3_meal4": "Dîner"
     },
     "features": {
       "eyebrow": "Fonctionnalités",
@@ -329,7 +333,8 @@
       "plan_free": "Free",
       "plan_plus": "Plus",
       "faq_title": "Questions sur l'abonnement",
-      "unavailable": "Les tarifs sont momentanément indisponibles. Réessaie dans quelques instants."
+      "unavailable": "Les tarifs sont momentanément indisponibles. Réessaie dans quelques instants.",
+      "plan_trial": "Essai"
     },
     "faq": {
       "eyebrow": "Aide",
@@ -502,7 +507,8 @@
       "social_title": "Connexion {provider} simulée",
       "social_lead": "Choisis le compte avec lequel te connecter.",
       "social_unknown": "Compte inconnu (pas encore inscrit)",
-      "scenario": "{scenario, select, trial {Essai Plus} free {Free} plus_web {Plus payé sur le site} plus_store {Plus payé dans un store} past_due {Paiement échoué} unverified {Email non vérifié} granted {Plus offert} rate_limited {Erreur 429} server_error {Erreur 500} other {Autre}}"
+      "scenario": "{scenario, select, trial {Essai Plus} free {Free} plus_web {Plus payé sur le site} plus_store {Plus payé dans un store} past_due {Paiement échoué} unverified {Email non vérifié} granted {Plus offert} rate_limited {Erreur 429} server_error {Erreur 500} other {Autre}}",
+      "deletion_link": "Ouvrir le lien de confirmation (démo)"
     },
     "credits": {
       "title": "Crédits photos",

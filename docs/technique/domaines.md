@@ -10,13 +10,13 @@ Omeo utilise un seul nom de domaine : **my-omeo.app**. Tous les livrables s'y ra
 | `my-omeo.app/i/{code}` | Lien d'invitation (parrainage), ouvert dans l'app si elle est installée | web et mobile |
 | `api.my-omeo.app/api/v1` | API REST (contrat [openapi.yaml](../../contracts/openapi.yaml)) | api |
 | `admin.my-omeo.app` | Back-office de l'équipe | admin |
-| `media.my-omeo.app` | Médias publics (vidéos HLS, images) et envois présignés | api (stockage objet et CDN) |
+| `media.my-omeo.app` | Médias des contenus (vidéos HLS, images) par URL signée et temporaire, envois présignés. Aucun accès public direct, MinIO jamais exposé | api (stockage objet) |
 
 `www.my-omeo.app` redirige en 301 vers `my-omeo.app`.
 
 ## Staging
 
-Même découpage, préfixé : `staging.my-omeo.app`, `api.staging.my-omeo.app`, `admin.staging.my-omeo.app` et `media.staging.my-omeo.app`. Ces hôtes ne sont jamais indexés (`X-Robots-Tag: noindex`).
+Même découpage sur un seul niveau, pour être couvert par le certificat `*.my-omeo.app` : `staging.my-omeo.app`, `staging-api.my-omeo.app`, `staging-admin.my-omeo.app` et `staging-media.my-omeo.app`. Ces hôtes ne sont jamais indexés (`X-Robots-Tag: noindex`) et, sauf les médias, sont réservés aux IP de l'équipe.
 
 ## Développement local
 

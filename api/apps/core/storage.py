@@ -13,6 +13,9 @@ par l'adresse interne (S3_ENDPOINT_URL). Signer ne nécessite aucun appel résea
 
 from __future__ import annotations
 
+import base64
+import hashlib
+import time
 import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
@@ -117,9 +120,37 @@ def presign_download(*, key: str, filename: str | None = None, ttl: int | None =
     )
 
 
-def public_url(key: str) -> str:
-    """URL permanente d'un média publié (bucket public, servi par CDN en prod)."""
-    return f"{settings.S3_PUBLIC_BASE_URL.rstrip('/')}/{key.lstrip('/')}"
+def public_url(key: str, *, now: float | None = None) -> str:
+    """
+    URL d'un média publié (bucket public).
+
+    Avec MEDIA_URL_SECRET, l'URL est signée et temporaire, vérifiée par nginx (module secure_link) :
+
+        {MEDIA_URL_BASE}/m/{expire}/{jeton}/{dossier}/-/{fichier}
+
+    Le jeton couvre le DOSSIER du fichier : les chemins relatifs d'un manifeste HLS (segments, variantes
+    dans des sous-dossiers) restent valides avec le même jeton. Les clés sont non devinables (build_key).
+    L'expiration est arrondie à une fenêtre de MEDIA_URL_TTL_SECONDS : l'URL reste stable pendant la
+    fenêtre (cache client et CDN) et vaut entre une et deux fenêtres.
+
+    Sans secret (dev) : URL permanente directe sur le bucket.
+    """
+    key = key.lstrip("/")
+    secret = settings.MEDIA_URL_SECRET
+    if not secret:
+        return f"{settings.S3_PUBLIC_BASE_URL.rstrip('/')}/{key}"
+    scope, _, filename = key.rpartition("/")
+    if not scope or not filename:
+        raise ValueError(f"media key must be inside a folder: {key!r}")
+    window = settings.MEDIA_URL_TTL_SECONDS
+    expires = (int(now if now is not None else time.time()) // window + 2) * window
+    return f"{settings.MEDIA_URL_BASE.rstrip('/')}/m/{expires}/{media_token(expires, scope)}/{scope}/-/{filename}"
+
+
+def media_token(expires: int, scope: str) -> str:
+    """Jeton attendu par nginx : base64url(md5("{expire}:{dossier}:{secret}")) sans « = » (format secure_link)."""
+    digest = hashlib.md5(f"{expires}:{scope}:{settings.MEDIA_URL_SECRET}".encode(), usedforsecurity=False).digest()
+    return base64.urlsafe_b64encode(digest).rstrip(b"=").decode()
 
 
 def head(*, key: str, bucket: Bucket = "private") -> dict[str, object] | None:

@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import io
 import time
+from urllib.parse import urljoin
 
 import pytest
 from PIL import Image
+from pytest_django.fixtures import SettingsWrapper
 from rest_framework.exceptions import ErrorDetail
 
 from apps.core import i18n
@@ -14,6 +18,7 @@ from apps.core.errors import _flatten_drf_errors
 from apps.core.ids import uuid7
 from apps.core.logging import REDACTED, scrub, scrub_text, sentry_before_send
 from apps.core.middleware import parse_version
+from apps.core.storage import public_url
 from apps.meals import images
 
 
@@ -135,6 +140,45 @@ class TestImages:
             assert not result.getexif()
         assert (cleaned.width, cleaned.height) == (40, 20)
         assert cleaned.content_type == "image/jpeg"
+
+
+class TestSignedMediaUrl:
+    """URL des médias publiés, vérifiées par nginx secure_link (deploy/nginx)."""
+
+    SECRET = "s" * 40
+
+    @pytest.fixture(autouse=True)
+    def _media(self, settings: SettingsWrapper) -> None:
+        settings.MEDIA_URL_SECRET = self.SECRET
+        settings.MEDIA_URL_BASE = "https://media.my-omeo.app"
+        settings.MEDIA_URL_TTL_SECONDS = 3600
+
+    def test_format_and_token(self) -> None:
+        url = public_url("media/video/shared/abc/master.m3u8", now=7200)
+        expires = 4 * 3600  # début de la fenêtre courante (7200) + 2 fenêtres
+        digest = hashlib.md5(f"{expires}:media/video/shared/abc:{self.SECRET}".encode(), usedforsecurity=False).digest()
+        token = base64.urlsafe_b64encode(digest).rstrip(b"=").decode()
+        assert url == f"https://media.my-omeo.app/m/{expires}/{token}/media/video/shared/abc/-/master.m3u8"
+
+    def test_stable_within_window_and_valid_at_least_one_window(self) -> None:
+        key = "media/image/shared/x.webp"
+        assert public_url(key, now=3600) == public_url(key, now=7199)
+        expires = int(public_url(key, now=7199).split("/")[4])
+        assert expires - 7199 >= 3600
+
+    def test_hls_relative_paths_keep_the_token(self) -> None:
+        manifest = public_url("media/video/shared/abc/master.m3u8", now=0)
+        variant = urljoin(manifest, "720p/index.m3u8")
+        assert variant.startswith(manifest.rsplit("/-/", 1)[0] + "/-/720p/")
+
+    def test_rejects_key_without_folder(self) -> None:
+        with pytest.raises(ValueError, match="inside a folder"):
+            public_url("orphan.png")
+
+    def test_unsigned_without_secret(self, settings: SettingsWrapper) -> None:
+        settings.MEDIA_URL_SECRET = ""
+        settings.S3_PUBLIC_BASE_URL = "http://s3.localhost/omeo-public"
+        assert public_url("/a/b.png") == "http://s3.localhost/omeo-public/a/b.png"
 
 
 class TestWebCacheSignature:

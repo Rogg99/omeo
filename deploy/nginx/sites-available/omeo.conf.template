@@ -12,18 +12,20 @@ server {
 
 # www -> domaine nu
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
     server_name {{WWW}};
+    {{HTTP2}}
     include snippets/omeo-tls.conf;
     return 301 https://{{SITE}}$request_uri;
 }
 
 # Site vitrine
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
     server_name {{SITE}};
+    {{HTTP2}}
     include snippets/omeo-tls.conf;
     {{SITE_ACCESS}}
     {{NOINDEX}}
@@ -39,9 +41,10 @@ server {
 
 # API
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
     server_name {{API}};
+    {{HTTP2}}
     include snippets/omeo-tls.conf;
     {{SITE_ACCESS}}
     {{NOINDEX}}
@@ -64,9 +67,10 @@ server {
 
 # Back-office : réservé aux IP de l'équipe
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
     server_name {{ADMIN}};
+    {{HTTP2}}
     include snippets/omeo-tls.conf;
     include snippets/omeo-admin-allow.conf;
     add_header X-Robots-Tag "noindex, nofollow" always;
@@ -79,21 +83,52 @@ server {
     }
 }
 
-# Médias (MinIO) : lecture publique et envois présignés.
-# Le Host doit arriver intact : il fait partie de la signature des URL présignées.
+# Médias. MinIO n'est jamais exposé : seules trois formes de requêtes passent, tout le reste répond 404.
+#   /m/{expire}/{jeton}/{dossier}/-/{fichier}   média publié, URL signée par l'API (secure_link)
+#   /omeo-{public,private}/{clé}?X-Amz-...      URL présignée S3 (envoi PUT, lecture d'un fichier privé)
+# Le Host arrive intact : il fait partie de la signature des URL présignées.
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+    listen 443 ssl;
+    listen [::]:443 ssl;
     server_name {{MEDIA}};
+    {{HTTP2}}
     include snippets/omeo-tls.conf;
-    {{NOINDEX}}
+    add_header X-Robots-Tag "noindex, nofollow" always;
 
     client_max_body_size 600m;  # vidéos d'exercices (attention : 100 Mo max via Cloudflare gratuit)
     proxy_request_buffering off;
     proxy_buffering off;
 
-    location / {
+    # Rien ne trahit MinIO : ni ses en-têtes, ni ses pages d'erreur XML
+    proxy_hide_header X-Amz-Request-Id;
+    proxy_hide_header X-Amz-Id-2;
+    proxy_hide_header X-Amz-Version-Id;
+    proxy_hide_header X-Amz-Bucket-Region;
+    proxy_hide_header X-Minio-Deployment-Id;
+    proxy_hide_header X-Xss-Protection;
+    proxy_intercept_errors on;
+    error_page 400 401 403 404 405 409 410 411 412 413 416 = @omeo_media_denied;
+
+    location ~ "^/m/(?<m_exp>[0-9]{10})/(?<m_tok>[A-Za-z0-9_-]{22})/(?<m_scope>[A-Za-z0-9._/-]+?)/-/(?<m_file>[A-Za-z0-9._/-]+)$" {
+        limit_except GET HEAD { deny all; }
+        secure_link $m_tok,$m_exp;
+        secure_link_md5 "$m_exp:$m_scope:{{MEDIA_SECRET}}";
+        if ($secure_link = "")  { return 403; }  # jeton faux
+        if ($secure_link = "0") { return 410; }  # URL expirée
+        include snippets/omeo-proxy.conf;
+        proxy_set_header Authorization "";
+        # URI explicite : la query string du client n'est jamais transmise
+        proxy_pass http://127.0.0.1:{{PORT_MEDIA}}/omeo-public/$m_scope/$m_file;
+    }
+
+    location ~ "^/omeo-(public|private)/[A-Za-z0-9._/-]+$" {
+        limit_except GET HEAD PUT { deny all; }
+        if ($omeo_s3_presigned = 0) { return 403; }
         include snippets/omeo-proxy.conf;
         proxy_pass http://127.0.0.1:{{PORT_MEDIA}};
     }
+
+    location / { return 404; }
+
+    location @omeo_media_denied { return 404; }
 }

@@ -9,6 +9,7 @@ from pathlib import Path
 
 import environ
 from celery.schedules import crontab
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -148,6 +149,13 @@ S3_SECRET_ACCESS_KEY = env("S3_SECRET_ACCESS_KEY")
 S3_PRIVATE_BUCKET = env("S3_PRIVATE_BUCKET", default="omeo-private")
 S3_PUBLIC_BUCKET = env("S3_PUBLIC_BUCKET", default="omeo-public")
 S3_PUBLIC_BASE_URL = env("S3_PUBLIC_BASE_URL", default=f"{S3_PUBLIC_ENDPOINT_URL}/{S3_PUBLIC_BUCKET}")
+# Médias publiés : URL signées et temporaires, vérifiées par nginx (secure_link). Voir apps/core/storage.py.
+# Secret vide = URL permanentes (dev uniquement, refusé en production). Même valeur dans la config nginx.
+MEDIA_URL_SECRET = env("MEDIA_URL_SECRET", default="")
+MEDIA_URL_BASE = env("MEDIA_URL_BASE", default="") or S3_PUBLIC_ENDPOINT_URL or ""
+MEDIA_URL_TTL_SECONDS = env.int("MEDIA_URL_TTL_SECONDS", default=6 * 60 * 60)
+if IS_PRODUCTION and len(MEDIA_URL_SECRET) < 32:
+    raise ImproperlyConfigured("MEDIA_URL_SECRET (32 caractères minimum) est obligatoire en production")
 UPLOAD_URL_TTL_SECONDS = 15 * 60
 DOWNLOAD_URL_TTL_SECONDS = 60 * 60
 UPLOAD_MAX_BYTES = 8 * 1024 * 1024

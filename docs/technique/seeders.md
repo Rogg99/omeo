@@ -30,6 +30,7 @@ Ce sont les données sans lesquelles l'API ne fonctionne pas. La commande est la
 - **Documents légaux** : publiés directement en version 1, car l'inscription l'exige. **En production, la commande échoue tant qu'un texte contient une mention entre `[crochets]`** (identité de l'éditeur, âge minimum, hébergeur…).
 - Les textes du seed n'existent qu'en français et en anglais. Les autres langues se complètent dans l'admin, avec la traduction IA à relire. L'ordre de repli est anglais, puis français.
 - **Premier superadmin** : `manage.py create_superadmin --email …`, une commande interactive qui demande le mot de passe et affiche le QR de la double authentification. Ce n'est jamais une fixture ni une variable d'environnement.
+- **Équipe d'administration** : `manage.py init_staff --domain my-omeo.app [--email role=adresse]` crée un compte par rôle (superadmin, content, support, finance, moderation) avec un mot de passe aléatoire et la double authentification. Les identifiants sont affichés une seule fois. La commande est idempotente : un rôle déjà tenu est ignoré.
 
 ## 2. Catalogue : `manage.py import_foods`, `import_content`
 
@@ -38,7 +39,7 @@ Le cœur de la valeur produit : sans aliments, l'analyse IA ne peut rapprocher a
 | Donnée | Source | Volume de départ |
 |---|---|---|
 | **Aliments**, pour 100 g | **FAO/INFOODS WAFCT 2019** (table de composition des aliments d'Afrique de l'Ouest), complétée par CIQUAL (ANSES) et USDA FoodData Central pour les aliments génériques | 300 à 500 |
-| **Plats** | Équipe (composition type, portion standard, autres noms locaux) | 60 à 100 |
+| **Plats** | Équipe (composition type, portion standard, autres noms locaux), un fichier par pays importé par `import_dishes` (voir [seeding-plats.md](seeding-plats.md)) | 60 à 100 |
 | **Recettes, plantes, exercices, séances, programmes, challenges, conseils de prévention, FAQ** | Équipe | selon la production |
 
 **Règles :**

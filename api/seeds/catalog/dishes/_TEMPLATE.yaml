@@ -1,0 +1,14 @@
+# Modèle de fichier pays : copier en <CODE_ISO>.yaml (ex. CM.yaml), méthodologie dans docs/technique/seeding-plats.md.
+# Les fichiers commençant par « _ » ne sont pas importés.
+country: XX
+dishes:
+  cle_du_plat:
+    name: { fr: Nom français, en: English name }
+    aliases: [nom local 1, orthographe alternative, nom dans une autre langue du pays]
+    # portion_g: 450            # facultatif : sinon somme des composants
+    components:                  # grammes pour UNE portion standard, partie comestible, plat cuit
+      wafct2019:CODE_ALIMENT: 150
+      wafct2019:CODE_HUILE: 15
+    sources:                     # traçabilité de la composition (non stockée en base)
+      - "pesée : <lieu>, <date>, <n> portions"
+      - "référence : <ouvrage ou URL>"

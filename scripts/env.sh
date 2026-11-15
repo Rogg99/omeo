@@ -23,9 +23,10 @@ resolve() {
 
 gen() {
   case "$1" in
-    HEX)    openssl rand -hex 32 ;;
-    TOKEN)  openssl rand -base64 64 | tr -d '\n=' | tr '+/' '-_' ;;
-    FERNET) openssl rand -base64 32 | tr '+/' '-_' ;;
+    # openssl coupe le base64 en lignes (avec \r sous Git Bash) : tout retour à la ligne est retiré
+    HEX)    openssl rand -hex 32 | tr -d '\r\n' ;;
+    TOKEN)  openssl rand -base64 64 | tr -d '\r\n=' | tr '+/' '-_' ;;
+    FERNET) openssl rand -base64 32 | tr -d '\r\n' | tr '+/' '-_' ;;
     *)      die "marqueur inconnu : __GEN_$1__" ;;
   esac
 }
@@ -38,7 +39,8 @@ cmd_init() {
   umask 077
   local line kind
   while IFS= read -r line || [[ -n "$line" ]]; do
-    while [[ "$line" =~ __GEN_([A-Z]+)__ ]]; do
+    # Seules les affectations sont générées : les commentaires documentent les marqueurs
+    while [[ "$line" =~ ^[A-Za-z_][A-Za-z0-9_]*=.*__GEN_([A-Z]+)__ ]]; do
       kind="${BASH_REMATCH[1]}"
       line="${line/__GEN_${kind}__/$(gen "$kind")}"
     done
@@ -65,7 +67,7 @@ cmd_check() {
   local src; src="$(resolve "${1:-}")"
   [[ -f "$src" ]] || die "$src introuvable (lance d'abord : init)"
   local markers empty
-  markers="$(grep -nE '__GEN_[A-Z]+__' "$src" || true)"
+  markers="$(grep -nE '^[A-Za-z_][A-Za-z0-9_]*=.*__GEN_[A-Z]+__' "$src" || true)"
   empty="$(grep -nE '^[A-Za-z_][A-Za-z0-9_]*=$' "$src" | cut -d= -f1 || true)"
   [[ -n "$markers" ]] && { echo "marqueurs non générés :"; echo "$markers"; }
   [[ -n "$empty" ]] && { echo "variables vides :"; echo "$empty"; }
@@ -76,7 +78,7 @@ cmd_check() {
 cmd_dispatch() {
   local src; src="$(resolve "${1:-}")"
   [[ -f "$src" ]] || die "$src introuvable (lance d'abord : init)"
-  grep -qE '__GEN_[A-Z]+__' "$src" && die "$src contient encore des marqueurs __GEN_*__ (lance init)"
+  grep -qE '^[A-Za-z_][A-Za-z0-9_]*=.*__GEN_[A-Z]+__' "$src" && die "$src contient encore des marqueurs __GEN_*__ (lance init)"
 
   umask 077
   local target out tmp

@@ -1,3 +1,4 @@
+import { cacheLife } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
 import { Logo } from "@/components/Logo";
@@ -10,8 +11,15 @@ import { ManageCookiesButton } from "./CookieConsent";
 
 const LEGAL_KINDS = ["terms", "privacy", "cookies", "legal_notice"] as const;
 
+/** Année du copyright, figée en cache pour la journée (pas de calcul d'heure pendant le prérendu). */
+async function currentYear(): Promise<number> {
+  "use cache";
+  cacheLife("days");
+  return new Date().getFullYear();
+}
+
 export async function Footer() {
-  const t = await getTranslations("web");
+  const [t, year] = await Promise.all([getTranslations("web"), currentYear()]);
   const analytics = env.ANALYTICS_PROVIDER !== "none";
   return (
     <footer className="foot">
@@ -76,7 +84,7 @@ export async function Footer() {
           </nav>
         </div>
         <div className="bottom">
-          <span>{t("footer.copyright", { year: new Date().getFullYear() })}</span>
+          <span>{t("footer.copyright", { year })}</span>
           <span className="grow" />
           <ul className="row wrapf" aria-label={t("a11y.choose_language")} style={{ display: "flex" }}>
             {LOCALES.map((l) => (

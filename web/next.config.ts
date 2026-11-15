@@ -43,6 +43,11 @@ export default function config(phase: string): NextConfig {
     cacheComponents: true,
     partialPrefetching: true,
     output: "standalone",
+    // Police lue à l'exécution par les images Open Graph (non détectée par le traçage)
+    outputFileTracingIncludes: {
+      "/[locale]/opengraph-image": ["./node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff"],
+      "/[locale]/i/[code]/opengraph-image": ["./node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff"],
+    },
     poweredByHeader: false,
     // Accès en dev via le proxy nginx
     allowedDevOrigins: ["localhost", "admin.localhost"],

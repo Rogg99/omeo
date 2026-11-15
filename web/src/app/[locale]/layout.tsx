@@ -1,6 +1,7 @@
 import "../globals.css";
 
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
@@ -62,6 +63,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   setRequestLocale(locale);
+  // Lecture du nonce de la CSP : chaque page est rendue à la requête (une page statique n'aurait
+  // pas de nonce et ses scripts seraient bloqués). Les données restent en cache ('use cache').
+  await headers();
   const [t, messages] = await Promise.all([getTranslations("web"), getMessages()]);
   // Seuls les textes de la page d'erreur (composant client) partent au navigateur.
   const clientMessages = {

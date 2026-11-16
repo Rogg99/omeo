@@ -921,5 +921,159 @@
         "type": "String"
       }
     }
-  }
+  },
+  "appPlusSubscriptionTitle": "Mon abonnement",
+  "@appPlusSubscriptionTitle": {},
+  "appPlusSubscriptionStatus": "{status, select, trial {Essai} active {Actif} grace {Période de grâce} canceled {Résilié} expired {Expiré} refunded {Remboursé} other {Inconnu}}",
+  "@appPlusSubscriptionStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionChannel": "{channel, select, google_play {Google Play} app_store {App Store} web {Site web} grant {Offert} other {Autre}}",
+  "@appPlusSubscriptionChannel": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionRenews": "Renouvellement le {date} · {channel}",
+  "@appPlusSubscriptionRenews": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionEnds": "Actif jusqu'au {date} · {channel}",
+  "@appPlusSubscriptionEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionThisPeriod": "Ce mois-ci",
+  "@appPlusSubscriptionThisPeriod": {},
+  "appPlusSubscriptionQuotaPhoto": "Analyses photo",
+  "@appPlusSubscriptionQuotaPhoto": {},
+  "appPlusSubscriptionQuotaText": "Saisies vocales et texte",
+  "@appPlusSubscriptionQuotaText": {},
+  "appPlusSubscriptionQuotaValue": "{used} / {limit}",
+  "@appPlusSubscriptionQuotaValue": {
+    "placeholders": {
+      "used": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "limit": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusSubscriptionResets": "Remise à zéro le {date}",
+  "@appPlusSubscriptionResets": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionManageStore": "Gérer dans {store}",
+  "@appPlusSubscriptionManageStore": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionManageStoreHint": "Changer d'offre ou résilier",
+  "@appPlusSubscriptionManageStoreHint": {},
+  "appPlusSubscriptionManageWeb": "Gérer sur my-omeo.app",
+  "@appPlusSubscriptionManageWeb": {},
+  "appPlusSubscriptionPayments": "Historique des paiements",
+  "@appPlusSubscriptionPayments": {},
+  "appPlusSubscriptionRestore": "Restaurer mes achats",
+  "@appPlusSubscriptionRestore": {},
+  "appPlusSubscriptionGranted": "Jours offerts",
+  "@appPlusSubscriptionGranted": {},
+  "appPlusSubscriptionGrantedHint": "{count, plural, one {{count} jour de parrainage en attente} other {{count} jours de parrainage en attente}}",
+  "@appPlusSubscriptionGrantedHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appPlusSubscriptionCancelNote": "Si tu résilies, Plus reste actif jusqu'à la fin de la période payée.",
+  "@appPlusSubscriptionCancelNote": {},
+  "appPlusSubscriptionGraceTitle": "Ton paiement n'est pas passé.",
+  "@appPlusSubscriptionGraceTitle": {},
+  "appPlusSubscriptionGraceBody": "Mets à jour ton moyen de paiement avant le {date} pour garder Omeo Plus.",
+  "@appPlusSubscriptionGraceBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionGraceTag": "Période de grâce",
+  "@appPlusSubscriptionGraceTag": {},
+  "appPlusSubscriptionFixWeb": "Mettre à jour sur my-omeo.app",
+  "@appPlusSubscriptionFixWeb": {},
+  "appPlusSubscriptionFixStore": "Mettre à jour dans {store}",
+  "@appPlusSubscriptionFixStore": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionWebNote": "Abonnement pris sur le site : il se gère sur le site, depuis ton compte Omeo.",
+  "@appPlusSubscriptionWebNote": {},
+  "appPlusSubscriptionNoneTitle": "Tu n'as pas d'abonnement",
+  "@appPlusSubscriptionNoneTitle": {},
+  "appPlusSubscriptionNoneBody": "Découvre ce qu'Omeo Plus t'apporte.",
+  "@appPlusSubscriptionNoneBody": {},
+  "appPlusSubscriptionErrorTitle": "Ton abonnement n'a pas pu être chargé",
+  "@appPlusSubscriptionErrorTitle": {},
+  "appPlusPaymentsTitle": "Paiements",
+  "@appPlusPaymentsTitle": {},
+  "appPlusPaymentsLine": "{description} · {channel}",
+  "@appPlusPaymentsLine": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaymentsStatus": "{status, select, failed {Refusé} refunded {Remboursé} pending {En attente} other {}}",
+  "@appPlusPaymentsStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaymentsReceipt": "Voir le reçu",
+  "@appPlusPaymentsReceipt": {},
+  "appPlusPaymentsNote": "Les reçus des stores sont envoyés par Google Play ou l'App Store.",
+  "@appPlusPaymentsNote": {},
+  "appPlusPaymentsEmpty": "Aucun paiement pour l'instant",
+  "@appPlusPaymentsEmpty": {},
+  "appPlusPaymentsErrorTitle": "L'historique n'a pas pu être chargé",
+  "@appPlusPaymentsErrorTitle": {}
 }

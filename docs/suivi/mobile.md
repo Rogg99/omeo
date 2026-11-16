@@ -36,16 +36,16 @@
 | Repas | B | 17 | 17 | | | |
 | Plus et Parrainage | B | 7 | 7 | | | |
 | Sport | B | 5 | 5 | | | |
-| Séances | B | 7 | | | 7 | |
+| Séances | B | 7 | 7 | | | |
 | Programmes | B | 6 | | | | 6 |
 | Challenges | B | 5 | | | | 5 |
 | Récompenses | B | 4 | | | | 4 |
 | Recettes | B | 4 | | | | 4 |
 | Plantes et Prévention | B | 4 | | | | 4 |
 | États système | Socle, A, B | 10 | 10 | | | |
-| **Total** | | **127** | **77** | | **7** | **43** |
+| **Total** | | **127** | **84** | | | **43** |
 
-Avancement : **77 écrans terminés sur 127 (61 %)**, tous dans `main`.
+Avancement : **84 écrans terminés sur 127 (66 %)**, tous dans `main`.
 
 ## Détail par écran
 
@@ -107,7 +107,7 @@ Avancement : **77 écrans terminés sur 127 (61 %)**, tous dans `main`.
 | PLS-04 à PLS-06 | Mon abonnement, paiement en échec, historique | ✅ | `main` | `7daf424` |
 | REF-01 | Parrainage | ✅ | `main` | `1f5a057` (voir B-04) |
 | SPO-01 à SPO-05 | Sport : aujourd'hui, ajout, fusion, balance de la semaine, analyses croisées | ✅ | `main` | `9ef27af` (voir B-03) |
-| EXO-01 à EXO-07 | Bibliothèque, fiche, séances guidées, détail, lecteur exercice, repos, séance terminée | 🚧 | `mobile-b` | dépôts `eb926a6`, moteur du lecteur `49ed165` (dans `main`) ; vidéo et téléchargement `2f0cf52` ; écrans EXO-01 à 04 écrits sans routes ni tests ; lecteur EXO-05, 06 et fin EXO-07 à faire |
+| EXO-01 à EXO-07 | Bibliothèque, fiche, séances guidées, détail, lecteur exercice, repos, séance terminée | ✅ | `main` | `1780394` (sans la carte du challenge lié de EXO-07, voir B-07 ; sans « Comment c'était ? », aucun endpoint ne le reçoit) |
 | PRG-01 à PRG-06 | Programmes | ⏳ | | |
 | CHA-01 à CHA-05 | Challenges | ⏳ | | |
 | REW-01 à REW-04 | Récompenses | ⏳ | | |
@@ -127,6 +127,7 @@ Les décisions marquées « toi » attendent une réponse de l'utilisateur.
 | B-05 | Doublon dans CHANGES.md | Une ligne « servers / staging » est encore « Proposé » alors que le changement est appliqué (contrat 1.1.5) | Aucun ; ligne à clore | toi (validation) |
 | A-01 | Intégrations natives Google / Apple et Health Connect / HealthKit | Identifiants OAuth par flavor et paquet `health` à configurer | Boutons sociaux et connexion santé masqués hors mock | toi |
 | B-06 | `Gauge.over_by` côté API | Champ dans le contrat 1.1.5, pas encore renvoyé par l'API | HOM-04 vide hors mock | agent API |
+| B-07 | Contrat : `challenge` dans la réponse de POST /me/workout-sessions | Proposition non validée (sur `mobile-b`) | Carte du challenge lié de EXO-07 absente | toi, puis B |
 
 ## Avant la mise en production
 
@@ -147,4 +148,5 @@ Ces valeurs à renseigner ne bloquent pas le développement.
 | 2026-11-16 | `mobile-b` | Repas (sauf MEA-04 à 07), file hors connexion, Plus, Parrainage |
 | 2026-11-16 | `mobile-a` | Onboarding, Compte, SYS-05, Journal, Progression |
 | 2026-11-16 | `mobile-b` | MEA-04 à 07, Sport, dépôts et moteur des Séances |
-| à faire | `mobile-b` | Séances (écrans), Programmes, Challenges, Récompenses, Contenus |
+| 2026-11-16 | `mobile-b` | Séances (EXO-01 à 07) |
+| à faire | `mobile-b` | Programmes, Challenges, Récompenses, Contenus |

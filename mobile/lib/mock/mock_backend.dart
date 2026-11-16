@@ -7,6 +7,7 @@ enum MockScenario {
   trial,
   free,
   plus,
+  plusGrace,
   quotaExhausted,
   emptyDay,
   firstLaunch,

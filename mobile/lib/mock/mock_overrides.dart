@@ -3,6 +3,7 @@ import 'package:omeo/core/api/api_providers.dart';
 import 'package:omeo/core/api/token_store.dart';
 import 'package:omeo/mock/meals_mock.dart';
 import 'package:omeo/mock/offline_mock.dart';
+import 'package:omeo/mock/subscription_mock.dart';
 import 'package:omeo/mock/tracking_mock.dart';
 
 export 'package:omeo/mock/mock_backend_provider.dart';
@@ -13,4 +14,5 @@ List<Override> mockOverrides() => [
   ...trackingMockOverrides(),
   ...mealsMockOverrides(),
   ...offlineMockOverrides(),
+  ...subscriptionMockOverrides(),
 ];

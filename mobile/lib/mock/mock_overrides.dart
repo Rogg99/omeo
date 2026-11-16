@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/misc.dart';
 import 'package:omeo/core/api/api_providers.dart';
 import 'package:omeo/core/api/token_store.dart';
+import 'package:omeo/mock/activity_mock.dart';
 import 'package:omeo/mock/meals_mock.dart';
 import 'package:omeo/mock/offline_mock.dart';
 import 'package:omeo/mock/subscription_mock.dart';
@@ -15,4 +16,5 @@ List<Override> mockOverrides() => [
   ...mealsMockOverrides(),
   ...offlineMockOverrides(),
   ...subscriptionMockOverrides(),
+  ...activityMockOverrides(),
 ];

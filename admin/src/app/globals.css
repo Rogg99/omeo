@@ -539,23 +539,28 @@ textarea {
 }
 .tag.green {
   background: var(--primary-soft);
-  color: var(--primary-text);
+  /* Assombri vers --text : contraste AA sur fond pâle. */
+  color: color-mix(in srgb, var(--primary-text) 70%, var(--text));
 }
 .tag.orange {
   background: var(--accent-soft);
-  color: var(--accent-text);
+  /* Assombri vers --text : contraste AA sur fond pâle. */
+  color: color-mix(in srgb, var(--accent-text) 70%, var(--text));
 }
 .tag.red {
   background: var(--danger-soft);
-  color: var(--danger);
+  /* Assombri vers --text : contraste AA sur fond pâle. */
+  color: color-mix(in srgb, var(--danger) 70%, var(--text));
 }
 .tag.amber {
   background: var(--warning-soft);
-  color: var(--warning);
+  /* Assombri vers --text : contraste AA sur fond pâle. */
+  color: color-mix(in srgb, var(--warning) 70%, var(--text));
 }
 .tag.blue {
   background: var(--info-soft);
-  color: var(--info);
+  /* Assombri vers --text : contraste AA sur fond pâle. */
+  color: color-mix(in srgb, var(--info) 70%, var(--text));
 }
 .tag.black {
   background: var(--contrast);
@@ -758,7 +763,7 @@ th.num {
 .tabs a {
   padding: 10px 14px;
   font-weight: 600;
-  color: var(--text-3);
+  color: var(--text-2);
   border: 0;
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
@@ -830,7 +835,7 @@ th.num {
   margin: 0;
 }
 .kv dt {
-  color: var(--text-3);
+  color: var(--text-2);
 }
 .kv dd {
   margin: 0;

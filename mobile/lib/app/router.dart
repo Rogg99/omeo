@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/app_shell.dart';
@@ -24,6 +25,16 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   final router = GoRouter(
     initialLocation: TrackingPaths.home,
+    refreshListenable: Listenable.merge([
+      for (final m in modules) ?m.refresh,
+    ]),
+    redirect: (context, state) {
+      for (final m in modules) {
+        final target = m.redirect?.call(context, state);
+        if (target != null) return target;
+      }
+      return null;
+    },
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(

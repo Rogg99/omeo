@@ -1075,5 +1075,58 @@
   "appPlusPaymentsEmpty": "Aucun paiement pour l'instant",
   "@appPlusPaymentsEmpty": {},
   "appPlusPaymentsErrorTitle": "L'historique n'a pas pu être chargé",
-  "@appPlusPaymentsErrorTitle": {}
+  "@appPlusPaymentsErrorTitle": {},
+  "appReferralTitle": "Parrainage",
+  "@appReferralTitle": {},
+  "appReferralHeroTitle": "Offre des jours de Plus, gagnes-en aussi",
+  "@appReferralHeroTitle": {},
+  "appReferralHeroBody": "Ton proche a un essai prolongé. Toi, tu gagnes des jours de Plus pour chaque ami, jusqu'à {cap, plural, one {{cap} jour} other {{cap} jours}}.",
+  "@appReferralHeroBody": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "appReferralYourCode": "TON CODE",
+  "@appReferralYourCode": {},
+  "appReferralCopy": "Copier le code",
+  "@appReferralCopy": {},
+  "appReferralCopied": "Code copié",
+  "@appReferralCopied": {},
+  "appReferralWhatsapp": "Partager sur WhatsApp",
+  "@appReferralWhatsapp": {},
+  "appReferralOtherApps": "Autres applis",
+  "@appReferralOtherApps": {},
+  "appReferralDaysEarned": "Jours gagnés",
+  "@appReferralDaysEarned": {},
+  "appReferralDaysValue": "{earned} / {cap}",
+  "@appReferralDaysValue": {
+    "placeholders": {
+      "earned": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "cap": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appReferralReferees": "Tes filleuls",
+  "@appReferralReferees": {},
+  "appReferralRefereeStatus": "{status, select, validated {Validé} pending {En attente : premier repas} rejected {Non validé} other {En attente}}",
+  "@appReferralRefereeStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appReferralRules": "Un parrainage est validé quand ton ami a confirmé son email et enregistré un repas.",
+  "@appReferralRules": {},
+  "appReferralEmpty": "Tes filleuls apparaîtront ici.",
+  "@appReferralEmpty": {},
+  "appReferralErrorTitle": "Le parrainage n'a pas pu être chargé",
+  "@appReferralErrorTitle": {}
 }

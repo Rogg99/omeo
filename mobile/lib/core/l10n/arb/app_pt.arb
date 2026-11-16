@@ -296,5 +296,20 @@
   "appPlusPaymentsReceipt": "View receipt",
   "appPlusPaymentsNote": "Store receipts are sent by Google Play or the App Store.",
   "appPlusPaymentsEmpty": "No payments yet",
-  "appPlusPaymentsErrorTitle": "The history couldn't be loaded"
+  "appPlusPaymentsErrorTitle": "The history couldn't be loaded",
+  "appReferralTitle": "Referrals",
+  "appReferralHeroTitle": "Give days of Plus, earn some too",
+  "appReferralHeroBody": "Your friend gets a longer trial. You earn Plus days for each friend, up to {cap, plural, one {{cap} day} other {{cap} days}}.",
+  "appReferralYourCode": "YOUR CODE",
+  "appReferralCopy": "Copy the code",
+  "appReferralCopied": "Code copied",
+  "appReferralWhatsapp": "Share on WhatsApp",
+  "appReferralOtherApps": "Other apps",
+  "appReferralDaysEarned": "Days earned",
+  "appReferralDaysValue": "{earned} / {cap}",
+  "appReferralReferees": "Your referrals",
+  "appReferralRefereeStatus": "{status, select, validated {Validated} pending {Pending: first meal} rejected {Not validated} other {Pending}}",
+  "appReferralRules": "A referral is validated once your friend has confirmed their email and logged a meal.",
+  "appReferralEmpty": "Your referrals will show up here.",
+  "appReferralErrorTitle": "Referrals couldn't be loaded"
 }

@@ -358,6 +358,23 @@
         "empty": "No payments yet",
         "error_title": "The history couldn't be loaded"
       }
+    },
+    "referral": {
+      "title": "Referrals",
+      "hero_title": "Give days of Plus, earn some too",
+      "hero_body": "Your friend gets a longer trial. You earn Plus days for each friend, up to {cap, plural, one {# day} other {# days}}.",
+      "your_code": "YOUR CODE",
+      "copy": "Copy the code",
+      "copied": "Code copied",
+      "whatsapp": "Share on WhatsApp",
+      "other_apps": "Other apps",
+      "days_earned": "Days earned",
+      "days_value": "{earned, number} / {cap, number}",
+      "referees": "Your referrals",
+      "referee_status": "{status, select, validated {Validated} pending {Pending: first meal} rejected {Not validated} other {Pending}}",
+      "rules": "A referral is validated once your friend has confirmed their email and logged a meal.",
+      "empty": "Your referrals will show up here.",
+      "error_title": "Referrals couldn't be loaded"
     }
   },
   "web": {

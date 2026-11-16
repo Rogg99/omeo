@@ -11,13 +11,28 @@ import 'package:omeo/core/platform/external_links.dart';
 import 'package:omeo/features/subscription/data/subscription_repository.dart';
 import 'package:omeo/features/subscription/presentation/payments_screen.dart';
 import 'package:omeo/features/subscription/presentation/paywall_screen.dart';
+import 'package:omeo/features/subscription/presentation/referral_screen.dart';
 import 'package:omeo/features/subscription/presentation/subscription_screen.dart';
 import 'package:omeo/features/subscription/subscription_paths.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Page des abonnements du store de l'appareil.
 Uri _storeSubscriptionsUri() => defaultTargetPlatform == TargetPlatform.iOS
     ? Uri.parse('https://apps.apple.com/account/subscriptions')
     : Uri.parse('https://play.google.com/store/account/subscriptions');
+
+/// Partage sur WhatsApp en priorité ; sans WhatsApp, feuille du système.
+Future<void> _shareOnWhatsApp(String message) async {
+  final uri = Uri.parse(
+    'https://wa.me/?text=${Uri.encodeComponent(message)}',
+  );
+  final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  if (!opened) await _shareElsewhere(message);
+}
+
+Future<void> _shareElsewhere(String message) =>
+    SharePlus.instance.share(ShareParams(text: message));
 
 /// Routes du module abonnement et parrainage.
 FeatureRoutes subscriptionRoutes(Ref ref) {
@@ -50,7 +65,8 @@ FeatureRoutes subscriptionRoutes(Ref ref) {
                 unawaited(context.push(SubscriptionPaths.payments)),
             onDiscoverPlus: () =>
                 unawaited(context.push(SubscriptionPaths.plus)),
-            onReferral: null,
+            onReferral: () =>
+                unawaited(context.push(SubscriptionPaths.referral)),
             onManageStore: () =>
                 unawaited(openExternal(_storeSubscriptionsUri())),
             onManageWeb: () => unawaited(manageOnWeb()),
@@ -65,6 +81,16 @@ FeatureRoutes subscriptionRoutes(Ref ref) {
             ),
           ),
         ],
+      ),
+      GoRoute(
+        path: SubscriptionPaths.referral,
+        builder: (context, state) => ReferralScreen(
+          navigation: (
+            onBack: context.pop,
+            shareOnWhatsApp: (m) => unawaited(_shareOnWhatsApp(m)),
+            shareElsewhere: (m) => unawaited(_shareElsewhere(m)),
+          ),
+        ),
       ),
     ],
   );

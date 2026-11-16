@@ -358,6 +358,23 @@
         "empty": "Aucun paiement pour l'instant",
         "error_title": "L'historique n'a pas pu être chargé"
       }
+    },
+    "referral": {
+      "title": "Parrainage",
+      "hero_title": "Offre des jours de Plus, gagnes-en aussi",
+      "hero_body": "Ton proche a un essai prolongé. Toi, tu gagnes des jours de Plus pour chaque ami, jusqu'à {cap, plural, one {# jour} other {# jours}}.",
+      "your_code": "TON CODE",
+      "copy": "Copier le code",
+      "copied": "Code copié",
+      "whatsapp": "Partager sur WhatsApp",
+      "other_apps": "Autres applis",
+      "days_earned": "Jours gagnés",
+      "days_value": "{earned, number} / {cap, number}",
+      "referees": "Tes filleuls",
+      "referee_status": "{status, select, validated {Validé} pending {En attente : premier repas} rejected {Non validé} other {En attente}}",
+      "rules": "Un parrainage est validé quand ton ami a confirmé son email et enregistré un repas.",
+      "empty": "Tes filleuls apparaîtront ici.",
+      "error_title": "Le parrainage n'a pas pu être chargé"
     }
   },
   "web": {

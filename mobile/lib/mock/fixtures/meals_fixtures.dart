@@ -315,3 +315,75 @@ MealWriteResult mealWriteFixture({
     'rewards': {'points': 10, 'total_points': 650, 'streak': 12},
   });
 }
+
+/// Repas du journal (MEA-15) : alloco et poisson braisé, analyse photo
+/// modifiée par l'utilisatrice.
+Meal allocoMealFixture({required String id, required DateTime now}) =>
+    Meal.fromJson({
+      'id': id,
+      'date':
+          '${now.year.toString().padLeft(4, '0')}-'
+          '${now.month.toString().padLeft(2, '0')}-'
+          '${now.day.toString().padLeft(2, '0')}',
+      'eaten_at': DateTime(
+        now.year,
+        now.month,
+        now.day,
+        12,
+        40,
+      ).toUtc().toIso8601String(),
+      'meal_type': 'lunch',
+      'source': 'photo',
+      'title': 'Alloco & poisson braisé',
+      'nutrients': _n(810, 41, 92, 31),
+      'items': [
+        _item(
+          '2b3c4d5e-0002-4000-8000-000000000001',
+          'Banane plantain frite',
+          200,
+          500,
+          .9,
+        ),
+        _item(
+          '2b3c4d5e-0003-4000-8000-000000000010',
+          'Poisson braisé (tilapia)',
+          180,
+          230,
+          .9,
+        ),
+        _item(
+          '2b3c4d5e-0003-4000-8000-000000000011',
+          'Piment, oignon, tomate',
+          60,
+          25,
+          .9,
+        ),
+        _item('2b3c4d5e-0003-4000-8000-000000000012', 'Attiéké', 50, 55, .9),
+      ],
+      'analysis_id': '5f6a7b8c-0005-4000-8000-000000000001',
+      'feedback_given': true,
+      'created_at': now.toUtc().toIso8601String(),
+    });
+
+/// Jour recalculé après la suppression d'un repas (réponse « après »).
+DaySummary dayAfterDeleteFixture(DateTime date) {
+  Map<String, Object?> g(num v, num t, int p, num r) => {
+    'value': v,
+    'target': t,
+    'remaining': r,
+    'percent': p,
+    'status': 'under',
+  };
+  return DaySummary.fromJson({
+    'date':
+        '${date.year.toString().padLeft(4, '0')}-'
+        '${date.month.toString().padLeft(2, '0')}-'
+        '${date.day.toString().padLeft(2, '0')}',
+    'kcal': g(640, 2340, 27, 1700),
+    'protein': g(43, 128, 34, 85),
+    'carbs': g(88, 270, 33, 182),
+    'fat': g(11, 72, 15, 61),
+    'water': g(1250, 2000, 63, 750),
+    'meals_count': 2,
+  });
+}

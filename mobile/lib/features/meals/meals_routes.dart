@@ -11,6 +11,7 @@ import 'package:omeo/features/meals/presentation/camera_screen.dart';
 import 'package:omeo/features/meals/presentation/catalog_screen.dart';
 import 'package:omeo/features/meals/presentation/describe_meal_screen.dart';
 import 'package:omeo/features/meals/presentation/dish_screen.dart';
+import 'package:omeo/features/meals/presentation/meal_detail_screen.dart';
 import 'package:omeo/features/meals/presentation/meal_saved_screen.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
 import 'package:omeo_api/omeo_api.dart' show MealWriteResult;
@@ -86,6 +87,13 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
       builder: (context, state) => MealSavedScreen(
         result: state.extra! as MealWriteResult,
         onDone: () => context.go(TrackingPaths.home),
+      ),
+    ),
+    GoRoute(
+      path: MealsPaths.meal,
+      builder: (context, state) => MealDetailScreen(
+        mealId: state.pathParameters['id']!,
+        onBack: context.pop,
       ),
     ),
   ],

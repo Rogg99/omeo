@@ -234,6 +234,37 @@
         "analyze": "Analyze",
         "mic_denied": "The microphone isn't allowed. You can type your meal instead.",
         "unavailable": "Dictation isn't available on this phone. You can type your meal instead."
+      },
+      "detail": {
+        "photo_label": "Meal photo: {title}",
+        "more": "More actions",
+        "when": "{type} · {time}",
+        "source": "{source, select, photo {Photo analysis} text {Voice or text entry} dish {Catalog} recipe {Recipe} foods {Foods} program {Program} other {Entry}}",
+        "edit": "Edit",
+        "move": "Move",
+        "duplicate": "Duplicate",
+        "delete": "Delete",
+        "ingredients": "Ingredients",
+        "ingredient": "{grams, number} g · {kcal, number} kcal",
+        "delete_photo": "Delete the photo only",
+        "photo_deleted": "Photo deleted",
+        "error_title": "This meal couldn't be loaded"
+      },
+      "move": {
+        "title": "Move the meal",
+        "duplicate_title": "Duplicate the meal",
+        "to": "To",
+        "day": "Day",
+        "confirm": "Move to {type} · {day}",
+        "confirm_duplicate": "Duplicate to {type} · {day}",
+        "moved": "Meal moved",
+        "duplicated": "Meal duplicated"
+      },
+      "delete": {
+        "title": "Delete this meal?",
+        "body": "{title} ({kcal}) will be removed from your journal and your totals recalculated.",
+        "deleted": "Meal deleted",
+        "undo": "Undo"
       }
     },
     "nav": {

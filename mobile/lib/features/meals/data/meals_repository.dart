@@ -54,6 +54,24 @@ abstract interface class MealsRepository {
     required String idempotencyKey,
   });
 
+  Future<Meal> getMeal(String id);
+
+  /// Déplacer (type, jour) ou corriger un repas ; l'API renvoie le jour
+  /// recalculé, et l'ancien jour si le repas en change.
+  Future<MealWriteResult> updateMeal(String id, MealUpdate update);
+
+  Future<MealWriteResult> duplicateMeal(
+    String id, {
+    required DuplicateMealRequest target,
+    required String idempotencyKey,
+  });
+
+  /// Renvoie le jour recalculé sans le repas.
+  Future<DaySummary> deleteMeal(String id);
+
+  /// Supprime la photo seulement ; le repas reste au journal.
+  Future<void> deleteMealPhoto(String id);
+
   /// Type de repas proposé selon l'heure locale (X-Timezone).
   Future<MealType> suggestMealType();
 
@@ -214,6 +232,34 @@ final class MealsApiRepository implements MealsRepository {
   }) => guardApi(
     () => _meals.createMeal(idempotencyKey: idempotencyKey, mealInput: input),
   );
+
+  @override
+  Future<Meal> getMeal(String id) => guardApi(() => _meals.getMeal(id: id));
+
+  @override
+  Future<MealWriteResult> updateMeal(String id, MealUpdate update) =>
+      guardApi(() => _meals.updateMeal(id: id, mealUpdate: update));
+
+  @override
+  Future<MealWriteResult> duplicateMeal(
+    String id, {
+    required DuplicateMealRequest target,
+    required String idempotencyKey,
+  }) => guardApi(
+    () => _meals.duplicateMeal(
+      id: id,
+      idempotencyKey: idempotencyKey,
+      duplicateMealRequest: target,
+    ),
+  );
+
+  @override
+  Future<DaySummary> deleteMeal(String id) async =>
+      (await guardApi(() => _meals.deleteMeal(id: id))).day;
+
+  @override
+  Future<void> deleteMealPhoto(String id) =>
+      guardApi(() => _meals.deleteMealPhoto(id: id));
 
   @override
   Future<MealType> suggestMealType() async =>

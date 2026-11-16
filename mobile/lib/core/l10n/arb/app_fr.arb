@@ -639,6 +639,115 @@
   "@appMealDescribeMicDenied": {},
   "appMealDescribeUnavailable": "La dictée n'est pas disponible sur ce téléphone. Tu peux écrire ton repas à la place.",
   "@appMealDescribeUnavailable": {},
+  "appMealDetailPhotoLabel": "Photo du repas : {title}",
+  "@appMealDetailPhotoLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDetailMore": "Plus d'actions",
+  "@appMealDetailMore": {},
+  "appMealDetailWhen": "{type} · {time}",
+  "@appMealDetailWhen": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDetailSource": "{source, select, photo {Analyse photo} text {Saisie vocale ou texte} dish {Catalogue} recipe {Recette} foods {Aliments} program {Programme} other {Saisie}}",
+  "@appMealDetailSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDetailEdit": "Modifier",
+  "@appMealDetailEdit": {},
+  "appMealDetailMove": "Déplacer",
+  "@appMealDetailMove": {},
+  "appMealDetailDuplicate": "Dupliquer",
+  "@appMealDetailDuplicate": {},
+  "appMealDetailDelete": "Supprimer",
+  "@appMealDetailDelete": {},
+  "appMealDetailIngredients": "Ingrédients",
+  "@appMealDetailIngredients": {},
+  "appMealDetailIngredient": "{grams} g · {kcal} kcal",
+  "@appMealDetailIngredient": {
+    "placeholders": {
+      "grams": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealDetailDeletePhoto": "Supprimer la photo seulement",
+  "@appMealDetailDeletePhoto": {},
+  "appMealDetailPhotoDeleted": "Photo supprimée",
+  "@appMealDetailPhotoDeleted": {},
+  "appMealDetailErrorTitle": "Ce repas n'a pas pu être chargé",
+  "@appMealDetailErrorTitle": {},
+  "appMealMoveTitle": "Déplacer le repas",
+  "@appMealMoveTitle": {},
+  "appMealMoveDuplicateTitle": "Dupliquer le repas",
+  "@appMealMoveDuplicateTitle": {},
+  "appMealMoveTo": "Vers",
+  "@appMealMoveTo": {},
+  "appMealMoveDay": "Jour",
+  "@appMealMoveDay": {},
+  "appMealMoveConfirm": "Déplacer vers {type} · {day}",
+  "@appMealMoveConfirm": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealMoveConfirmDuplicate": "Dupliquer vers {type} · {day}",
+  "@appMealMoveConfirmDuplicate": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealMoveMoved": "Repas déplacé",
+  "@appMealMoveMoved": {},
+  "appMealMoveDuplicated": "Repas dupliqué",
+  "@appMealMoveDuplicated": {},
+  "appMealDeleteTitle": "Supprimer ce repas ?",
+  "@appMealDeleteTitle": {},
+  "appMealDeleteBody": "{title} ({kcal}) sera retiré de ton journal et tes totaux seront recalculés.",
+  "@appMealDeleteBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDeleteDeleted": "Repas supprimé",
+  "@appMealDeleteDeleted": {},
+  "appMealDeleteUndo": "Annuler",
+  "@appMealDeleteUndo": {},
   "appNavHome": "Accueil",
   "@appNavHome": {},
   "appNavProgress": "Progression",

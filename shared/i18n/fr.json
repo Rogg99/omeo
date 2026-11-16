@@ -234,6 +234,37 @@
         "analyze": "Analyser",
         "mic_denied": "Le micro n'est pas autorisé. Tu peux écrire ton repas à la place.",
         "unavailable": "La dictée n'est pas disponible sur ce téléphone. Tu peux écrire ton repas à la place."
+      },
+      "detail": {
+        "photo_label": "Photo du repas : {title}",
+        "more": "Plus d'actions",
+        "when": "{type} · {time}",
+        "source": "{source, select, photo {Analyse photo} text {Saisie vocale ou texte} dish {Catalogue} recipe {Recette} foods {Aliments} program {Programme} other {Saisie}}",
+        "edit": "Modifier",
+        "move": "Déplacer",
+        "duplicate": "Dupliquer",
+        "delete": "Supprimer",
+        "ingredients": "Ingrédients",
+        "ingredient": "{grams, number} g · {kcal, number} kcal",
+        "delete_photo": "Supprimer la photo seulement",
+        "photo_deleted": "Photo supprimée",
+        "error_title": "Ce repas n'a pas pu être chargé"
+      },
+      "move": {
+        "title": "Déplacer le repas",
+        "duplicate_title": "Dupliquer le repas",
+        "to": "Vers",
+        "day": "Jour",
+        "confirm": "Déplacer vers {type} · {day}",
+        "confirm_duplicate": "Dupliquer vers {type} · {day}",
+        "moved": "Repas déplacé",
+        "duplicated": "Repas dupliqué"
+      },
+      "delete": {
+        "title": "Supprimer ce repas ?",
+        "body": "{title} ({kcal}) sera retiré de ton journal et tes totaux seront recalculés.",
+        "deleted": "Repas supprimé",
+        "undo": "Annuler"
       }
     },
     "nav": {

@@ -7,5 +7,10 @@ abstract final class MealsPaths {
   static const describe = '/meals/describe';
   static const dish = '/meals/dishes/:id';
 
+  /// Détail d'un repas, ouvert depuis le journal.
+  static const meal = '/meals/:id';
+
+  static String mealOf(String id) => '/meals/$id';
+
   static String dishOf(String id) => '/meals/dishes/$id';
 }

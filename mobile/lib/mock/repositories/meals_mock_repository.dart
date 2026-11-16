@@ -15,6 +15,7 @@ final class _MealsState {
       {};
   final Set<String> favorites = {pouletYassaId, fonioLegumesId, sauceGomboId};
   final Map<String, MealWriteResult> writes = {};
+  final Map<String, Meal> meals = {};
 }
 
 /// Repas simulés : la photo prise est réelle, seuls l'envoi et l'analyse IA
@@ -168,16 +169,96 @@ final class MealsMockRepository implements MealsRepository {
   Future<MealWriteResult> createMeal({
     required MealInput input,
     required String idempotencyKey,
-  }) => _backend.call(
-    () => _s.writes[idempotencyKey] ??= mealWriteFixture(
+  }) => _backend.call(() {
+    final result = _s.writes[idempotencyKey] ??= mealWriteFixture(
       mealId: _uuid.v4(),
       input: input,
       title: input.dishId == null
           ? 'Thiéboudienne'
           : dishSummary(input.dishId!).name,
       now: DateTime.now(),
+    );
+    // Le repas créé rejoint le journal simulé (détail, déplacement…).
+    _s.meals[result.meal.id] = result.meal;
+    return result;
+  });
+
+  /// Repas de démonstration du journal, toujours présent.
+  static const demoMealId = '6a7b8c9d-0006-4000-8000-000000000001';
+
+  Meal _meal(String id) {
+    final meal =
+        _s.meals[id] ??
+        (id == demoMealId
+            ? allocoMealFixture(id: id, now: DateTime.now())
+            : null);
+    if (meal == null) {
+      throw const ProblemFailure(status: 404, code: 'not_found');
+    }
+    return meal;
+  }
+
+  MealWriteResult _rewrite(Meal meal) {
+    _s.meals[meal.id] = meal;
+    final base = mealWriteFixture(
+      mealId: meal.id,
+      title: meal.title,
+      now: DateTime.now(),
+      input: MealInput(
+        source_: MealInputSource_Enum.photo,
+        mealType: meal.mealType,
+        date: meal.date,
+      ),
+    );
+    return MealWriteResult(
+      meal: meal,
+      day: base.day,
+      rewards: RewardDelta.fromJson({'points': 0}),
+    );
+  }
+
+  @override
+  Future<Meal> getMeal(String id) => _backend.call(() => _meal(id));
+
+  @override
+  Future<MealWriteResult> updateMeal(String id, MealUpdate update) =>
+      _backend.call(() {
+        final json = _meal(id).toJson();
+        if (update.mealType != null) json['meal_type'] = update.mealType!.value;
+        if (update.date != null) {
+          json['date'] = update.date!.toIso8601String().substring(0, 10);
+        }
+        return _rewrite(Meal.fromJson(json));
+      });
+
+  @override
+  Future<MealWriteResult> duplicateMeal(
+    String id, {
+    required DuplicateMealRequest target,
+    required String idempotencyKey,
+  }) => _backend.call(
+    () => _s.writes[idempotencyKey] ??= _rewrite(
+      Meal.fromJson({
+        ..._meal(id).toJson(),
+        'id': _uuid.v4(),
+        'meal_type': target.mealType.value,
+        'date': target.date.toIso8601String().substring(0, 10),
+      }),
     ),
   );
+
+  @override
+  Future<DaySummary> deleteMeal(String id) => _backend.call(() {
+    final meal = _meal(id);
+    _s.meals.remove(id);
+    return dayAfterDeleteFixture(meal.date);
+  });
+
+  @override
+  Future<void> deleteMealPhoto(String id) => _backend.call(() {
+    final json = _meal(id).toJson()..remove('photo');
+    _s.meals[id] = Meal.fromJson(json);
+  });
 
   @override
   Future<MealType> suggestMealType() => _backend.call(() {

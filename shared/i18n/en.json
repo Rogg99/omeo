@@ -271,6 +271,50 @@
         "banner_pending": "Offline · {count, plural, one {# meal waiting to be sent} other {# meals waiting to be sent}}",
         "syncing": "{count, plural, one {Sending # meal…} other {Sending # meals…}}",
         "queued": "Meal saved. It will be calculated when you're back online."
+      },
+      "review": {
+        "title": "Check your meal",
+        "eyebrow": "{kind, select, text {Voice or text entry} other {Photo analysis}}",
+        "confidence_high": "High confidence",
+        "confidence_medium": "Medium confidence",
+        "low_banner": "We're not sure about everything. Check the marked ingredients and adjust the amounts.",
+        "pending_totals": "Calculating",
+        "pending_hint": "Nutrients will be recalculated with your corrections when you save.",
+        "ingredients": "Ingredients detected",
+        "add": "Add",
+        "to_check": "To check",
+        "item_kcal": "{kcal, number} kcal",
+        "item_changed": "Edited",
+        "include": "Include {name}",
+        "less": "Less {name}",
+        "more": "More {name}",
+        "grams": "{grams, number} g",
+        "meal_type": "Meal type",
+        "meal_type_hint": "Suggested from the time of day. You can change it.",
+        "save": "Save",
+        "save_kcal": "Save · {kcal, number} kcal",
+        "not_satisfied": "Not quite right? 🤔",
+        "not_satisfied_closed": "{count, plural, one {We also thought of another dish.} other {We also thought of # other dishes.}}",
+        "not_satisfied_open": "We were also hesitating between these dishes. Tap the right one, we'll handle the rest.",
+        "other_dish": "Something else",
+        "other_dish_hint": "Search your dish, local names included",
+        "alternative_percent": "{percent, number}%",
+        "thanks": "Your choice helps us recognize this dish better. Thank you! 💛",
+        "dish_changed": "Got it, thank you! 💛"
+      },
+      "add_food": {
+        "title": "Add an ingredient",
+        "hint": "Plantain, okra, peanut…",
+        "line": "{portion, number} g · {kcal, number} kcal per 100 g",
+        "line_alias": "{alias} · {kcal, number} kcal per 100 g",
+        "add": "Add {name}",
+        "empty": "No food found. Try another name."
+      },
+      "quantity": {
+        "unit": "g",
+        "decrease": "Decrease",
+        "increase": "Increase",
+        "confirm": "Confirm"
       }
     },
     "nav": {

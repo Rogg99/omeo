@@ -16,8 +16,9 @@ import 'package:omeo/features/meals/presentation/dish_screen.dart';
 import 'package:omeo/features/meals/presentation/meal_detail_screen.dart';
 import 'package:omeo/features/meals/presentation/meal_saved_screen.dart';
 import 'package:omeo/features/meals/presentation/offline_banner.dart';
+import 'package:omeo/features/meals/presentation/review_screen.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
-import 'package:omeo_api/omeo_api.dart' show MealWriteResult;
+import 'package:omeo_api/omeo_api.dart' show Analysis, MealWriteResult;
 
 /// Ouvre l'analyse d'une photo à la place de l'écran courant.
 void _analyze(BuildContext context, AnalysisRequest request) =>
@@ -29,6 +30,10 @@ Future<void> _pickFromGallery(BuildContext context) async {
     unawaited(context.push(MealsPaths.analysis, extra: PhotoRequest(bytes)));
   }
 }
+
+/// Repas enregistré, avec le nombre de corrections faites à la vérification
+/// (jointes à un avis négatif).
+typedef _Saved = ({MealWriteResult result, int corrections});
 
 /// Repas mis en attente du réseau : retour à l'accueil avec un message.
 void _queued(BuildContext context) {
@@ -62,7 +67,8 @@ FeatureRoutes mealsRoutes(Ref ref) {
         builder: (context, state) => AnalysisScreen(
           request: state.extra! as AnalysisRequest,
           navigation: (
-            onSucceeded: (_) => context.pop(),
+            onSucceeded: (analysis) =>
+                context.pushReplacement(MealsPaths.review, extra: analysis),
             onClose: context.pop,
             onRetake: () => context.pushReplacement(MealsPaths.camera),
             onSearchCatalog: () => context.pushReplacement(MealsPaths.catalog),
@@ -82,8 +88,10 @@ FeatureRoutes mealsRoutes(Ref ref) {
           dishId: state.pathParameters['id']!,
           navigation: (
             onClose: context.pop,
-            onSaved: (result) =>
-                context.pushReplacement(MealsPaths.saved, extra: result),
+            onSaved: (result) => context.pushReplacement(
+              MealsPaths.saved,
+              extra: (result: result, corrections: 0),
+            ),
             onQueued: () => _queued(context),
             openRecipe: null,
           ),
@@ -97,13 +105,41 @@ FeatureRoutes mealsRoutes(Ref ref) {
         ),
       ),
       GoRoute(
+        path: MealsPaths.review,
+        redirect: (context, state) =>
+            state.extra is Analysis ? null : TrackingPaths.home,
+        builder: (context, state) => ReviewScreen(
+          analysis: state.extra! as Analysis,
+          navigation: (
+            onClose: context.pop,
+            onSaved: (result, corrections) => context.pushReplacement(
+              MealsPaths.saved,
+              extra: (result: result, corrections: corrections),
+            ),
+            onQueued: () => _queued(context),
+            pickDish: () => context.push<String>(MealsPaths.pickDish),
+          ),
+        ),
+      ),
+      GoRoute(
+        path: MealsPaths.pickDish,
+        builder: (context, state) => CatalogScreen(
+          onClose: context.pop,
+          onDish: (dish) => context.pop(dish.id),
+        ),
+      ),
+      GoRoute(
         path: MealsPaths.saved,
         redirect: (context, state) =>
-            state.extra is MealWriteResult ? null : TrackingPaths.home,
-        builder: (context, state) => MealSavedScreen(
-          result: state.extra! as MealWriteResult,
-          onDone: () => context.go(TrackingPaths.home),
-        ),
+            state.extra is _Saved ? null : TrackingPaths.home,
+        builder: (context, state) {
+          final saved = state.extra! as _Saved;
+          return MealSavedScreen(
+            result: saved.result,
+            corrections: saved.corrections,
+            onDone: () => context.go(TrackingPaths.home),
+          );
+        },
       ),
       GoRoute(
         path: MealsPaths.meal,

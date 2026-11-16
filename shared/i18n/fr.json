@@ -271,6 +271,50 @@
         "banner_pending": "Hors connexion · {count, plural, one {# repas en attente d'envoi} other {# repas en attente d'envoi}}",
         "syncing": "{count, plural, one {Envoi de # repas…} other {Envoi de # repas…}}",
         "queued": "Repas enregistré. Il sera calculé au retour du réseau."
+      },
+      "review": {
+        "title": "Vérifie ton repas",
+        "eyebrow": "{kind, select, text {Saisie vocale ou texte} other {Analyse photo}}",
+        "confidence_high": "Confiance élevée",
+        "confidence_medium": "Confiance moyenne",
+        "low_banner": "On n'est pas sûrs de tout. Vérifie les ingrédients marqués et ajuste les quantités.",
+        "pending_totals": "En cours de calcul",
+        "pending_hint": "Les apports seront recalculés avec tes corrections à l'enregistrement.",
+        "ingredients": "Ingrédients détectés",
+        "add": "Ajouter",
+        "to_check": "À vérifier",
+        "item_kcal": "{kcal, number} kcal",
+        "item_changed": "Modifié",
+        "include": "Inclure {name}",
+        "less": "Moins de {name}",
+        "more": "Plus de {name}",
+        "grams": "{grams, number} g",
+        "meal_type": "Type de repas",
+        "meal_type_hint": "Proposé selon l'heure. Modifiable.",
+        "save": "Enregistrer",
+        "save_kcal": "Enregistrer · {kcal, number} kcal",
+        "not_satisfied": "Pas satisfait ? 🤔",
+        "not_satisfied_closed": "{count, plural, one {On a aussi pensé à un autre plat.} other {On a aussi pensé à # autres plats.}}",
+        "not_satisfied_open": "On hésitait aussi avec ces plats. Touche le bon, on s'occupe du reste.",
+        "other_dish": "Autre chose",
+        "other_dish_hint": "Cherche ton plat, noms locaux compris",
+        "alternative_percent": "{percent, number} %",
+        "thanks": "Ton choix nous aide à mieux reconnaître ce plat. Merci ! 💛",
+        "dish_changed": "C'est noté, merci ! 💛"
+      },
+      "add_food": {
+        "title": "Ajouter un ingrédient",
+        "hint": "Plantain, gombo, arachide…",
+        "line": "{portion, number} g · {kcal, number} kcal pour 100 g",
+        "line_alias": "{alias} · {kcal, number} kcal pour 100 g",
+        "add": "Ajouter {name}",
+        "empty": "Aucun aliment trouvé. Essaie un autre nom."
+      },
+      "quantity": {
+        "unit": "g",
+        "decrease": "Diminuer",
+        "increase": "Augmenter",
+        "confirm": "Valider"
       }
     },
     "nav": {

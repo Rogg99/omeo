@@ -3,6 +3,8 @@ abstract final class MealsPaths {
   static const camera = '/meals/camera';
   static const analysis = '/meals/analysis';
   static const catalog = '/meals/catalog';
+  static const pickDish = '/meals/catalog/pick';
+  static const review = '/meals/review';
   static const saved = '/meals/saved';
   static const describe = '/meals/describe';
   static const dish = '/meals/dishes/:id';

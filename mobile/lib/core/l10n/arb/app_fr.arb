@@ -768,6 +768,167 @@
   },
   "appMealOfflineQueued": "Repas enregistré. Il sera calculé au retour du réseau.",
   "@appMealOfflineQueued": {},
+  "appMealReviewTitle": "Vérifie ton repas",
+  "@appMealReviewTitle": {},
+  "appMealReviewEyebrow": "{kind, select, text {Saisie vocale ou texte} other {Analyse photo}}",
+  "@appMealReviewEyebrow": {
+    "placeholders": {
+      "kind": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealReviewConfidenceHigh": "Confiance élevée",
+  "@appMealReviewConfidenceHigh": {},
+  "appMealReviewConfidenceMedium": "Confiance moyenne",
+  "@appMealReviewConfidenceMedium": {},
+  "appMealReviewLowBanner": "On n'est pas sûrs de tout. Vérifie les ingrédients marqués et ajuste les quantités.",
+  "@appMealReviewLowBanner": {},
+  "appMealReviewPendingTotals": "En cours de calcul",
+  "@appMealReviewPendingTotals": {},
+  "appMealReviewPendingHint": "Les apports seront recalculés avec tes corrections à l'enregistrement.",
+  "@appMealReviewPendingHint": {},
+  "appMealReviewIngredients": "Ingrédients détectés",
+  "@appMealReviewIngredients": {},
+  "appMealReviewAdd": "Ajouter",
+  "@appMealReviewAdd": {},
+  "appMealReviewToCheck": "À vérifier",
+  "@appMealReviewToCheck": {},
+  "appMealReviewItemKcal": "{kcal} kcal",
+  "@appMealReviewItemKcal": {
+    "placeholders": {
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealReviewItemChanged": "Modifié",
+  "@appMealReviewItemChanged": {},
+  "appMealReviewInclude": "Inclure {name}",
+  "@appMealReviewInclude": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealReviewLess": "Moins de {name}",
+  "@appMealReviewLess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealReviewMore": "Plus de {name}",
+  "@appMealReviewMore": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealReviewGrams": "{grams} g",
+  "@appMealReviewGrams": {
+    "placeholders": {
+      "grams": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealReviewMealType": "Type de repas",
+  "@appMealReviewMealType": {},
+  "appMealReviewMealTypeHint": "Proposé selon l'heure. Modifiable.",
+  "@appMealReviewMealTypeHint": {},
+  "appMealReviewSave": "Enregistrer",
+  "@appMealReviewSave": {},
+  "appMealReviewSaveKcal": "Enregistrer · {kcal} kcal",
+  "@appMealReviewSaveKcal": {
+    "placeholders": {
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealReviewNotSatisfied": "Pas satisfait ? 🤔",
+  "@appMealReviewNotSatisfied": {},
+  "appMealReviewNotSatisfiedClosed": "{count, plural, one {On a aussi pensé à un autre plat.} other {On a aussi pensé à {count} autres plats.}}",
+  "@appMealReviewNotSatisfiedClosed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealReviewNotSatisfiedOpen": "On hésitait aussi avec ces plats. Touche le bon, on s'occupe du reste.",
+  "@appMealReviewNotSatisfiedOpen": {},
+  "appMealReviewOtherDish": "Autre chose",
+  "@appMealReviewOtherDish": {},
+  "appMealReviewOtherDishHint": "Cherche ton plat, noms locaux compris",
+  "@appMealReviewOtherDishHint": {},
+  "appMealReviewAlternativePercent": "{percent} %",
+  "@appMealReviewAlternativePercent": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealReviewThanks": "Ton choix nous aide à mieux reconnaître ce plat. Merci ! 💛",
+  "@appMealReviewThanks": {},
+  "appMealReviewDishChanged": "C'est noté, merci ! 💛",
+  "@appMealReviewDishChanged": {},
+  "appMealAddFoodTitle": "Ajouter un ingrédient",
+  "@appMealAddFoodTitle": {},
+  "appMealAddFoodHint": "Plantain, gombo, arachide…",
+  "@appMealAddFoodHint": {},
+  "appMealAddFoodLine": "{portion} g · {kcal} kcal pour 100 g",
+  "@appMealAddFoodLine": {
+    "placeholders": {
+      "portion": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealAddFoodLineAlias": "{alias} · {kcal} kcal pour 100 g",
+  "@appMealAddFoodLineAlias": {
+    "placeholders": {
+      "alias": {
+        "type": "String"
+      },
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealAddFoodAdd": "Ajouter {name}",
+  "@appMealAddFoodAdd": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealAddFoodEmpty": "Aucun aliment trouvé. Essaie un autre nom.",
+  "@appMealAddFoodEmpty": {},
+  "appMealQuantityUnit": "g",
+  "@appMealQuantityUnit": {},
+  "appMealQuantityDecrease": "Diminuer",
+  "@appMealQuantityDecrease": {},
+  "appMealQuantityIncrease": "Augmenter",
+  "@appMealQuantityIncrease": {},
+  "appMealQuantityConfirm": "Valider",
+  "@appMealQuantityConfirm": {},
   "appNavHome": "Accueil",
   "@appNavHome": {},
   "appNavProgress": "Progression",

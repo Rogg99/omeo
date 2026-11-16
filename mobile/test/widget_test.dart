@@ -6,6 +6,8 @@ import 'package:omeo/app/bootstrap.dart';
 import 'package:omeo/core/api/api_providers.dart';
 import 'package:omeo/core/api/global_errors.dart';
 import 'package:omeo/core/config/app_config.dart';
+import 'package:omeo/core/offline/offline_queue.dart';
+import 'package:omeo/core/offline/offline_store.dart';
 import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/core/theme/tokens.g.dart';
 import 'package:omeo/mock/mock_backend.dart';
@@ -29,6 +31,8 @@ Future<ProviderContainer> _pumpMockApp(WidgetTester tester) async {
         ),
       ),
       ...mockOverrides(),
+      // Pas de SQLite dans les tests : file d'attente en mémoire.
+      offlineStoreProvider.overrideWithValue(MemoryOfflineStore()),
     ],
   );
   addTearDown(container.dispose);

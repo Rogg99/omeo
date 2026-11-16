@@ -36,9 +36,15 @@ class _ExerciseVideoState extends ConsumerState<ExerciseVideo> {
   VideoPlayerController? _controller;
   bool _failed = false;
 
+  bool _opened = false;
+
+  /// Ouverture différée : la langue (sous-titres) dépend du contexte, lisible
+  /// seulement après initState.
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_opened) return;
+    _opened = true;
     unawaited(_open());
   }
 

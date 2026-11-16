@@ -11,6 +11,7 @@ import 'package:omeo/features/subscription/subscription_routes.dart';
 import 'package:omeo/features/support/support_routes.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
 import 'package:omeo/features/tracking/tracking_routes.dart';
+import 'package:omeo/features/training/training_routes.dart';
 
 /// Modules qui contribuent à la navigation : une ligne par module.
 final List<FeatureRoutesBuilder> _modules = [
@@ -21,6 +22,7 @@ final List<FeatureRoutesBuilder> _modules = [
   mealsRoutes,
   subscriptionRoutes,
   activityRoutes,
+  trainingRoutes,
 ];
 
 final routerProvider = Provider<GoRouter>((ref) {

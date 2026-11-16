@@ -11,6 +11,7 @@ class AppShell extends StatelessWidget {
     required this.navigationShell,
     required this.branchTabs,
     this.onAddMeal,
+    this.banners = const [],
     super.key,
   });
 
@@ -20,13 +21,29 @@ class AppShell extends StatelessWidget {
   final List<AppTab> branchTabs;
   final void Function(BuildContext context)? onAddMeal;
 
+  /// Bandeaux des modules, au-dessus de la page de l'onglet.
+  final List<Widget> banners;
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final current = branchTabs[navigationShell.currentIndex];
     return Scaffold(
       extendBody: true,
-      body: navigationShell,
+      body: banners.isEmpty
+          ? navigationShell
+          : Column(
+              children: [
+                SafeArea(bottom: false, child: Column(children: banners)),
+                Expanded(
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: navigationShell,
+                  ),
+                ),
+              ],
+            ),
       bottomNavigationBar: OmeoTabBar(
         tabs: [
           for (final tab in AppTab.values)

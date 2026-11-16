@@ -579,6 +579,443 @@
       }
     }
   },
+  "appMealAddTitle": "Ajouter",
+  "@appMealAddTitle": {},
+  "appMealAddPhoto": "Prendre en photo",
+  "@appMealAddPhoto": {},
+  "appMealAddGallery": "Choisir dans la galerie",
+  "@appMealAddGallery": {},
+  "appMealAddGalleryHint": "Une photo déjà prise",
+  "@appMealAddGalleryHint": {},
+  "appMealAddVoice": "Dicter ou écrire",
+  "@appMealAddVoice": {},
+  "appMealAddVoiceHint": "« Un ndolé avec deux plantains »",
+  "@appMealAddVoiceHint": {},
+  "appMealAddCatalog": "Chercher un plat",
+  "@appMealAddCatalog": {},
+  "appMealAddCatalogHint": "Catalogue, récents et favoris",
+  "@appMealAddCatalogHint": {},
+  "appMealAddQuotaLoading": "Analyses restantes…",
+  "@appMealAddQuotaLoading": {},
+  "appMealAddUnlimited": "Analyses illimitées",
+  "@appMealAddUnlimited": {},
+  "appMealAnalysisTitle": "Analyse",
+  "@appMealAnalysisTitle": {},
+  "appMealAnalysisHeading": "On regarde ton assiette…",
+  "@appMealAnalysisHeading": {},
+  "appMealAnalysisStepDish": "Plat reconnu",
+  "@appMealAnalysisStepDish": {},
+  "appMealAnalysisStepIngredients": "Ingrédients détectés",
+  "@appMealAnalysisStepIngredients": {},
+  "appMealAnalysisStepPortions": "Portions estimées",
+  "@appMealAnalysisStepPortions": {},
+  "appMealAnalysisStepNutrients": "Calcul des apports",
+  "@appMealAnalysisStepNutrients": {},
+  "appMealAnalysisPhotoLabel": "Photo de ton repas",
+  "@appMealAnalysisPhotoLabel": {},
+  "appMealAnalysisUnusableTitle": "On n'a pas reconnu de plat",
+  "@appMealAnalysisUnusableTitle": {},
+  "appMealAnalysisUnusableBody": "La photo est floue ou trop sombre. Cette analyse n'est pas décomptée.",
+  "@appMealAnalysisUnusableBody": {},
+  "appMealAnalysisTipTop": "Vue de dessus, toute l'assiette",
+  "@appMealAnalysisTipTop": {},
+  "appMealAnalysisTipLight": "Près d'une fenêtre ou avec le flash",
+  "@appMealAnalysisTipLight": {},
+  "appMealAnalysisTipStill": "Téléphone immobile",
+  "@appMealAnalysisTipStill": {},
+  "appMealAnalysisRetake": "Reprendre la photo",
+  "@appMealAnalysisRetake": {},
+  "appMealAnalysisSearchCatalog": "Chercher dans le catalogue",
+  "@appMealAnalysisSearchCatalog": {},
+  "appMealAnalysisErrorTitle": "L'analyse n'a pas abouti",
+  "@appMealAnalysisErrorTitle": {},
+  "appMealCameraClose": "Fermer",
+  "@appMealCameraClose": {},
+  "appMealCameraFlashOn": "Activer le flash",
+  "@appMealCameraFlashOn": {},
+  "appMealCameraFlashOff": "Désactiver le flash",
+  "@appMealCameraFlashOff": {},
+  "appMealCameraGallery": "Galerie",
+  "@appMealCameraGallery": {},
+  "appMealCameraShutter": "Prendre la photo",
+  "@appMealCameraShutter": {},
+  "appMealCameraVoice": "Saisie vocale",
+  "@appMealCameraVoice": {},
+  "appMealCameraTip": "Cadre toute l'assiette, vue de dessus, avec de la lumière",
+  "@appMealCameraTip": {},
+  "appMealCameraPreview": "Aperçu de la caméra",
+  "@appMealCameraPreview": {},
+  "appMealCameraUnavailable": "La caméra n'est pas disponible sur cet appareil.",
+  "@appMealCameraUnavailable": {},
+  "appMealCameraDeniedTitle": "Omeo a besoin de ta caméra",
+  "@appMealCameraDeniedTitle": {},
+  "appMealCameraDeniedBody": "Pour analyser tes plats. Les photos ne servent qu'à ton suivi et tu peux les supprimer.",
+  "@appMealCameraDeniedBody": {},
+  "appMealCameraOpenSettings": "Ouvrir les réglages",
+  "@appMealCameraOpenSettings": {},
+  "appMealCameraPickGallery": "Choisir dans la galerie",
+  "@appMealCameraPickGallery": {},
+  "appMealCatalogTitle": "Chercher un plat",
+  "@appMealCatalogTitle": {},
+  "appMealCatalogSearchHint": "Ndolé, attiéké, yassa…",
+  "@appMealCatalogSearchHint": {},
+  "appMealCatalogAllCountries": "Tous les pays",
+  "@appMealCatalogAllCountries": {},
+  "appMealCatalogCountry": "{code, select, CM {Cameroun} SN {Sénégal} CI {Côte d'Ivoire} TG {Togo} ML {Mali} BF {Burkina Faso} other {Autre}}",
+  "@appMealCatalogCountry": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealCatalogRecent": "Récents",
+  "@appMealCatalogRecent": {},
+  "appMealCatalogFavorites": "Favoris",
+  "@appMealCatalogFavorites": {},
+  "appMealCatalogResults": "Résultats",
+  "@appMealCatalogResults": {},
+  "appMealCatalogPortion": "1 portion · {kcal} kcal",
+  "@appMealCatalogPortion": {
+    "placeholders": {
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealCatalogAdd": "Ajouter {name}",
+  "@appMealCatalogAdd": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealCatalogEmptyTitle": "Aucun plat trouvé",
+  "@appMealCatalogEmptyTitle": {},
+  "appMealCatalogEmptyBody": "Essaie un autre nom : les noms locaux sont aussi reconnus.",
+  "@appMealCatalogEmptyBody": {},
+  "appMealCatalogErrorTitle": "Le catalogue n'a pas pu être chargé",
+  "@appMealCatalogErrorTitle": {},
+  "appMealDishPhotoLabel": "Photo : {name}",
+  "@appMealDishPhotoLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishAka": "aussi appelé « {names} »",
+  "@appMealDishAka": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishFavoriteAdd": "Ajouter aux favoris",
+  "@appMealDishFavoriteAdd": {},
+  "appMealDishFavoriteRemove": "Retirer des favoris",
+  "@appMealDishFavoriteRemove": {},
+  "appMealDishPortion": "Portion",
+  "@appMealDishPortion": {},
+  "appMealDishPortionValue": "{portion, select, half {½} one {1 assiette} one_half {1½} two {2} other {1 assiette}}",
+  "@appMealDishPortionValue": {
+    "placeholders": {
+      "portion": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishPortionWeight": "1 assiette ≈ {grams} g",
+  "@appMealDishPortionWeight": {
+    "placeholders": {
+      "grams": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealDishPerPortion": "Apports pour 1 assiette",
+  "@appMealDishPerPortion": {},
+  "appMealDishMealType": "Type de repas",
+  "@appMealDishMealType": {},
+  "appMealDishAddTo": "Ajouter au {type, select, breakfast {petit-déjeuner} lunch {déjeuner} snack {goûter} dinner {dîner} other {repas}}",
+  "@appMealDishAddTo": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishRecipe": "Voir la recette",
+  "@appMealDishRecipe": {},
+  "appMealDishErrorTitle": "Ce plat n'a pas pu être chargé",
+  "@appMealDishErrorTitle": {},
+  "appMealDishSaved": "{type, select, breakfast {Petit-déjeuner} lunch {Déjeuner} snack {Collation} dinner {Dîner} other {Repas}} enregistré",
+  "@appMealDishSaved": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealMacroKcal": "kcal",
+  "@appMealMacroKcal": {},
+  "appMealMacroProtein": "prot.",
+  "@appMealMacroProtein": {},
+  "appMealMacroCarbs": "gluc.",
+  "@appMealMacroCarbs": {},
+  "appMealMacroFat": "lip.",
+  "@appMealMacroFat": {},
+  "appMealMacroGrams": "{value} g",
+  "@appMealMacroGrams": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealSavedRemaining": "Il te reste {kcal} pour aujourd'hui.",
+  "@appMealSavedRemaining": {
+    "placeholders": {
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealSavedOver": "Tu as dépassé ton objectif de {kcal} aujourd'hui. Demain est un autre jour.",
+  "@appMealSavedOver": {
+    "placeholders": {
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealSavedPoints": "+{points, plural, one {{points} point} other {{points} points}}",
+  "@appMealSavedPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealSavedRing": "{percent} % de ton objectif du jour",
+  "@appMealSavedRing": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealSavedFeedbackTitle": "L'analyse était-elle juste ?",
+  "@appMealSavedFeedbackTitle": {},
+  "appMealSavedFeedbackBody": "Ton avis améliore la reconnaissance des plats.",
+  "@appMealSavedFeedbackBody": {},
+  "appMealSavedYes": "Oui",
+  "@appMealSavedYes": {},
+  "appMealSavedNo": "Non",
+  "@appMealSavedNo": {},
+  "appMealSavedThanks": "Merci pour ton avis !",
+  "@appMealSavedThanks": {},
+  "appMealSavedDone": "Terminé",
+  "@appMealSavedDone": {},
+  "appMealFeedbackTitle": "Qu'est-ce qui n'allait pas ?",
+  "@appMealFeedbackTitle": {},
+  "appMealFeedbackReason": "{reason, select, wrong_dish {Mauvais plat} missing_ingredient {Ingrédient manquant} wrong_quantities {Quantités fausses} other {Autre}}",
+  "@appMealFeedbackReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealFeedbackCommentHint": "Dis-nous en plus (facultatif)",
+  "@appMealFeedbackCommentHint": {},
+  "appMealFeedbackCorrections": "{count, plural, one {Ta correction sera jointe à l'avis.} other {Tes {count} corrections seront jointes à l'avis.}}",
+  "@appMealFeedbackCorrections": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealFeedbackSend": "Envoyer",
+  "@appMealFeedbackSend": {},
+  "appMealDescribeVoiceTitle": "Dicter mon repas",
+  "@appMealDescribeVoiceTitle": {},
+  "appMealDescribeTextTitle": "Décrire mon repas",
+  "@appMealDescribeTextTitle": {},
+  "appMealDescribeVoice": "Voix",
+  "@appMealDescribeVoice": {},
+  "appMealDescribeText": "Texte",
+  "@appMealDescribeText": {},
+  "appMealDescribeListeningHint": "Décris ton repas, par exemple « une assiette de ndolé avec deux plantains frits ».",
+  "@appMealDescribeListeningHint": {},
+  "appMealDescribeStop": "Arrêter",
+  "@appMealDescribeStop": {},
+  "appMealDescribeStart": "Parler",
+  "@appMealDescribeStart": {},
+  "appMealDescribeTapToStop": "Touche pour terminer",
+  "@appMealDescribeTapToStop": {},
+  "appMealDescribeTapToStart": "Touche pour parler",
+  "@appMealDescribeTapToStart": {},
+  "appMealDescribeLeft": "{count, plural, =0 {Plus de saisie ce mois-ci} one {{count} saisie restante ce mois-ci} other {{count} saisies restantes ce mois-ci}}",
+  "@appMealDescribeLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealDescribeTextHint": "Petit-déjeuner : bouillie de mil avec du lait et un beignet",
+  "@appMealDescribeTextHint": {},
+  "appMealDescribeExamples": "Exemples",
+  "@appMealDescribeExamples": {},
+  "appMealDescribeExample1": "2 beignets haricots",
+  "@appMealDescribeExample1": {},
+  "appMealDescribeExample2": "Garba au thon",
+  "@appMealDescribeExample2": {},
+  "appMealDescribeExample3": "Yassa poulet, riz",
+  "@appMealDescribeExample3": {},
+  "appMealDescribeAnalyze": "Analyser",
+  "@appMealDescribeAnalyze": {},
+  "appMealDescribeMicDenied": "Le micro n'est pas autorisé. Tu peux écrire ton repas à la place.",
+  "@appMealDescribeMicDenied": {},
+  "appMealDescribeUnavailable": "La dictée n'est pas disponible sur ce téléphone. Tu peux écrire ton repas à la place.",
+  "@appMealDescribeUnavailable": {},
+  "appMealDetailPhotoLabel": "Photo du repas : {title}",
+  "@appMealDetailPhotoLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDetailMore": "Plus d'actions",
+  "@appMealDetailMore": {},
+  "appMealDetailWhen": "{type} · {time}",
+  "@appMealDetailWhen": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDetailSource": "{source, select, photo {Analyse photo} text {Saisie vocale ou texte} dish {Catalogue} recipe {Recette} foods {Aliments} program {Programme} other {Saisie}}",
+  "@appMealDetailSource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDetailEdit": "Modifier",
+  "@appMealDetailEdit": {},
+  "appMealDetailMove": "Déplacer",
+  "@appMealDetailMove": {},
+  "appMealDetailDuplicate": "Dupliquer",
+  "@appMealDetailDuplicate": {},
+  "appMealDetailDelete": "Supprimer",
+  "@appMealDetailDelete": {},
+  "appMealDetailIngredients": "Ingrédients",
+  "@appMealDetailIngredients": {},
+  "appMealDetailIngredient": "{grams} g · {kcal} kcal",
+  "@appMealDetailIngredient": {
+    "placeholders": {
+      "grams": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealDetailDeletePhoto": "Supprimer la photo seulement",
+  "@appMealDetailDeletePhoto": {},
+  "appMealDetailPhotoDeleted": "Photo supprimée",
+  "@appMealDetailPhotoDeleted": {},
+  "appMealDetailErrorTitle": "Ce repas n'a pas pu être chargé",
+  "@appMealDetailErrorTitle": {},
+  "appMealMoveTitle": "Déplacer le repas",
+  "@appMealMoveTitle": {},
+  "appMealMoveDuplicateTitle": "Dupliquer le repas",
+  "@appMealMoveDuplicateTitle": {},
+  "appMealMoveTo": "Vers",
+  "@appMealMoveTo": {},
+  "appMealMoveDay": "Jour",
+  "@appMealMoveDay": {},
+  "appMealMoveConfirm": "Déplacer vers {type} · {day}",
+  "@appMealMoveConfirm": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealMoveConfirmDuplicate": "Dupliquer vers {type} · {day}",
+  "@appMealMoveConfirmDuplicate": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealMoveMoved": "Repas déplacé",
+  "@appMealMoveMoved": {},
+  "appMealMoveDuplicated": "Repas dupliqué",
+  "@appMealMoveDuplicated": {},
+  "appMealDeleteTitle": "Supprimer ce repas ?",
+  "@appMealDeleteTitle": {},
+  "appMealDeleteBody": "{title} ({kcal}) sera retiré de ton journal et tes totaux seront recalculés.",
+  "@appMealDeleteBody": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDeleteDeleted": "Repas supprimé",
+  "@appMealDeleteDeleted": {},
+  "appMealDeleteUndo": "Annuler",
+  "@appMealDeleteUndo": {},
+  "appMealOfflineBanner": "Hors connexion",
+  "@appMealOfflineBanner": {},
+  "appMealOfflineBannerPending": "Hors connexion · {count, plural, one {{count} repas en attente d'envoi} other {{count} repas en attente d'envoi}}",
+  "@appMealOfflineBannerPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealOfflineSyncing": "{count, plural, one {Envoi de {count} repas…} other {Envoi de {count} repas…}}",
+  "@appMealOfflineSyncing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealOfflineQueued": "Repas enregistré. Il sera calculé au retour du réseau.",
+  "@appMealOfflineQueued": {},
   "appNavHome": "Accueil",
   "@appNavHome": {},
   "appNavProgress": "Progression",
@@ -625,6 +1062,359 @@
   },
   "appSystemOk": "Compris",
   "@appSystemOk": {},
+  "appPlusPaywallTag": "Omeo Plus",
+  "@appPlusPaywallTag": {},
+  "appPlusPaywallTitle": "Mange mieux,",
+  "@appPlusPaywallTitle": {},
+  "appPlusPaywallTitleAccent": "sans limite.",
+  "@appPlusPaywallTitleAccent": {},
+  "appPlusPaywallTrial": "Essai gratuit",
+  "@appPlusPaywallTrial": {},
+  "appPlusPaywallTrialLeft": "{count, plural, =0 {Dernier jour} one {{count} jour restant} other {{count} jours restants}}",
+  "@appPlusPaywallTrialLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appPlusPaywallQuotaPhoto": "Analyses photo : {remaining} / {limit} restantes",
+  "@appPlusPaywallQuotaPhoto": {
+    "placeholders": {
+      "remaining": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "limit": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusPaywallQuotaText": "Saisies vocales : {remaining} / {limit}",
+  "@appPlusPaywallQuotaText": {
+    "placeholders": {
+      "remaining": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "limit": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusPaywallFree": "Tu es en Free",
+  "@appPlusPaywallFree": {},
+  "appPlusPaywallPerMonth": "{price} / mois",
+  "@appPlusPaywallPerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaywallSavings": "économise {percent} %",
+  "@appPlusPaywallSavings": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusPaywallNoCommitment": "Sans engagement",
+  "@appPlusPaywallNoCommitment": {},
+  "appPlusPaywallBest": "Meilleure offre",
+  "@appPlusPaywallBest": {},
+  "appPlusPaywallContinue": "Continuer · {price} / {interval, select, year {an} month {mois} other {période}}",
+  "@appPlusPaywallContinue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "interval": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaywallStayFree": "Rester en Free",
+  "@appPlusPaywallStayFree": {},
+  "appPlusPaywallLegal": "Prix en USD ; le store affiche le montant dans ta monnaie. Renouvellement automatique, résiliable à tout moment dans {store}.",
+  "@appPlusPaywallLegal": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaywallRestore": "Restaurer mes achats",
+  "@appPlusPaywallRestore": {},
+  "appPlusPaywallRestored": "Tes achats ont été restaurés.",
+  "@appPlusPaywallRestored": {},
+  "appPlusPaywallNothingRestored": "Aucun achat à restaurer avec ce compte.",
+  "@appPlusPaywallNothingRestored": {},
+  "appPlusPaywallWelcome": "Bienvenue dans Omeo Plus !",
+  "@appPlusPaywallWelcome": {},
+  "appPlusPaywallStoreError": "Le store n'est pas disponible pour le moment. Réessaie plus tard.",
+  "@appPlusPaywallStoreError": {},
+  "appPlusPaywallWeb": "Payer sur my-omeo.app",
+  "@appPlusPaywallWeb": {},
+  "appPlusPaywallErrorTitle": "Les offres n'ont pas pu être chargées",
+  "@appPlusPaywallErrorTitle": {},
+  "appPlusPaywallStore": "{platform, select, ios {l'App Store} other {Google Play}}",
+  "@appPlusPaywallStore": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionTitle": "Mon abonnement",
+  "@appPlusSubscriptionTitle": {},
+  "appPlusSubscriptionStatus": "{status, select, trial {Essai} active {Actif} grace {Période de grâce} canceled {Résilié} expired {Expiré} refunded {Remboursé} other {Inconnu}}",
+  "@appPlusSubscriptionStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionChannel": "{channel, select, google_play {Google Play} app_store {App Store} web {Site web} grant {Offert} other {Autre}}",
+  "@appPlusSubscriptionChannel": {
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionRenews": "Renouvellement le {date} · {channel}",
+  "@appPlusSubscriptionRenews": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionEnds": "Actif jusqu'au {date} · {channel}",
+  "@appPlusSubscriptionEnds": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionThisPeriod": "Ce mois-ci",
+  "@appPlusSubscriptionThisPeriod": {},
+  "appPlusSubscriptionQuotaPhoto": "Analyses photo",
+  "@appPlusSubscriptionQuotaPhoto": {},
+  "appPlusSubscriptionQuotaText": "Saisies vocales et texte",
+  "@appPlusSubscriptionQuotaText": {},
+  "appPlusSubscriptionQuotaValue": "{used} / {limit}",
+  "@appPlusSubscriptionQuotaValue": {
+    "placeholders": {
+      "used": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "limit": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusSubscriptionResets": "Remise à zéro le {date}",
+  "@appPlusSubscriptionResets": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionManageStore": "Gérer dans {store}",
+  "@appPlusSubscriptionManageStore": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionManageStoreHint": "Changer d'offre ou résilier",
+  "@appPlusSubscriptionManageStoreHint": {},
+  "appPlusSubscriptionManageWeb": "Gérer sur my-omeo.app",
+  "@appPlusSubscriptionManageWeb": {},
+  "appPlusSubscriptionPayments": "Historique des paiements",
+  "@appPlusSubscriptionPayments": {},
+  "appPlusSubscriptionRestore": "Restaurer mes achats",
+  "@appPlusSubscriptionRestore": {},
+  "appPlusSubscriptionGranted": "Jours offerts",
+  "@appPlusSubscriptionGranted": {},
+  "appPlusSubscriptionGrantedHint": "{count, plural, one {{count} jour de parrainage en attente} other {{count} jours de parrainage en attente}}",
+  "@appPlusSubscriptionGrantedHint": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appPlusSubscriptionCancelNote": "Si tu résilies, Plus reste actif jusqu'à la fin de la période payée.",
+  "@appPlusSubscriptionCancelNote": {},
+  "appPlusSubscriptionGraceTitle": "Ton paiement n'est pas passé.",
+  "@appPlusSubscriptionGraceTitle": {},
+  "appPlusSubscriptionGraceBody": "Mets à jour ton moyen de paiement avant le {date} pour garder Omeo Plus.",
+  "@appPlusSubscriptionGraceBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionGraceTag": "Période de grâce",
+  "@appPlusSubscriptionGraceTag": {},
+  "appPlusSubscriptionFixWeb": "Mettre à jour sur my-omeo.app",
+  "@appPlusSubscriptionFixWeb": {},
+  "appPlusSubscriptionFixStore": "Mettre à jour dans {store}",
+  "@appPlusSubscriptionFixStore": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusSubscriptionWebNote": "Abonnement pris sur le site : il se gère sur le site, depuis ton compte Omeo.",
+  "@appPlusSubscriptionWebNote": {},
+  "appPlusSubscriptionNoneTitle": "Tu n'as pas d'abonnement",
+  "@appPlusSubscriptionNoneTitle": {},
+  "appPlusSubscriptionNoneBody": "Découvre ce qu'Omeo Plus t'apporte.",
+  "@appPlusSubscriptionNoneBody": {},
+  "appPlusSubscriptionErrorTitle": "Ton abonnement n'a pas pu être chargé",
+  "@appPlusSubscriptionErrorTitle": {},
+  "appPlusPaymentsTitle": "Paiements",
+  "@appPlusPaymentsTitle": {},
+  "appPlusPaymentsLine": "{description} · {channel}",
+  "@appPlusPaymentsLine": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      },
+      "channel": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaymentsStatus": "{status, select, failed {Refusé} refunded {Remboursé} pending {En attente} other {}}",
+  "@appPlusPaymentsStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaymentsReceipt": "Voir le reçu",
+  "@appPlusPaymentsReceipt": {},
+  "appPlusPaymentsNote": "Les reçus des stores sont envoyés par Google Play ou l'App Store.",
+  "@appPlusPaymentsNote": {},
+  "appPlusPaymentsEmpty": "Aucun paiement pour l'instant",
+  "@appPlusPaymentsEmpty": {},
+  "appPlusPaymentsErrorTitle": "L'historique n'a pas pu être chargé",
+  "@appPlusPaymentsErrorTitle": {},
+  "appPlusQuotaFreeTitle": "Plus d'analyses photo aujourd'hui",
+  "@appPlusQuotaFreeTitle": {},
+  "appPlusQuotaFreeBody": "Tu as utilisé tes analyses du jour. Elles reviennent {when}.",
+  "@appPlusQuotaFreeBody": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusQuotaFreeBodyNoDate": "Tu as utilisé tes analyses du jour. Elles reviennent demain.",
+  "@appPlusQuotaFreeBodyNoDate": {},
+  "appPlusQuotaPlusTitle": "Quota mensuel atteint",
+  "@appPlusQuotaPlusTitle": {},
+  "appPlusQuotaPlusBody": "Tu as utilisé tes analyses de ce mois. Elles se rechargent le {date}.",
+  "@appPlusQuotaPlusBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusQuotaPlusBodyNoDate": "Tu as utilisé tes analyses de ce mois. Elles se rechargent au début de ta prochaine période.",
+  "@appPlusQuotaPlusBodyNoDate": {},
+  "appPlusQuotaPlusCard": "Omeo Plus",
+  "@appPlusQuotaPlusCard": {},
+  "appPlusQuotaPlusCardBody": "Plus d'analyses chaque mois, et la saisie vocale.",
+  "@appPlusQuotaPlusCardBody": {},
+  "appPlusQuotaTryPlus": "Essayer Omeo Plus",
+  "@appPlusQuotaTryPlus": {},
+  "appPlusQuotaMeanwhile": "En attendant",
+  "@appPlusQuotaMeanwhile": {},
+  "appPlusQuotaCatalog": "Chercher le plat dans le catalogue",
+  "@appPlusQuotaCatalog": {},
+  "appPlusQuotaCatalogHint": "Gratuit et illimité",
+  "@appPlusQuotaCatalogHint": {},
+  "appPlusQuotaOk": "Compris",
+  "@appPlusQuotaOk": {},
+  "appReferralTitle": "Parrainage",
+  "@appReferralTitle": {},
+  "appReferralHeroTitle": "Offre des jours de Plus, gagnes-en aussi",
+  "@appReferralHeroTitle": {},
+  "appReferralHeroBody": "Ton proche a un essai prolongé. Toi, tu gagnes des jours de Plus pour chaque ami, jusqu'à {cap, plural, one {{cap} jour} other {{cap} jours}}.",
+  "@appReferralHeroBody": {
+    "placeholders": {
+      "cap": {
+        "type": "int"
+      }
+    }
+  },
+  "appReferralYourCode": "TON CODE",
+  "@appReferralYourCode": {},
+  "appReferralCopy": "Copier le code",
+  "@appReferralCopy": {},
+  "appReferralCopied": "Code copié",
+  "@appReferralCopied": {},
+  "appReferralWhatsapp": "Partager sur WhatsApp",
+  "@appReferralWhatsapp": {},
+  "appReferralOtherApps": "Autres applis",
+  "@appReferralOtherApps": {},
+  "appReferralDaysEarned": "Jours gagnés",
+  "@appReferralDaysEarned": {},
+  "appReferralDaysValue": "{earned} / {cap}",
+  "@appReferralDaysValue": {
+    "placeholders": {
+      "earned": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "cap": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appReferralReferees": "Tes filleuls",
+  "@appReferralReferees": {},
+  "appReferralRefereeStatus": "{status, select, validated {Validé} pending {En attente : premier repas} rejected {Non validé} other {En attente}}",
+  "@appReferralRefereeStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appReferralRules": "Un parrainage est validé quand ton ami a confirmé son email et enregistré un repas.",
+  "@appReferralRules": {},
+  "appReferralEmpty": "Tes filleuls apparaîtront ici.",
+  "@appReferralEmpty": {},
+  "appReferralErrorTitle": "Le parrainage n'a pas pu être chargé",
+  "@appReferralErrorTitle": {},
   "appAuthBrandName": "Omeo",
   "@appAuthBrandName": {},
   "appAuthTagline": "Scanne. Comprends. Mange mieux.",

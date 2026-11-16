@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/app_shell.dart';
 import 'package:omeo/app/navigation/feature_routes.dart';
 import 'package:omeo/features/auth/auth_routes.dart';
+import 'package:omeo/features/meals/meals_routes.dart';
 import 'package:omeo/features/onboarding/onboarding_routes.dart';
+import 'package:omeo/features/subscription/subscription_routes.dart';
 import 'package:omeo/features/support/support_routes.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
 import 'package:omeo/features/tracking/tracking_routes.dart';
@@ -15,6 +17,8 @@ final List<FeatureRoutesBuilder> _modules = [
   onboardingRoutes,
   trackingRoutes,
   supportRoutes,
+  mealsRoutes,
+  subscriptionRoutes,
 ];
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -45,6 +49,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           navigationShell: shell,
           branchTabs: branchTabs,
           onAddMeal: onAddMeal,
+          banners: [
+            for (final m in modules) ?m.shellBanner,
+          ],
         ),
         branches: [
           for (final tab in branchTabs)

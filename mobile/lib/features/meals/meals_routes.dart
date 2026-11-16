@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/feature_routes.dart';
-import 'package:omeo/core/l10n/gen/app_localizations.dart';
 import 'package:omeo/features/meals/meals_paths.dart';
 import 'package:omeo/features/meals/presentation/add_meal_sheet.dart';
 import 'package:omeo/features/meals/presentation/analysis_screen.dart';
 import 'package:omeo/features/meals/presentation/camera_screen.dart';
 import 'package:omeo/features/meals/presentation/catalog_screen.dart';
 import 'package:omeo/features/meals/presentation/dish_screen.dart';
+import 'package:omeo/features/meals/presentation/meal_saved_screen.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
 import 'package:omeo_api/omeo_api.dart' show MealWriteResult;
 
@@ -23,16 +23,6 @@ Future<void> _pickFromGallery(BuildContext context) async {
   if (bytes != null && context.mounted) {
     unawaited(context.push(MealsPaths.analysis, extra: PhotoRequest(bytes)));
   }
-}
-
-/// Repas enregistré : retour à l'accueil, qui relit la journée.
-void _saved(BuildContext context, MealWriteResult result) {
-  final l = AppLocalizations.of(context);
-  final messenger = ScaffoldMessenger.of(context);
-  context.go(TrackingPaths.home);
-  messenger.showSnackBar(
-    SnackBar(content: Text(l.appMealDishSaved(result.meal.mealType.value))),
-  );
 }
 
 /// Routes du module des repas et action centrale « + » de la barre.
@@ -75,9 +65,19 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
         dishId: state.pathParameters['id']!,
         navigation: (
           onClose: context.pop,
-          onSaved: (result) => _saved(context, result),
+          onSaved: (result) =>
+              context.pushReplacement(MealsPaths.saved, extra: result),
           openRecipe: null,
         ),
+      ),
+    ),
+    GoRoute(
+      path: MealsPaths.saved,
+      redirect: (context, state) =>
+          state.extra is MealWriteResult ? null : TrackingPaths.home,
+      builder: (context, state) => MealSavedScreen(
+        result: state.extra! as MealWriteResult,
+        onDone: () => context.go(TrackingPaths.home),
       ),
     ),
   ],

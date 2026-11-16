@@ -195,6 +195,25 @@
         "carbs": "carbs",
         "fat": "fat",
         "grams": "{value, number} g"
+      },
+      "saved": {
+        "remaining": "You have {kcal} left for today.",
+        "over": "You went {kcal} over your goal today. Tomorrow is another day.",
+        "points": "+{points, plural, one {# point} other {# points}}",
+        "ring": "{percent, number}% of your daily goal",
+        "feedback_title": "Was the analysis right?",
+        "feedback_body": "Your feedback improves dish recognition.",
+        "yes": "Yes",
+        "no": "No",
+        "thanks": "Thanks for your feedback!",
+        "done": "Done"
+      },
+      "feedback": {
+        "title": "What was wrong?",
+        "reason": "{reason, select, wrong_dish {Wrong dish} missing_ingredient {Missing ingredient} wrong_quantities {Wrong quantities} other {Other}}",
+        "comment_hint": "Tell us more (optional)",
+        "corrections": "{count, plural, one {Your correction will be attached.} other {Your # corrections will be attached.}}",
+        "send": "Send"
       }
     },
     "nav": {

@@ -530,6 +530,73 @@
       }
     }
   },
+  "appMealSavedRemaining": "Il te reste {kcal} pour aujourd'hui.",
+  "@appMealSavedRemaining": {
+    "placeholders": {
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealSavedOver": "Tu as dépassé ton objectif de {kcal} aujourd'hui. Demain est un autre jour.",
+  "@appMealSavedOver": {
+    "placeholders": {
+      "kcal": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealSavedPoints": "+{points, plural, one {{points} point} other {{points} points}}",
+  "@appMealSavedPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealSavedRing": "{percent} % de ton objectif du jour",
+  "@appMealSavedRing": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealSavedFeedbackTitle": "L'analyse était-elle juste ?",
+  "@appMealSavedFeedbackTitle": {},
+  "appMealSavedFeedbackBody": "Ton avis améliore la reconnaissance des plats.",
+  "@appMealSavedFeedbackBody": {},
+  "appMealSavedYes": "Oui",
+  "@appMealSavedYes": {},
+  "appMealSavedNo": "Non",
+  "@appMealSavedNo": {},
+  "appMealSavedThanks": "Merci pour ton avis !",
+  "@appMealSavedThanks": {},
+  "appMealSavedDone": "Terminé",
+  "@appMealSavedDone": {},
+  "appMealFeedbackTitle": "Qu'est-ce qui n'allait pas ?",
+  "@appMealFeedbackTitle": {},
+  "appMealFeedbackReason": "{reason, select, wrong_dish {Mauvais plat} missing_ingredient {Ingrédient manquant} wrong_quantities {Quantités fausses} other {Autre}}",
+  "@appMealFeedbackReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealFeedbackCommentHint": "Dis-nous en plus (facultatif)",
+  "@appMealFeedbackCommentHint": {},
+  "appMealFeedbackCorrections": "{count, plural, one {Ta correction sera jointe à l'avis.} other {Tes {count} corrections seront jointes à l'avis.}}",
+  "@appMealFeedbackCorrections": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealFeedbackSend": "Envoyer",
+  "@appMealFeedbackSend": {},
   "appNavHome": "Accueil",
   "@appNavHome": {},
   "appNavProgress": "Progression",

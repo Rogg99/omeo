@@ -195,6 +195,25 @@
         "carbs": "gluc.",
         "fat": "lip.",
         "grams": "{value, number} g"
+      },
+      "saved": {
+        "remaining": "Il te reste {kcal} pour aujourd'hui.",
+        "over": "Tu as dépassé ton objectif de {kcal} aujourd'hui. Demain est un autre jour.",
+        "points": "+{points, plural, one {# point} other {# points}}",
+        "ring": "{percent, number} % de ton objectif du jour",
+        "feedback_title": "L'analyse était-elle juste ?",
+        "feedback_body": "Ton avis améliore la reconnaissance des plats.",
+        "yes": "Oui",
+        "no": "Non",
+        "thanks": "Merci pour ton avis !",
+        "done": "Terminé"
+      },
+      "feedback": {
+        "title": "Qu'est-ce qui n'allait pas ?",
+        "reason": "{reason, select, wrong_dish {Mauvais plat} missing_ingredient {Ingrédient manquant} wrong_quantities {Quantités fausses} other {Autre}}",
+        "comment_hint": "Dis-nous en plus (facultatif)",
+        "corrections": "{count, plural, one {Ta correction sera jointe à l'avis.} other {Tes # corrections seront jointes à l'avis.}}",
+        "send": "Envoyer"
       }
     },
     "nav": {

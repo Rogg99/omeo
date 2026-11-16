@@ -9,6 +9,7 @@ import 'package:omeo/core/api/global_errors.dart';
 import 'package:omeo/core/l10n/gen/app_localizations.dart';
 import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/core/widgets/widgets.dart';
+import 'package:omeo/features/subscription/subscription_paths.dart';
 import 'package:omeo/features/support/presentation/system_screens.dart';
 import 'package:omeo/features/support/support_paths.dart';
 
@@ -91,9 +92,11 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
         );
       case QuotaExceeded(:final canUpgrade, :final resetsAt):
         unawaited(_showQuota(canUpgrade: canUpgrade, resetsAt: resetsAt));
-      // Présentation de Plus, réacceptation des CGU et déconnexion :
-      // traitées par les modules abonnement, compte et authentification.
-      case PlanRequired() || ConsentRequired() || SignedOut():
+      case PlanRequired():
+        unawaited(widget.router.push(SubscriptionPaths.plus));
+      // Réacceptation des CGU et déconnexion : traitées par les modules
+      // compte et authentification.
+      case ConsentRequired() || SignedOut():
         break;
     }
   }
@@ -110,7 +113,14 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
       context: context,
       title: l.appSystemQuotaTitle,
       closeLabel: l.commonActionClose,
-      builder: (_) => QuotaSheet(canUpgrade: canUpgrade, resetsAt: resetsAt),
+      builder: (sheetContext) => QuotaSheet(
+        canUpgrade: canUpgrade,
+        resetsAt: resetsAt,
+        onDiscoverPlus: () {
+          Navigator.of(sheetContext).pop();
+          unawaited(widget.router.push(SubscriptionPaths.plus));
+        },
+      ),
     );
     _quotaSheetOpen = false;
   }

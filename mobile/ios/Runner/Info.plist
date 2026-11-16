@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Omeo lit tes pas, tes séances et ton poids pour calculer ta balance du jour. Rien n'est écrit dans Santé.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Omeo écoute ta description de repas pour la transcrire sur ton téléphone.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

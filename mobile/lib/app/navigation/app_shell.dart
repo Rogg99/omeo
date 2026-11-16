@@ -28,7 +28,7 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final current = branchTabs[navigationShell.currentIndex];
-    return Scaffold(
+    final shell = Scaffold(
       extendBody: true,
       body: banners.isEmpty
           ? navigationShell
@@ -67,5 +67,26 @@ class AppShell extends StatelessWidget {
         onFab: onAddMeal == null ? null : () => onAddMeal!(context),
       ),
     );
+    return AddMealAction(onAddMeal: onAddMeal, child: shell);
   }
+}
+
+/// Action « Ajouter un repas » de la barre, offerte aux écrans des onglets
+/// (le « + » de chaque repas du journal, par exemple).
+class AddMealAction extends InheritedWidget {
+  const AddMealAction({
+    required this.onAddMeal,
+    required super.child,
+    super.key,
+  });
+
+  final void Function(BuildContext context)? onAddMeal;
+
+  /// `null` hors de la coquille ou sans module des repas.
+  static void Function(BuildContext context)? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<AddMealAction>()?.onAddMeal;
+
+  @override
+  bool updateShouldNotify(AddMealAction oldWidget) =>
+      onAddMeal != oldWidget.onAddMeal;
 }

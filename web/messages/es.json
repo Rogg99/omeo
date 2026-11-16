@@ -47,7 +47,11 @@
     "forbidden": "No tienes acceso a esta acción.",
     "mfa_required": "Esta cuenta solo puede iniciar sesión desde el espacio de administración.",
     "captcha_failed": "La verificación antirrobots ha fallado. Vuelve a intentarlo.",
-    "network_error": "No podemos contactar con nuestros servidores. Comprueba tu conexión y vuelve a intentarlo."
+    "network_error": "No podemos contactar con nuestros servidores. Comprueba tu conexión y vuelve a intentarlo.",
+    "forbidden_role": "Ton rôle ne permet pas cette action.",
+    "csrf_failed": "La page a expiré. Recharge-la puis réessaie.",
+    "approval_pending": "Une demande identique attend déjà une validation.",
+    "invalid_mfa_code": "Code incorrect. Réessaie."
   },
   "web": {
     "hero": {

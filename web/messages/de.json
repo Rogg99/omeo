@@ -47,7 +47,11 @@
     "forbidden": "Du hast keinen Zugriff auf diese Aktion.",
     "mfa_required": "Dieses Konto kann sich nur im Administrationsbereich anmelden.",
     "captcha_failed": "Die Anti-Bot-Prüfung ist fehlgeschlagen. Bitte versuche es erneut.",
-    "network_error": "Unsere Server sind nicht erreichbar. Prüfe deine Verbindung und versuche es erneut."
+    "network_error": "Unsere Server sind nicht erreichbar. Prüfe deine Verbindung und versuche es erneut.",
+    "forbidden_role": "Ton rôle ne permet pas cette action.",
+    "csrf_failed": "La page a expiré. Recharge-la puis réessaie.",
+    "approval_pending": "Une demande identique attend déjà une validation.",
+    "invalid_mfa_code": "Code incorrect. Réessaie."
   },
   "web": {
     "hero": {

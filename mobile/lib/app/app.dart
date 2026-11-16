@@ -9,6 +9,8 @@ import 'package:omeo/core/api/global_errors.dart';
 import 'package:omeo/core/l10n/gen/app_localizations.dart';
 import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/core/widgets/widgets.dart';
+import 'package:omeo/features/meals/meals_paths.dart';
+import 'package:omeo/features/subscription/presentation/quota_exhausted_sheet.dart';
 import 'package:omeo/features/subscription/subscription_paths.dart';
 import 'package:omeo/features/support/presentation/system_screens.dart';
 import 'package:omeo/features/support/support_paths.dart';
@@ -90,8 +92,14 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
             queryParameters: {'support': ?supportUrl},
           ).toString(),
         );
-      case QuotaExceeded(:final canUpgrade, :final resetsAt):
-        unawaited(_showQuota(canUpgrade: canUpgrade, resetsAt: resetsAt));
+      case QuotaExceeded(:final canUpgrade, :final resetsAt, :final feature):
+        unawaited(
+          _showQuota(
+            canUpgrade: canUpgrade,
+            resetsAt: resetsAt,
+            feature: feature,
+          ),
+        );
       case PlanRequired():
         unawaited(widget.router.push(SubscriptionPaths.plus));
       // Réacceptation des CGU et déconnexion : traitées par les modules
@@ -104,10 +112,27 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
   Future<void> _showQuota({
     required bool canUpgrade,
     DateTime? resetsAt,
+    String? feature,
   }) async {
     final context = widget.router.routerDelegate.navigatorKey.currentContext;
     if (_quotaSheetOpen || context == null) return;
     _quotaSheetOpen = true;
+    void discoverPlus() =>
+        unawaited(widget.router.push(SubscriptionPaths.plus));
+    // Analyses photo et texte : feuille du module abonnement, avec les
+    // alternatives gratuites (PLS-02, PLS-03).
+    if (feature == 'photo_analysis' || feature == 'text_analysis') {
+      await showQuotaExhaustedSheet(
+        context,
+        canUpgrade: canUpgrade,
+        resetsAt: resetsAt,
+        onDiscoverPlus: discoverPlus,
+        onSearchCatalog: () =>
+            unawaited(widget.router.push(MealsPaths.catalog)),
+      );
+      _quotaSheetOpen = false;
+      return;
+    }
     final l = AppLocalizations.of(context);
     await showOmeoSheet<void>(
       context: context,
@@ -118,7 +143,7 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
         resetsAt: resetsAt,
         onDiscoverPlus: () {
           Navigator.of(sheetContext).pop();
-          unawaited(widget.router.push(SubscriptionPaths.plus));
+          discoverPlus();
         },
       ),
     );

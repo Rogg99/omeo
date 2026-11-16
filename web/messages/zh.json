@@ -47,7 +47,11 @@
     "forbidden": "你无权进行此操作。",
     "mfa_required": "此账户只能从管理后台登录。",
     "captcha_failed": "人机验证失败，请重试。",
-    "network_error": "无法连接到服务器，请检查网络后重试。"
+    "network_error": "无法连接到服务器，请检查网络后重试。",
+    "forbidden_role": "Ton rôle ne permet pas cette action.",
+    "csrf_failed": "La page a expiré. Recharge-la puis réessaie.",
+    "approval_pending": "Une demande identique attend déjà une validation.",
+    "invalid_mfa_code": "Code incorrect. Réessaie."
   },
   "web": {
     "hero": {

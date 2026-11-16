@@ -47,7 +47,11 @@
     "forbidden": "ليست لديك صلاحية لهذا الإجراء.",
     "mfa_required": "لا يمكن لهذا الحساب تسجيل الدخول إلا من مساحة الإدارة.",
     "captcha_failed": "فشل التحقق من أنك لست روبوتًا. أعد المحاولة.",
-    "network_error": "تعذّر الوصول إلى خوادمنا. تحقّق من اتصالك وأعد المحاولة."
+    "network_error": "تعذّر الوصول إلى خوادمنا. تحقّق من اتصالك وأعد المحاولة.",
+    "forbidden_role": "Ton rôle ne permet pas cette action.",
+    "csrf_failed": "La page a expiré. Recharge-la puis réessaie.",
+    "approval_pending": "Une demande identique attend déjà une validation.",
+    "invalid_mfa_code": "Code incorrect. Réessaie."
   },
   "web": {
     "hero": {

@@ -115,7 +115,19 @@
       "type": {
         "name": "{type, select, breakfast {Petit-déjeuner} lunch {Déjeuner} snack {Collation} dinner {Dîner} other {Repas}}"
       },
-      "analyses_left": "{count, plural, =0 {Plus d'analyse aujourd'hui} one {# analyse restante} other {# analyses restantes}}"
+      "analyses_left": "{count, plural, =0 {Plus d'analyse aujourd'hui} one {# analyse restante} other {# analyses restantes}}",
+      "add": {
+        "title": "Ajouter",
+        "photo": "Prendre en photo",
+        "gallery": "Choisir dans la galerie",
+        "gallery_hint": "Une photo déjà prise",
+        "voice": "Dicter ou écrire",
+        "voice_hint": "« Un ndolé avec deux plantains »",
+        "catalog": "Chercher un plat",
+        "catalog_hint": "Catalogue, récents et favoris",
+        "quota_loading": "Analyses restantes…",
+        "unlimited": "Analyses illimitées"
+      }
     },
     "nav": {
       "home": "Accueil",

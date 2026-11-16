@@ -115,7 +115,19 @@
       "type": {
         "name": "{type, select, breakfast {Breakfast} lunch {Lunch} snack {Snack} dinner {Dinner} other {Meal}}"
       },
-      "analyses_left": "{count, plural, =0 {No analyses left today} one {# analysis left} other {# analyses left}}"
+      "analyses_left": "{count, plural, =0 {No analyses left today} one {# analysis left} other {# analyses left}}",
+      "add": {
+        "title": "Add",
+        "photo": "Take a photo",
+        "gallery": "Choose from gallery",
+        "gallery_hint": "A photo you already took",
+        "voice": "Speak or type",
+        "voice_hint": "“Ndolé with two plantains”",
+        "catalog": "Search for a dish",
+        "catalog_hint": "Catalog, recent and favorites",
+        "quota_loading": "Analyses left…",
+        "unlimited": "Unlimited analyses"
+      }
     },
     "nav": {
       "home": "Home",

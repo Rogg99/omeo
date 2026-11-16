@@ -813,5 +813,113 @@
     }
   },
   "appSystemOk": "Compris",
-  "@appSystemOk": {}
+  "@appSystemOk": {},
+  "appPlusPaywallTag": "Omeo Plus",
+  "@appPlusPaywallTag": {},
+  "appPlusPaywallTitle": "Mange mieux,",
+  "@appPlusPaywallTitle": {},
+  "appPlusPaywallTitleAccent": "sans limite.",
+  "@appPlusPaywallTitleAccent": {},
+  "appPlusPaywallTrial": "Essai gratuit",
+  "@appPlusPaywallTrial": {},
+  "appPlusPaywallTrialLeft": "{count, plural, =0 {Dernier jour} one {{count} jour restant} other {{count} jours restants}}",
+  "@appPlusPaywallTrialLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appPlusPaywallQuotaPhoto": "Analyses photo : {remaining} / {limit} restantes",
+  "@appPlusPaywallQuotaPhoto": {
+    "placeholders": {
+      "remaining": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "limit": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusPaywallQuotaText": "Saisies vocales : {remaining} / {limit}",
+  "@appPlusPaywallQuotaText": {
+    "placeholders": {
+      "remaining": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "limit": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusPaywallFree": "Tu es en Free",
+  "@appPlusPaywallFree": {},
+  "appPlusPaywallPerMonth": "{price} / mois",
+  "@appPlusPaywallPerMonth": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaywallSavings": "économise {percent} %",
+  "@appPlusPaywallSavings": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appPlusPaywallNoCommitment": "Sans engagement",
+  "@appPlusPaywallNoCommitment": {},
+  "appPlusPaywallBest": "Meilleure offre",
+  "@appPlusPaywallBest": {},
+  "appPlusPaywallContinue": "Continuer · {price} / {interval, select, year {an} month {mois} other {période}}",
+  "@appPlusPaywallContinue": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "interval": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaywallStayFree": "Rester en Free",
+  "@appPlusPaywallStayFree": {},
+  "appPlusPaywallLegal": "Prix en USD ; le store affiche le montant dans ta monnaie. Renouvellement automatique, résiliable à tout moment dans {store}.",
+  "@appPlusPaywallLegal": {
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusPaywallRestore": "Restaurer mes achats",
+  "@appPlusPaywallRestore": {},
+  "appPlusPaywallRestored": "Tes achats ont été restaurés.",
+  "@appPlusPaywallRestored": {},
+  "appPlusPaywallNothingRestored": "Aucun achat à restaurer avec ce compte.",
+  "@appPlusPaywallNothingRestored": {},
+  "appPlusPaywallWelcome": "Bienvenue dans Omeo Plus !",
+  "@appPlusPaywallWelcome": {},
+  "appPlusPaywallStoreError": "Le store n'est pas disponible pour le moment. Réessaie plus tard.",
+  "@appPlusPaywallStoreError": {},
+  "appPlusPaywallWeb": "Payer sur my-omeo.app",
+  "@appPlusPaywallWeb": {},
+  "appPlusPaywallErrorTitle": "Les offres n'ont pas pu être chargées",
+  "@appPlusPaywallErrorTitle": {},
+  "appPlusPaywallStore": "{platform, select, ios {l'App Store} other {Google Play}}",
+  "@appPlusPaywallStore": {
+    "placeholders": {
+      "platform": {
+        "type": "String"
+      }
+    }
+  }
 }

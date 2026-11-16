@@ -22,11 +22,15 @@ String? storeProductId(PlanCatalogPlansInner plan) =>
     ? plan.storeProductIds?.apple
     : plan.storeProductIds?.google;
 
+/// Offres et comparaison Free / Plus (GET /billing/plans).
+final FutureProvider<PlanCatalog> planCatalogProvider =
+    FutureProvider.autoDispose(
+      (ref) => ref.watch(subscriptionRepositoryProvider).listPlans(),
+    );
+
 final FutureProvider<List<PlanOffer>> planOffersProvider =
     FutureProvider.autoDispose((ref) async {
-      final catalog = await ref
-          .watch(subscriptionRepositoryProvider)
-          .listPlans();
+      final catalog = await ref.watch(planCatalogProvider.future);
       final ids = {
         for (final p in catalog.plans) ?storeProductId(p),
       };

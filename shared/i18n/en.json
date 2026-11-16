@@ -293,6 +293,33 @@
       "quota_free_body": "You've used all your analyses. With Omeo Plus, they're unlimited.",
       "quota_reset": "Your limit resets on {date}.",
       "ok": "Got it"
+    },
+    "plus": {
+      "paywall": {
+        "tag": "Omeo Plus",
+        "title": "Eat better,",
+        "title_accent": "without limits.",
+        "trial": "Free trial",
+        "trial_left": "{count, plural, =0 {Last day} one {# day left} other {# days left}}",
+        "quota_photo": "Photo analyses: {remaining, number} / {limit, number} left",
+        "quota_text": "Voice entries: {remaining, number} / {limit, number}",
+        "free": "You're on Free",
+        "per_month": "{price} / month",
+        "savings": "save {percent, number}%",
+        "no_commitment": "No commitment",
+        "best": "Best deal",
+        "continue": "Continue · {price} / {interval, select, year {year} month {month} other {period}}",
+        "stay_free": "Stay on Free",
+        "legal": "Prices in USD; the store shows the amount in your currency. Renews automatically, cancel anytime in {store}.",
+        "restore": "Restore purchases",
+        "restored": "Your purchases have been restored.",
+        "nothing_restored": "No purchases to restore for this account.",
+        "welcome": "Welcome to Omeo Plus!",
+        "store_error": "The store isn't available right now. Try again later.",
+        "web": "Pay on my-omeo.app",
+        "error_title": "Offers couldn't be loaded",
+        "store": "{platform, select, ios {the App Store} other {Google Play}}"
+      }
     }
   },
   "web": {

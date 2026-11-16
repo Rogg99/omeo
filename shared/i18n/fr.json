@@ -293,6 +293,33 @@
       "quota_free_body": "Tu as utilisé toutes tes analyses. Avec Omeo Plus, elles sont illimitées.",
       "quota_reset": "Ta limite se réinitialise le {date}.",
       "ok": "Compris"
+    },
+    "plus": {
+      "paywall": {
+        "tag": "Omeo Plus",
+        "title": "Mange mieux,",
+        "title_accent": "sans limite.",
+        "trial": "Essai gratuit",
+        "trial_left": "{count, plural, =0 {Dernier jour} one {# jour restant} other {# jours restants}}",
+        "quota_photo": "Analyses photo : {remaining, number} / {limit, number} restantes",
+        "quota_text": "Saisies vocales : {remaining, number} / {limit, number}",
+        "free": "Tu es en Free",
+        "per_month": "{price} / mois",
+        "savings": "économise {percent, number} %",
+        "no_commitment": "Sans engagement",
+        "best": "Meilleure offre",
+        "continue": "Continuer · {price} / {interval, select, year {an} month {mois} other {période}}",
+        "stay_free": "Rester en Free",
+        "legal": "Prix en USD ; le store affiche le montant dans ta monnaie. Renouvellement automatique, résiliable à tout moment dans {store}.",
+        "restore": "Restaurer mes achats",
+        "restored": "Tes achats ont été restaurés.",
+        "nothing_restored": "Aucun achat à restaurer avec ce compte.",
+        "welcome": "Bienvenue dans Omeo Plus !",
+        "store_error": "Le store n'est pas disponible pour le moment. Réessaie plus tard.",
+        "web": "Payer sur my-omeo.app",
+        "error_title": "Les offres n'ont pas pu être chargées",
+        "store": "{platform, select, ios {l'App Store} other {Google Play}}"
+      }
     }
   },
   "web": {

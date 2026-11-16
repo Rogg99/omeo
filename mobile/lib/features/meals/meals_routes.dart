@@ -9,6 +9,7 @@ import 'package:omeo/features/meals/presentation/add_meal_sheet.dart';
 import 'package:omeo/features/meals/presentation/analysis_screen.dart';
 import 'package:omeo/features/meals/presentation/camera_screen.dart';
 import 'package:omeo/features/meals/presentation/catalog_screen.dart';
+import 'package:omeo/features/meals/presentation/describe_meal_screen.dart';
 import 'package:omeo/features/meals/presentation/dish_screen.dart';
 import 'package:omeo/features/meals/presentation/meal_saved_screen.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
@@ -34,7 +35,7 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
         navigation: (
           onPhoto: (bytes) => _analyze(context, PhotoRequest(bytes)),
           onClose: context.pop,
-          onVoice: null,
+          onVoice: () => context.pushReplacement(MealsPaths.describe),
         ),
       ),
     ),
@@ -72,6 +73,13 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
       ),
     ),
     GoRoute(
+      path: MealsPaths.describe,
+      builder: (context, state) => DescribeMealScreen(
+        onClose: context.pop,
+        onAnalyze: (text) => _analyze(context, TextRequest(text)),
+      ),
+    ),
+    GoRoute(
       path: MealsPaths.saved,
       redirect: (context, state) =>
           state.extra is MealWriteResult ? null : TrackingPaths.home,
@@ -87,7 +95,7 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
       actions: (
         takePhoto: () => unawaited(context.push(MealsPaths.camera)),
         pickFromGallery: () => unawaited(_pickFromGallery(context)),
-        describe: null,
+        describe: () => unawaited(context.push(MealsPaths.describe)),
         searchCatalog: () => unawaited(context.push(MealsPaths.catalog)),
       ),
     ),

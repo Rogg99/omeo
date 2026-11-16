@@ -214,6 +214,26 @@
         "comment_hint": "Tell us more (optional)",
         "corrections": "{count, plural, one {Your correction will be attached.} other {Your # corrections will be attached.}}",
         "send": "Send"
+      },
+      "describe": {
+        "voice_title": "Dictate my meal",
+        "text_title": "Describe my meal",
+        "voice": "Voice",
+        "text": "Text",
+        "listening_hint": "Describe your meal, for example “a plate of ndolé with two fried plantains”.",
+        "stop": "Stop",
+        "start": "Speak",
+        "tap_to_stop": "Tap to finish",
+        "tap_to_start": "Tap to speak",
+        "left": "{count, plural, =0 {No entries left this month} one {# entry left this month} other {# entries left this month}}",
+        "text_hint": "Breakfast: millet porridge with milk and a doughnut",
+        "examples": "Examples",
+        "example_1": "2 bean fritters",
+        "example_2": "Garba with tuna",
+        "example_3": "Chicken yassa, rice",
+        "analyze": "Analyze",
+        "mic_denied": "The microphone isn't allowed. You can type your meal instead.",
+        "unavailable": "Dictation isn't available on this phone. You can type your meal instead."
       }
     },
     "nav": {

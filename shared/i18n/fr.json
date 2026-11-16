@@ -214,6 +214,26 @@
         "comment_hint": "Dis-nous en plus (facultatif)",
         "corrections": "{count, plural, one {Ta correction sera jointe à l'avis.} other {Tes # corrections seront jointes à l'avis.}}",
         "send": "Envoyer"
+      },
+      "describe": {
+        "voice_title": "Dicter mon repas",
+        "text_title": "Décrire mon repas",
+        "voice": "Voix",
+        "text": "Texte",
+        "listening_hint": "Décris ton repas, par exemple « une assiette de ndolé avec deux plantains frits ».",
+        "stop": "Arrêter",
+        "start": "Parler",
+        "tap_to_stop": "Touche pour terminer",
+        "tap_to_start": "Touche pour parler",
+        "left": "{count, plural, =0 {Plus de saisie ce mois-ci} one {# saisie restante ce mois-ci} other {# saisies restantes ce mois-ci}}",
+        "text_hint": "Petit-déjeuner : bouillie de mil avec du lait et un beignet",
+        "examples": "Exemples",
+        "example_1": "2 beignets haricots",
+        "example_2": "Garba au thon",
+        "example_3": "Yassa poulet, riz",
+        "analyze": "Analyser",
+        "mic_denied": "Le micro n'est pas autorisé. Tu peux écrire ton repas à la place.",
+        "unavailable": "La dictée n'est pas disponible sur ce téléphone. Tu peux écrire ton repas à la place."
       }
     },
     "nav": {

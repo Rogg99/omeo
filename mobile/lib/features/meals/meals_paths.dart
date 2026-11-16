@@ -4,6 +4,7 @@ abstract final class MealsPaths {
   static const analysis = '/meals/analysis';
   static const catalog = '/meals/catalog';
   static const saved = '/meals/saved';
+  static const describe = '/meals/describe';
   static const dish = '/meals/dishes/:id';
 
   static String dishOf(String id) => '/meals/dishes/$id';

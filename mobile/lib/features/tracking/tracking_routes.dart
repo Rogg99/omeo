@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/feature_routes.dart';
+import 'package:omeo/features/meals/meals_routes.dart';
 import 'package:omeo/features/tracking/presentation/home_screen.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
 
@@ -10,13 +11,13 @@ FeatureRoutes trackingRoutes(Ref ref) => FeatureRoutes(
     AppTab.home: [
       GoRoute(
         path: TrackingPaths.home,
-        builder: (context, state) => const HomeScreen(
+        builder: (context, state) => HomeScreen(
           unreadNotifications: 0,
           // Chaque destination est branchée par le module qui la fournit.
           navigation: (
             openHelp: null,
             openNotifications: null,
-            quickAction: null,
+            quickAction: (action) => mealQuickAction(context, action),
             openJournal: null,
             openShortcut: null,
             openProgram: null,

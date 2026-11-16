@@ -17,8 +17,15 @@ import 'package:omeo/features/meals/presentation/meal_detail_screen.dart';
 import 'package:omeo/features/meals/presentation/meal_saved_screen.dart';
 import 'package:omeo/features/meals/presentation/offline_banner.dart';
 import 'package:omeo/features/meals/presentation/review_screen.dart';
+import 'package:omeo/features/subscription/subscription_paths.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
-import 'package:omeo_api/omeo_api.dart' show Analysis, MealWriteResult;
+import 'package:omeo_api/omeo_api.dart'
+    show
+        Analysis,
+        HomeQuickActionsInner,
+        HomeQuickActionsInnerKindEnum,
+        HomeQuickActionsInnerLockedReasonEnum,
+        MealWriteResult;
 
 /// Ouvre l'analyse d'une photo à la place de l'écran courant.
 void _analyze(BuildContext context, AnalysisRequest request) =>
@@ -41,6 +48,24 @@ void _queued(BuildContext context) {
   final messenger = ScaffoldMessenger.of(context);
   context.go(TrackingPaths.home);
   messenger.showSnackBar(SnackBar(content: Text(l.appMealOfflineQueued)));
+}
+
+/// Action rapide de l'accueil (photo, vocal, catalogue). Une action
+/// verrouillée par l'offre ouvre la présentation de Plus.
+void mealQuickAction(BuildContext context, HomeQuickActionsInner action) {
+  if (!action.enabled) {
+    if (action.lockedReason ==
+        HomeQuickActionsInnerLockedReasonEnum.planRequired) {
+      unawaited(context.push(SubscriptionPaths.plus));
+    }
+    return;
+  }
+  final path = switch (action.kind) {
+    HomeQuickActionsInnerKindEnum.photo => MealsPaths.camera,
+    HomeQuickActionsInnerKindEnum.voice => MealsPaths.describe,
+    HomeQuickActionsInnerKindEnum.catalog => MealsPaths.catalog,
+  };
+  unawaited(context.push(path));
 }
 
 /// Routes du module des repas et action centrale « + » de la barre.

@@ -127,6 +127,23 @@
         "catalog_hint": "Catalog, recent and favorites",
         "quota_loading": "Analyses left…",
         "unlimited": "Unlimited analyses"
+      },
+      "analysis": {
+        "title": "Analysis",
+        "heading": "Looking at your plate…",
+        "step_dish": "Dish recognized",
+        "step_ingredients": "Ingredients detected",
+        "step_portions": "Portions estimated",
+        "step_nutrients": "Calculating nutrients",
+        "photo_label": "Photo of your meal",
+        "unusable_title": "We couldn't recognize a dish",
+        "unusable_body": "The photo is blurry or too dark. This analysis doesn't count.",
+        "tip_top": "Top-down view, whole plate",
+        "tip_light": "Near a window or with the flash",
+        "tip_still": "Hold the phone still",
+        "retake": "Retake the photo",
+        "search_catalog": "Search the catalog",
+        "error_title": "The analysis didn't go through"
       }
     },
     "nav": {

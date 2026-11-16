@@ -127,6 +127,23 @@
         "catalog_hint": "Catalogue, récents et favoris",
         "quota_loading": "Analyses restantes…",
         "unlimited": "Analyses illimitées"
+      },
+      "analysis": {
+        "title": "Analyse",
+        "heading": "On regarde ton assiette…",
+        "step_dish": "Plat reconnu",
+        "step_ingredients": "Ingrédients détectés",
+        "step_portions": "Portions estimées",
+        "step_nutrients": "Calcul des apports",
+        "photo_label": "Photo de ton repas",
+        "unusable_title": "On n'a pas reconnu de plat",
+        "unusable_body": "La photo est floue ou trop sombre. Cette analyse n'est pas décomptée.",
+        "tip_top": "Vue de dessus, toute l'assiette",
+        "tip_light": "Près d'une fenêtre ou avec le flash",
+        "tip_still": "Téléphone immobile",
+        "retake": "Reprendre la photo",
+        "search_catalog": "Chercher dans le catalogue",
+        "error_title": "L'analyse n'a pas abouti"
       }
     },
     "nav": {

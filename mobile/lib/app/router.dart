@@ -32,6 +32,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           navigationShell: shell,
           branchTabs: branchTabs,
           onAddMeal: onAddMeal,
+          banners: [
+            for (final m in modules) ?m.shellBanner,
+          ],
         ),
         branches: [
           for (final tab in branchTabs)

@@ -32,6 +32,7 @@ final class FeatureRoutes {
     this.tabs = const {},
     this.routes = const [],
     this.onAddMeal,
+    this.shellBanner,
   });
 
   /// Routes d'un onglet (sa pile de navigation, sous la barre).
@@ -42,6 +43,9 @@ final class FeatureRoutes {
 
   /// Action centrale « + » de la barre (fournie par le module des repas).
   final void Function(BuildContext context)? onAddMeal;
+
+  /// Bandeau affiché en haut des onglets (hors connexion, par exemple).
+  final Widget? shellBanner;
 }
 
 /// Fabrique des routes d'un module : elle peut lire des providers.

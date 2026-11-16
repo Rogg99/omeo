@@ -54,9 +54,6 @@
       "step": "{current} / {total}",
       "name": {
         "title": "Wie heißt du?"
-      },
-      "target_weight": {
-        "warning_lose": "Dein Zielgewicht liegt über deinem aktuellen Gewicht, du möchtest aber abnehmen."
       }
     },
     "home": {

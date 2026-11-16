@@ -54,9 +54,6 @@
       "step": "{current} / {total}",
       "name": {
         "title": "你叫什么名字？"
-      },
-      "target_weight": {
-        "warning_lose": "你的目标体重高于当前体重，但你的目标是减重。"
       }
     },
     "home": {

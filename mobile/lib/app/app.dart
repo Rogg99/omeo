@@ -9,6 +9,10 @@ import 'package:omeo/core/api/global_errors.dart';
 import 'package:omeo/core/l10n/gen/app_localizations.dart';
 import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/core/widgets/widgets.dart';
+import 'package:omeo/features/auth/application/session.dart';
+import 'package:omeo/features/auth/auth_paths.dart';
+import 'package:omeo/features/auth/presentation/consent_screens.dart';
+import 'package:omeo/features/profile/application/app_settings.dart';
 import 'package:omeo/features/support/presentation/system_screens.dart';
 import 'package:omeo/features/support/support_paths.dart';
 
@@ -19,7 +23,11 @@ class OmeoApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final settings = ref.watch(appSettingsProvider);
+    final language = settings.languageCode;
     return MaterialApp.router(
+      locale: language == null ? null : Locale(language),
+      themeMode: settings.themeMode,
       onGenerateTitle: (context) => AppLocalizations.of(context).commonPlusName,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -65,6 +73,7 @@ class GlobalErrorListener extends ConsumerStatefulWidget {
 class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
   StreamSubscription<GlobalErrorEvent>? _subscription;
   bool _quotaSheetOpen = false;
+  bool _consentSheetOpen = false;
 
   @override
   void initState() {
@@ -91,9 +100,14 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
         );
       case QuotaExceeded(:final canUpgrade, :final resetsAt):
         unawaited(_showQuota(canUpgrade: canUpgrade, resetsAt: resetsAt));
-      // Présentation de Plus, réacceptation des CGU et déconnexion :
-      // traitées par les modules abonnement, compte et authentification.
-      case PlanRequired() || ConsentRequired() || SignedOut():
+      case ConsentRequired(:final documents):
+        unawaited(_showConsent(documents));
+      case SignedOut():
+        // Jetons déjà effacés : la garde de session ramène à l'accueil
+        // public.
+        unawaited(ref.read(sessionProvider.notifier).expire());
+      // Présentation de Plus : traitée par le module abonnement.
+      case PlanRequired():
         break;
     }
   }
@@ -115,6 +129,28 @@ class _GlobalErrorListenerState extends ConsumerState<GlobalErrorListener> {
     _quotaSheetOpen = false;
   }
 
+  /// Nouvelles CGU (SYS-05) : feuille non fermable avant acceptation.
+  Future<void> _showConsent(List<String> documents) async {
+    final context = widget.router.routerDelegate.navigatorKey.currentContext;
+    if (_consentSheetOpen || context == null || documents.isEmpty) return;
+    _consentSheetOpen = true;
+    await showConsentSheet(
+      context: context,
+      documentKinds: documents,
+      onRead: (kind) => widget.router.push(AuthPaths.legalOf(kind)),
+    );
+    _consentSheetOpen = false;
+  }
+
   @override
-  Widget build(BuildContext context) => widget.child;
+  Widget build(BuildContext context) {
+    // Documents à réaccepter signalés par /me, avant tout refus de l'API.
+    ref.listen(meProvider, (_, next) {
+      final pending = next.value?.pendingDocuments ?? const [];
+      if (pending.isNotEmpty) {
+        unawaited(_showConsent([for (final d in pending) d.kind.value]));
+      }
+    });
+    return widget.child;
+  }
 }

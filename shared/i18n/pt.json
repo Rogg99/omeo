@@ -54,9 +54,6 @@
       "step": "{current} / {total}",
       "name": {
         "title": "Qual é o seu nome?"
-      },
-      "target_weight": {
-        "warning_lose": "Seu peso desejado é maior que o atual, mas você quer emagrecer."
       }
     },
     "home": {

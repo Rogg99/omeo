@@ -132,9 +132,7 @@ class OmeoTextField extends StatelessWidget {
                 ? text.headlineSmall?.copyWith(color: t.text3)
                 : text.bodyLarge?.copyWith(color: t.text3),
             enabledBorder: borderColor == null ? null : border(borderColor),
-            focusedBorder: borderColor == null
-                ? null
-                : border(borderColor, 2),
+            focusedBorder: borderColor == null ? null : border(borderColor, 2),
           ),
         ),
         if (helpText != null || maxLength != null)

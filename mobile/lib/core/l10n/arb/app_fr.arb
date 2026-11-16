@@ -108,6 +108,14 @@
   "@errorsCaptchaFailed": {},
   "errorsNetworkError": "Impossible de joindre nos serveurs. Vérifie ta connexion et réessaie.",
   "@errorsNetworkError": {},
+  "errorsForbiddenRole": "Ton rôle ne permet pas cette action.",
+  "@errorsForbiddenRole": {},
+  "errorsCsrfFailed": "La page a expiré. Recharge-la puis réessaie.",
+  "@errorsCsrfFailed": {},
+  "errorsApprovalPending": "Une demande identique attend déjà une validation.",
+  "@errorsApprovalPending": {},
+  "errorsInvalidMfaCode": "Code incorrect. Réessaie.",
+  "@errorsInvalidMfaCode": {},
   "appOnboardingStep": "{current} / {total}",
   "@appOnboardingStep": {
     "placeholders": {

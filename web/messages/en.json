@@ -47,7 +47,11 @@
     "forbidden": "You don't have access to this action.",
     "mfa_required": "This account can only sign in from the admin area.",
     "captcha_failed": "The anti-bot check failed. Please try again.",
-    "network_error": "We can't reach our servers. Check your connection and try again."
+    "network_error": "We can't reach our servers. Check your connection and try again.",
+    "forbidden_role": "Ton rôle ne permet pas cette action.",
+    "csrf_failed": "La page a expiré. Recharge-la puis réessaie.",
+    "approval_pending": "Une demande identique attend déjà une validation.",
+    "invalid_mfa_code": "Code incorrect. Réessaie."
   },
   "web": {
     "hero": {

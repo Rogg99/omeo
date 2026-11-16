@@ -3519,7 +3519,7 @@ export interface components {
             today: components["schemas"]["ProgramDayView"];
             week: components["schemas"]["ProgramDayView"][];
             /** @description Bilan final (poids, assiduité) si terminé */
-            report?: Record<string, never> | null;
+            report?: Record<string, unknown> | null;
         };
         ChallengeSummary: {
             /** Format: uuid */
@@ -7733,7 +7733,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": Record<string, never>;
+                "application/json": Record<string, unknown>;
             };
         };
         responses: {
@@ -7781,7 +7781,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": Record<string, never>;
+                "application/json": Record<string, unknown>;
             };
         };
         responses: {
@@ -8157,7 +8157,7 @@ export interface operations {
                         author: string;
                         /** Format: date-time */
                         created_at: string;
-                        snapshot?: Record<string, never>;
+                        snapshot?: Record<string, unknown>;
                     }[];
                 };
             };

@@ -17,6 +17,7 @@ __pycache__/
 api/db.sqlite3
 api/media/
 api/staticfiles/
+api/celerybeat-schedule*
 .pytest_cache/
 .coverage
 htmlcov/

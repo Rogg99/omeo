@@ -748,6 +748,26 @@
   "@appMealDeleteDeleted": {},
   "appMealDeleteUndo": "Annuler",
   "@appMealDeleteUndo": {},
+  "appMealOfflineBanner": "Hors connexion",
+  "@appMealOfflineBanner": {},
+  "appMealOfflineBannerPending": "Hors connexion · {count, plural, one {{count} repas en attente d'envoi} other {{count} repas en attente d'envoi}}",
+  "@appMealOfflineBannerPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealOfflineSyncing": "{count, plural, one {Envoi de {count} repas…} other {Envoi de {count} repas…}}",
+  "@appMealOfflineSyncing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appMealOfflineQueued": "Repas enregistré. Il sera calculé au retour du réseau.",
+  "@appMealOfflineQueued": {},
   "appNavHome": "Accueil",
   "@appNavHome": {},
   "appNavProgress": "Progression",

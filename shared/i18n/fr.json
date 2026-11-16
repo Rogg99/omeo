@@ -265,6 +265,12 @@
         "body": "{title} ({kcal}) sera retiré de ton journal et tes totaux seront recalculés.",
         "deleted": "Repas supprimé",
         "undo": "Annuler"
+      },
+      "offline": {
+        "banner": "Hors connexion",
+        "banner_pending": "Hors connexion · {count, plural, one {# repas en attente d'envoi} other {# repas en attente d'envoi}}",
+        "syncing": "{count, plural, one {Envoi de # repas…} other {Envoi de # repas…}}",
+        "queued": "Repas enregistré. Il sera calculé au retour du réseau."
       }
     },
     "nav": {

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:omeo/features/meals/application/meal_writer.dart';
 import 'package:omeo/features/meals/data/meals_repository.dart';
 import 'package:omeo_api/omeo_api.dart';
-import 'package:uuid/uuid.dart';
 
 /// Portions proposées pour un plat du catalogue, en multiples de la portion
 /// standard (valeur envoyée telle quelle à l'API).
@@ -34,23 +34,22 @@ final FutureProvider<MealType> suggestedMealTypeProvider =
 
 /// Écritures autour d'un plat du catalogue.
 class DishActions {
-  DishActions(this._repo);
+  DishActions(this._repo, this._writer);
 
   final MealsRepository _repo;
-  static const _uuid = Uuid();
+  final MealWriter _writer;
 
   Future<void> setFavorite(String id, {required bool favorite}) =>
       _repo.setDishFavorite(id, favorite: favorite);
 
   /// Ajoute le plat au journal ; l'API renvoie le jour recalculé et les
-  /// points gagnés.
-  Future<MealWriteResult> addToJournal({
+  /// points gagnés, ou le repas attend le retour du réseau.
+  Future<MealSaveOutcome> addToJournal({
     required String dishId,
     required DishPortion portion,
     required MealType mealType,
-  }) => _repo.createMeal(
-    idempotencyKey: _uuid.v4(),
-    input: MealInput(
+  }) => _writer.save(
+    MealInput(
       source_: MealInputSource_Enum.dish,
       mealType: mealType,
       dishId: dishId,
@@ -60,5 +59,8 @@ class DishActions {
 }
 
 final Provider<DishActions> dishActionsProvider = Provider(
-  (ref) => DishActions(ref.watch(mealsRepositoryProvider)),
+  (ref) => DishActions(
+    ref.watch(mealsRepositoryProvider),
+    ref.watch(mealWriterProvider),
+  ),
 );

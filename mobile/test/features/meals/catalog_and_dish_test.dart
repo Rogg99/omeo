@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:omeo/core/l10n/gen/app_localizations.dart';
+import 'package:omeo/core/offline/offline_queue.dart';
+import 'package:omeo/core/offline/offline_store.dart';
 import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/features/meals/data/meals_repository.dart';
 import 'package:omeo/features/meals/presentation/catalog_screen.dart';
@@ -15,6 +17,10 @@ Widget _app(Widget home, MockBackend backend) => ProviderScope(
   retry: (_, _) => null,
   overrides: [
     mealsRepositoryProvider.overrideWithValue(MealsMockRepository(backend)),
+    offlineStoreProvider.overrideWithValue(MemoryOfflineStore()),
+    connectivityProvider.overrideWith(
+      (ref) => Stream.value(!backend.isOffline),
+    ),
   ],
   child: MaterialApp(
     locale: const Locale('fr'),
@@ -69,6 +75,7 @@ void main() {
           navigation: (
             onClose: () {},
             onSaved: saved.add,
+            onQueued: () {},
             openRecipe: null,
           ),
         ),
@@ -86,5 +93,29 @@ void main() {
     await tester.tap(find.text('Ajouter au dîner'));
     await tester.pumpAndSettle();
     expect(saved.single.meal.title, 'Ndolé');
+  });
+
+  testWidgets('sans réseau, le repas est mis en attente', (tester) async {
+    var queued = 0;
+    final backend = MockBackend(latency: Duration.zero);
+    await tester.pumpWidget(
+      _app(
+        DishScreen(
+          dishId: ndoleId,
+          navigation: (
+            onClose: () {},
+            onSaved: (_) {},
+            onQueued: () => queued++,
+            openRecipe: null,
+          ),
+        ),
+        backend,
+      ),
+    );
+    await tester.pumpAndSettle();
+    backend.setNetworkDown(down: true);
+    await tester.tap(find.textContaining('Ajouter au'));
+    await tester.pumpAndSettle();
+    expect(queued, 1);
   });
 }

@@ -12,6 +12,7 @@ import 'package:omeo/core/theme/omeo_theme.dart';
 import 'package:omeo/core/theme/tokens.g.dart';
 import 'package:omeo/core/widgets/widgets.dart';
 import 'package:omeo/features/meals/application/dish_controller.dart';
+import 'package:omeo/features/meals/application/meal_writer.dart';
 import 'package:omeo/features/meals/presentation/catalog_screen.dart';
 import 'package:omeo/features/meals/presentation/meal_type_chips.dart';
 import 'package:omeo_api/omeo_api.dart'
@@ -21,6 +22,7 @@ import 'package:omeo_api/omeo_api.dart'
 typedef DishNavigation = ({
   VoidCallback onClose,
   ValueChanged<MealWriteResult> onSaved,
+  VoidCallback onQueued,
   ValueChanged<String>? openRecipe,
 });
 
@@ -65,7 +67,12 @@ class _DishScreenState extends ConsumerState<DishScreen> {
             mealType: type,
           );
       unawaited(HapticFeedback.mediumImpact());
-      widget.navigation.onSaved(result);
+      switch (result) {
+        case MealSaved(:final result):
+          widget.navigation.onSaved(result);
+        case MealQueued():
+          widget.navigation.onQueued();
+      }
     } on ApiFailure catch (e) {
       ref.read(globalErrorBusProvider).report(e);
       if (mounted) {

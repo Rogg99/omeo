@@ -265,6 +265,12 @@
         "body": "{title} ({kcal}) will be removed from your journal and your totals recalculated.",
         "deleted": "Meal deleted",
         "undo": "Undo"
+      },
+      "offline": {
+        "banner": "Offline",
+        "banner_pending": "Offline · {count, plural, one {# meal waiting to be sent} other {# meals waiting to be sent}}",
+        "syncing": "{count, plural, one {Sending # meal…} other {Sending # meals…}}",
+        "queued": "Meal saved. It will be calculated when you're back online."
       }
     },
     "nav": {

@@ -180,6 +180,17 @@ final class MealsMockRepository implements MealsRepository {
   );
 
   @override
+  Future<MealType> suggestMealType() => _backend.call(() {
+    final hour = DateTime.now().hour;
+    return switch (hour) {
+      < 11 => MealType.breakfast,
+      < 15 => MealType.lunch,
+      < 18 => MealType.snack,
+      _ => MealType.dinner,
+    };
+  });
+
+  @override
   Future<SearchDishes200Response> searchDishes({
     String? query,
     String? country,

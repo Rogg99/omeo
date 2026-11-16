@@ -159,6 +159,42 @@
         "denied_body": "To analyze your dishes. Photos are only used for your tracking and you can delete them.",
         "open_settings": "Open settings",
         "pick_gallery": "Choose from gallery"
+      },
+      "catalog": {
+        "title": "Search for a dish",
+        "search_hint": "Ndolé, attiéké, yassa…",
+        "all_countries": "All countries",
+        "country": "{code, select, CM {Cameroon} SN {Senegal} CI {Côte d'Ivoire} TG {Togo} ML {Mali} BF {Burkina Faso} other {Other}}",
+        "recent": "Recent",
+        "favorites": "Favorites",
+        "results": "Results",
+        "portion": "1 serving · {kcal, number} kcal",
+        "add": "Add {name}",
+        "empty_title": "No dish found",
+        "empty_body": "Try another name: local names work too.",
+        "error_title": "The catalog couldn't be loaded"
+      },
+      "dish": {
+        "photo_label": "Photo: {name}",
+        "aka": "also called “{names}”",
+        "favorite_add": "Add to favorites",
+        "favorite_remove": "Remove from favorites",
+        "portion": "Serving",
+        "portion_value": "{portion, select, half {½} one {1 plate} one_half {1½} two {2} other {1 plate}}",
+        "portion_weight": "1 plate ≈ {grams, number} g",
+        "per_portion": "Nutrients for 1 plate",
+        "meal_type": "Meal type",
+        "add_to": "Add to {type, select, breakfast {breakfast} lunch {lunch} snack {snack} dinner {dinner} other {meal}}",
+        "recipe": "See the recipe",
+        "error_title": "This dish couldn't be loaded",
+        "saved": "{type, select, breakfast {Breakfast} lunch {Lunch} snack {Snack} dinner {Dinner} other {Meal}} saved"
+      },
+      "macro": {
+        "kcal": "kcal",
+        "protein": "prot.",
+        "carbs": "carbs",
+        "fat": "fat",
+        "grams": "{value, number} g"
       }
     },
     "nav": {

@@ -159,6 +159,42 @@
         "denied_body": "Pour analyser tes plats. Les photos ne servent qu'à ton suivi et tu peux les supprimer.",
         "open_settings": "Ouvrir les réglages",
         "pick_gallery": "Choisir dans la galerie"
+      },
+      "catalog": {
+        "title": "Chercher un plat",
+        "search_hint": "Ndolé, attiéké, yassa…",
+        "all_countries": "Tous les pays",
+        "country": "{code, select, CM {Cameroun} SN {Sénégal} CI {Côte d'Ivoire} TG {Togo} ML {Mali} BF {Burkina Faso} other {Autre}}",
+        "recent": "Récents",
+        "favorites": "Favoris",
+        "results": "Résultats",
+        "portion": "1 portion · {kcal, number} kcal",
+        "add": "Ajouter {name}",
+        "empty_title": "Aucun plat trouvé",
+        "empty_body": "Essaie un autre nom : les noms locaux sont aussi reconnus.",
+        "error_title": "Le catalogue n'a pas pu être chargé"
+      },
+      "dish": {
+        "photo_label": "Photo : {name}",
+        "aka": "aussi appelé « {names} »",
+        "favorite_add": "Ajouter aux favoris",
+        "favorite_remove": "Retirer des favoris",
+        "portion": "Portion",
+        "portion_value": "{portion, select, half {½} one {1 assiette} one_half {1½} two {2} other {1 assiette}}",
+        "portion_weight": "1 assiette ≈ {grams, number} g",
+        "per_portion": "Apports pour 1 assiette",
+        "meal_type": "Type de repas",
+        "add_to": "Ajouter au {type, select, breakfast {petit-déjeuner} lunch {déjeuner} snack {goûter} dinner {dîner} other {repas}}",
+        "recipe": "Voir la recette",
+        "error_title": "Ce plat n'a pas pu être chargé",
+        "saved": "{type, select, breakfast {Petit-déjeuner} lunch {Déjeuner} snack {Collation} dinner {Dîner} other {Repas}} enregistré"
+      },
+      "macro": {
+        "kcal": "kcal",
+        "protein": "prot.",
+        "carbs": "gluc.",
+        "fat": "lip.",
+        "grams": "{value, number} g"
       }
     },
     "nav": {

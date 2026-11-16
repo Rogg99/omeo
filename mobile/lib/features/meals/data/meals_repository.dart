@@ -54,6 +54,9 @@ abstract interface class MealsRepository {
     required String idempotencyKey,
   });
 
+  /// Type de repas proposé selon l'heure locale (X-Timezone).
+  Future<MealType> suggestMealType();
+
   Future<SearchDishes200Response> searchDishes({
     String? query,
     String? country,
@@ -211,6 +214,10 @@ final class MealsApiRepository implements MealsRepository {
   }) => guardApi(
     () => _meals.createMeal(idempotencyKey: idempotencyKey, mealInput: input),
   );
+
+  @override
+  Future<MealType> suggestMealType() async =>
+      (await guardApi(_meals.suggestMealType)).mealType;
 
   @override
   Future<SearchDishes200Response> searchDishes({

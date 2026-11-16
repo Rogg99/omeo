@@ -1,13 +1,18 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/feature_routes.dart';
+import 'package:omeo/core/l10n/gen/app_localizations.dart';
 import 'package:omeo/features/meals/meals_paths.dart';
 import 'package:omeo/features/meals/presentation/add_meal_sheet.dart';
 import 'package:omeo/features/meals/presentation/analysis_screen.dart';
 import 'package:omeo/features/meals/presentation/camera_screen.dart';
+import 'package:omeo/features/meals/presentation/catalog_screen.dart';
+import 'package:omeo/features/meals/presentation/dish_screen.dart';
+import 'package:omeo/features/tracking/tracking_paths.dart';
+import 'package:omeo_api/omeo_api.dart' show MealWriteResult;
 
 /// Ouvre l'analyse d'une photo à la place de l'écran courant.
 void _analyze(BuildContext context, AnalysisRequest request) =>
@@ -18,6 +23,16 @@ Future<void> _pickFromGallery(BuildContext context) async {
   if (bytes != null && context.mounted) {
     unawaited(context.push(MealsPaths.analysis, extra: PhotoRequest(bytes)));
   }
+}
+
+/// Repas enregistré : retour à l'accueil, qui relit la journée.
+void _saved(BuildContext context, MealWriteResult result) {
+  final l = AppLocalizations.of(context);
+  final messenger = ScaffoldMessenger.of(context);
+  context.go(TrackingPaths.home);
+  messenger.showSnackBar(
+    SnackBar(content: Text(l.appMealDishSaved(result.meal.mealType.value))),
+  );
 }
 
 /// Routes du module des repas et action centrale « + » de la barre.
@@ -43,7 +58,25 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
           onSucceeded: (_) => context.pop(),
           onClose: context.pop,
           onRetake: () => context.pushReplacement(MealsPaths.camera),
-          onSearchCatalog: null,
+          onSearchCatalog: () => context.pushReplacement(MealsPaths.catalog),
+        ),
+      ),
+    ),
+    GoRoute(
+      path: MealsPaths.catalog,
+      builder: (context, state) => CatalogScreen(
+        onClose: context.pop,
+        onDish: (dish) => unawaited(context.push(MealsPaths.dishOf(dish.id))),
+      ),
+    ),
+    GoRoute(
+      path: MealsPaths.dish,
+      builder: (context, state) => DishScreen(
+        dishId: state.pathParameters['id']!,
+        navigation: (
+          onClose: context.pop,
+          onSaved: (result) => _saved(context, result),
+          openRecipe: null,
         ),
       ),
     ),
@@ -55,7 +88,7 @@ FeatureRoutes mealsRoutes(Ref ref) => FeatureRoutes(
         takePhoto: () => unawaited(context.push(MealsPaths.camera)),
         pickFromGallery: () => unawaited(_pickFromGallery(context)),
         describe: null,
-        searchCatalog: null,
+        searchCatalog: () => unawaited(context.push(MealsPaths.catalog)),
       ),
     ),
   ),

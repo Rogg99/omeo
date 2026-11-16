@@ -2,4 +2,8 @@
 abstract final class MealsPaths {
   static const camera = '/meals/camera';
   static const analysis = '/meals/analysis';
+  static const catalog = '/meals/catalog';
+  static const dish = '/meals/dishes/:id';
+
+  static String dishOf(String id) => '/meals/dishes/$id';
 }

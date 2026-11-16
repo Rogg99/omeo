@@ -407,6 +407,129 @@
   "@appMealCameraOpenSettings": {},
   "appMealCameraPickGallery": "Choisir dans la galerie",
   "@appMealCameraPickGallery": {},
+  "appMealCatalogTitle": "Chercher un plat",
+  "@appMealCatalogTitle": {},
+  "appMealCatalogSearchHint": "Ndolé, attiéké, yassa…",
+  "@appMealCatalogSearchHint": {},
+  "appMealCatalogAllCountries": "Tous les pays",
+  "@appMealCatalogAllCountries": {},
+  "appMealCatalogCountry": "{code, select, CM {Cameroun} SN {Sénégal} CI {Côte d'Ivoire} TG {Togo} ML {Mali} BF {Burkina Faso} other {Autre}}",
+  "@appMealCatalogCountry": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealCatalogRecent": "Récents",
+  "@appMealCatalogRecent": {},
+  "appMealCatalogFavorites": "Favoris",
+  "@appMealCatalogFavorites": {},
+  "appMealCatalogResults": "Résultats",
+  "@appMealCatalogResults": {},
+  "appMealCatalogPortion": "1 portion · {kcal} kcal",
+  "@appMealCatalogPortion": {
+    "placeholders": {
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealCatalogAdd": "Ajouter {name}",
+  "@appMealCatalogAdd": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealCatalogEmptyTitle": "Aucun plat trouvé",
+  "@appMealCatalogEmptyTitle": {},
+  "appMealCatalogEmptyBody": "Essaie un autre nom : les noms locaux sont aussi reconnus.",
+  "@appMealCatalogEmptyBody": {},
+  "appMealCatalogErrorTitle": "Le catalogue n'a pas pu être chargé",
+  "@appMealCatalogErrorTitle": {},
+  "appMealDishPhotoLabel": "Photo : {name}",
+  "@appMealDishPhotoLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishAka": "aussi appelé « {names} »",
+  "@appMealDishAka": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishFavoriteAdd": "Ajouter aux favoris",
+  "@appMealDishFavoriteAdd": {},
+  "appMealDishFavoriteRemove": "Retirer des favoris",
+  "@appMealDishFavoriteRemove": {},
+  "appMealDishPortion": "Portion",
+  "@appMealDishPortion": {},
+  "appMealDishPortionValue": "{portion, select, half {½} one {1 assiette} one_half {1½} two {2} other {1 assiette}}",
+  "@appMealDishPortionValue": {
+    "placeholders": {
+      "portion": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishPortionWeight": "1 assiette ≈ {grams} g",
+  "@appMealDishPortionWeight": {
+    "placeholders": {
+      "grams": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appMealDishPerPortion": "Apports pour 1 assiette",
+  "@appMealDishPerPortion": {},
+  "appMealDishMealType": "Type de repas",
+  "@appMealDishMealType": {},
+  "appMealDishAddTo": "Ajouter au {type, select, breakfast {petit-déjeuner} lunch {déjeuner} snack {goûter} dinner {dîner} other {repas}}",
+  "@appMealDishAddTo": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealDishRecipe": "Voir la recette",
+  "@appMealDishRecipe": {},
+  "appMealDishErrorTitle": "Ce plat n'a pas pu être chargé",
+  "@appMealDishErrorTitle": {},
+  "appMealDishSaved": "{type, select, breakfast {Petit-déjeuner} lunch {Déjeuner} snack {Collation} dinner {Dîner} other {Repas}} enregistré",
+  "@appMealDishSaved": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "appMealMacroKcal": "kcal",
+  "@appMealMacroKcal": {},
+  "appMealMacroProtein": "prot.",
+  "@appMealMacroProtein": {},
+  "appMealMacroCarbs": "gluc.",
+  "@appMealMacroCarbs": {},
+  "appMealMacroFat": "lip.",
+  "@appMealMacroFat": {},
+  "appMealMacroGrams": "{value} g",
+  "@appMealMacroGrams": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
   "appNavHome": "Accueil",
   "@appNavHome": {},
   "appNavProgress": "Progression",

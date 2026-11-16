@@ -144,6 +144,21 @@
         "retake": "Retake the photo",
         "search_catalog": "Search the catalog",
         "error_title": "The analysis didn't go through"
+      },
+      "camera": {
+        "close": "Close",
+        "flash_on": "Turn flash on",
+        "flash_off": "Turn flash off",
+        "gallery": "Gallery",
+        "shutter": "Take the photo",
+        "voice": "Voice input",
+        "tip": "Frame the whole plate, from above, in good light",
+        "preview": "Camera preview",
+        "unavailable": "The camera isn't available on this device.",
+        "denied_title": "Omeo needs your camera",
+        "denied_body": "To analyze your dishes. Photos are only used for your tracking and you can delete them.",
+        "open_settings": "Open settings",
+        "pick_gallery": "Choose from gallery"
       }
     },
     "nav": {

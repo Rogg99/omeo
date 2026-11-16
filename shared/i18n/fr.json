@@ -144,6 +144,21 @@
         "retake": "Reprendre la photo",
         "search_catalog": "Chercher dans le catalogue",
         "error_title": "L'analyse n'a pas abouti"
+      },
+      "camera": {
+        "close": "Fermer",
+        "flash_on": "Activer le flash",
+        "flash_off": "Désactiver le flash",
+        "gallery": "Galerie",
+        "shutter": "Prendre la photo",
+        "voice": "Saisie vocale",
+        "tip": "Cadre toute l'assiette, vue de dessus, avec de la lumière",
+        "preview": "Aperçu de la caméra",
+        "unavailable": "La caméra n'est pas disponible sur cet appareil.",
+        "denied_title": "Omeo a besoin de ta caméra",
+        "denied_body": "Pour analyser tes plats. Les photos ne servent qu'à ton suivi et tu peux les supprimer.",
+        "open_settings": "Ouvrir les réglages",
+        "pick_gallery": "Choisir dans la galerie"
       }
     },
     "nav": {

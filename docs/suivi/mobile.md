@@ -26,10 +26,10 @@
 | Module | Session | Écrans | ✅ | 🔀 | 🚧 | ⏳ |
 |---|---|---|---|---|---|---|
 | Accueil | Socle | 5 | 5 | | | |
-| Onboarding | A | 16 | | 16 | | |
-| Compte | A | 6 | | 6 | | |
-| Journal | A | 4 | | | | 4 |
-| Progression | A | 7 | | | | 7 |
+| Onboarding | A | 16 | 16 | | | |
+| Compte | A | 6 | 6 | | | |
+| Journal | A | 4 | 4 | | | |
+| Progression | A | 7 | 7 | | | |
 | Profil | A | 13 | | | | 13 |
 | Notifications | A | 3 | | | | 3 |
 | Support | A | 4 | | | | 4 |
@@ -42,10 +42,10 @@
 | Récompenses | B | 4 | | | | 4 |
 | Recettes | B | 4 | | | | 4 |
 | Plantes et Prévention | B | 4 | | | | 4 |
-| États système | Socle, A, B | 10 | 9 | 1 | | |
-| **Total** | | **127** | **34** | **32** | **7** | **54** |
+| États système | Socle, A, B | 10 | 10 | | | |
+| **Total** | | **127** | **68** | **9** | **7** | **43** |
 
-Avancement : **66 écrans terminés sur 127 (52 %)**, dont 34 déjà dans `main`.
+Avancement : **77 écrans terminés sur 127 (61 %)**, dont 68 déjà dans `main`.
 
 ## Détail par écran
 
@@ -68,20 +68,20 @@ Avancement : **66 écrans terminés sur 127 (52 %)**, dont 34 déjà dans `main`
 
 | Écran | Titre | Statut | Branche | Commit |
 |---|---|---|---|---|
-| ONB-01 à ONB-16 | Démarrage, langue, bienvenue, étapes 1 à 9, code invalide, calcul et plan prêt | 🔀 | `mobile-a` | `752855d` |
-| ACC-01 à ACC-06 | Connexion, erreur, mot de passe oublié, lien envoyé, nouveau mot de passe, vérification de l'email | 🔀 | `mobile-a` | `752855d` |
-| SYS-05 | Nouvelles CGU à accepter | 🔀 | `mobile-a` | `752855d` |
-| HIS-01 | Journal du jour | ⏳ | | |
-| HIS-02 | Calendrier | ⏳ | | |
-| HIS-03 | Ajouter de l'eau | ⏳ | | |
-| HIS-04 | Journée vide | ⏳ | | |
-| PRO-01 | Progression · 7 jours | ⏳ | | |
-| PRO-02 | Progression · sel | ⏳ | | |
-| PRO-03 | Période réservée à Plus | ⏳ | | |
-| PRO-04 | Progression · vide | ⏳ | | |
-| PRO-05 | Autorisation santé | ⏳ | | |
-| PRO-06 | Suivi du poids | ⏳ | | |
-| PRO-07 | Nouvelle pesée | ⏳ | | |
+| ONB-01 à ONB-16 | Démarrage, langue, bienvenue, étapes 1 à 9, code invalide, calcul et plan prêt | ✅ | `main` | `752855d` |
+| ACC-01 à ACC-06 | Connexion, erreur, mot de passe oublié, lien envoyé, nouveau mot de passe, vérification de l'email | ✅ | `main` | `752855d` |
+| SYS-05 | Nouvelles CGU à accepter | ✅ | `main` | `752855d` |
+| HIS-01 | Journal du jour | ✅ | `main` | `a6e7b1e` |
+| HIS-02 | Calendrier | ✅ | `main` | `a6e7b1e` |
+| HIS-03 | Ajouter de l'eau | ✅ | `main` | `a6e7b1e` |
+| HIS-04 | Journée vide | ✅ | `main` | `a6e7b1e` |
+| PRO-01 | Progression · 7 jours | ✅ | `main` | `a6e7b1e` |
+| PRO-02 | Progression · sel | ✅ | `main` | `a6e7b1e` |
+| PRO-03 | Période réservée à Plus | ✅ | `main` | `a6e7b1e` |
+| PRO-04 | Progression · vide | ✅ | `main` | `a6e7b1e` |
+| PRO-05 | Autorisation santé | ✅ | `main` | `a6e7b1e` |
+| PRO-06 | Suivi du poids | ✅ | `main` | `a6e7b1e` |
+| PRO-07 | Nouvelle pesée | ✅ | `main` | `a6e7b1e` |
 | PRF-01 à PRF-13 | Profil, corps et objectif, compte, mot de passe, santé, paramètres, langue, unités, confidentialité, déconnexion, suppression (2), noter Omeo | ⏳ | | |
 | NOT-01 à NOT-03 | Centre de notifications, aucune notification, réglages | ⏳ | | |
 | SUP-01 à SUP-04 | Aide et contact, formulaire, message envoyé, réponse du support | ⏳ | | |
@@ -125,6 +125,7 @@ Les décisions marquées « toi » attendent une réponse de l'utilisateur.
 | B-03 | Contrat `ActivityOverview.week_summary` | Proposition non validée (sur `mobile-b`) | Résumé de la semaine de SPO-04 | toi, puis B |
 | B-04 | Contrat `ReferralOverview.days_per_referral` et `referee_trial_days` | Proposition non validée (sur `mobile-b`) | Textes de REF-01 sur les jours gagnés | toi, puis B |
 | B-05 | Doublon dans CHANGES.md | Une ligne « servers / staging » est encore « Proposé » alors que le changement est appliqué (contrat 1.1.5) | Aucun ; ligne à clore | toi (validation) |
+| A-01 | Intégrations natives Google / Apple et Health Connect / HealthKit | Identifiants OAuth par flavor et paquet `health` à configurer | Boutons sociaux et connexion santé masqués hors mock | toi |
 | B-06 | `Gauge.over_by` côté API | Champ dans le contrat 1.1.5, pas encore renvoyé par l'API | HOM-04 vide hors mock | agent API |
 
 ## Avant la mise en production
@@ -144,5 +145,5 @@ Ces valeurs à renseigner ne bloquent pas le développement.
 | Date | Branche → `main` | Contenu |
 |---|---|---|
 | 2026-11-16 | `mobile-b` | Repas (sauf MEA-04 à 07), file hors connexion, Plus, Parrainage |
-| à faire | `mobile-a` | Onboarding, Compte, SYS-05 |
+| 2026-11-16 | `mobile-a` | Onboarding, Compte, SYS-05, Journal, Progression |
 | à faire | `mobile-b` | MEA-04 à 07, Sport, Séances en cours |

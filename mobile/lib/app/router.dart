@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/app_shell.dart';
 import 'package:omeo/app/navigation/feature_routes.dart';
+import 'package:omeo/features/activity/activity_routes.dart';
 import 'package:omeo/features/meals/meals_routes.dart';
 import 'package:omeo/features/subscription/subscription_routes.dart';
 import 'package:omeo/features/support/support_routes.dart';
@@ -14,6 +15,7 @@ final List<FeatureRoutesBuilder> _modules = [
   supportRoutes,
   mealsRoutes,
   subscriptionRoutes,
+  activityRoutes,
 ];
 
 final routerProvider = Provider<GoRouter>((ref) {

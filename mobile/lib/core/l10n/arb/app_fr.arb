@@ -1327,5 +1327,262 @@
   "appReferralEmpty": "Tes filleuls apparaîtront ici.",
   "@appReferralEmpty": {},
   "appReferralErrorTitle": "Le parrainage n'a pas pu être chargé",
-  "@appReferralErrorTitle": {}
+  "@appReferralErrorTitle": {},
+  "appActivityTitle": "Sport",
+  "@appActivityTitle": {},
+  "appActivityAdd": "Ajouter une activité",
+  "@appActivityAdd": {},
+  "appActivityStepsOf": "/ {target} pas",
+  "@appActivityStepsOf": {
+    "placeholders": {
+      "target": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivityStepsRing": "{value} pas sur {target}",
+  "@appActivityStepsRing": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "target": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivityBurned": "DÉPENSÉ",
+  "@appActivityBurned": {},
+  "appActivityDistance": "DISTANCE",
+  "@appActivityDistance": {},
+  "appActivityActive": "ACTIF",
+  "@appActivityActive": {},
+  "appActivityKcalUnit": "kcal",
+  "@appActivityKcalUnit": {},
+  "appActivityKm": "{value} km",
+  "@appActivityKm": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityMinUnit": "min",
+  "@appActivityMinUnit": {},
+  "appActivitySynced": "{source, select, health_connect {Health Connect} apple_health {Apple Santé} other {Santé}} · {when}",
+  "@appActivitySynced": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      },
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityConnectTitle": "Importe tes pas et tes séances",
+  "@appActivityConnectTitle": {},
+  "appActivityConnectBody": "Omeo lit Health Connect ou Apple Santé pour calculer ta dépense. Rien n'est écrit dans tes données de santé.",
+  "@appActivityConnectBody": {},
+  "appActivityConnect": "Connecter",
+  "@appActivityConnect": {},
+  "appActivityConnectDenied": "Autorisation refusée. Tu peux la donner plus tard dans les réglages.",
+  "@appActivityConnectDenied": {},
+  "appActivityConnectInstall": "Installe Health Connect pour importer tes activités.",
+  "@appActivityConnectInstall": {},
+  "appActivityInstall": "Installer",
+  "@appActivityInstall": {},
+  "appActivityConnectUnsupported": "L'import d'activités n'est pas disponible sur ce téléphone.",
+  "@appActivityConnectUnsupported": {},
+  "appActivityBalanceTitle": "Balance du jour",
+  "@appActivityBalanceTitle": {},
+  "appActivityEaten": "MANGÉ",
+  "@appActivityEaten": {},
+  "appActivitySpent": "DÉPENSÉ",
+  "@appActivitySpent": {},
+  "appActivityGap": "ÉCART",
+  "@appActivityGap": {},
+  "appActivityTodayActivities": "Activités du jour",
+  "@appActivityTodayActivities": {},
+  "appActivityWeek": "Semaine",
+  "@appActivityWeek": {},
+  "appActivityEmptyActivities": "Aucune activité aujourd'hui. Elles s'importent toutes seules, ou ajoute-les à la main.",
+  "@appActivityEmptyActivities": {},
+  "appActivityActivityLine": "{time} · {minutes, plural, one {{minutes} min} other {{minutes} min}}",
+  "@appActivityActivityLine": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "appActivityActivityLineHr": "{time} · {minutes, plural, one {{minutes} min} other {{minutes} min}} · FC moy. {hr}",
+  "@appActivityActivityLineHr": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "hr": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivitySource": "{source, select, manual {Manuel} health_connect {Health Connect} apple_health {Apple Santé} workout {Séance Omeo} other {Import}}",
+  "@appActivitySource": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityForYou": "Séances pour toi",
+  "@appActivityForYou": {},
+  "appActivitySeeAll": "Tout voir",
+  "@appActivitySeeAll": {},
+  "appActivityWorkoutMeta": "{minutes} min · {level, select, beginner {Débutant} intermediate {Intermédiaire} advanced {Avancé} other {Tous niveaux}}",
+  "@appActivityWorkoutMeta": {
+    "placeholders": {
+      "minutes": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityErrorTitle": "Ton activité n'a pas pu être chargée",
+  "@appActivityErrorTitle": {},
+  "appActivityType": "{type, select, walking {Marche} running {Course} football {Football} dancing {Danse} cycling {Vélo} strength {Muscu} swimming {Natation} other {Autre}}",
+  "@appActivityType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityAddActivity": "Activité",
+  "@appActivityAddActivity": {},
+  "appActivityDuration": "Durée",
+  "@appActivityDuration": {},
+  "appActivityMinutesValue": "{value} min",
+  "@appActivityMinutesValue": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivityLess": "Moins",
+  "@appActivityLess": {},
+  "appActivityMore": "Plus",
+  "@appActivityMore": {},
+  "appActivityIntensity": "Intensité",
+  "@appActivityIntensity": {},
+  "appActivityIntensityValue": "{value, select, light {Légère} moderate {Modérée} vigorous {Intense} other {Modérée}}",
+  "@appActivityIntensityValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityWhen": "Quand",
+  "@appActivityWhen": {},
+  "appActivityNow": "Maintenant",
+  "@appActivityNow": {},
+  "appActivityEstimateHint": "Les calories sont estimées par Omeo à l'enregistrement.",
+  "@appActivityEstimateHint": {},
+  "appActivitySaved": "Activité enregistrée · {kcal} kcal",
+  "@appActivitySaved": {
+    "placeholders": {
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivityMergeTitle": "Même activité ?",
+  "@appActivityMergeTitle": {},
+  "appActivityMergeBody": "Une séance importée chevauche celle que tu as saisie.",
+  "@appActivityMergeBody": {},
+  "appActivityMergeKeepImported": "Garder la séance importée",
+  "@appActivityMergeKeepImported": {},
+  "appActivityMergeKeepBoth": "Garder les deux",
+  "@appActivityMergeKeepBoth": {},
+  "appActivityActivityDetail": "{minutes, plural, one {{minutes} min} other {{minutes} min}} · {kcal} kcal",
+  "@appActivityActivityDetail": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "kcal": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivityWeekScreenTitle": "Balance",
+  "@appActivityWeekScreenTitle": {},
+  "appActivityWeekScreenEyebrow": "Semaine du {date}",
+  "@appActivityWeekScreenEyebrow": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityWeekScreenEaten": "Mangé",
+  "@appActivityWeekScreenEaten": {},
+  "appActivityWeekScreenBurned": "Dépensé",
+  "@appActivityWeekScreenBurned": {},
+  "appActivityWeekScreenChart": "Mangé et dépensé, jour par jour",
+  "@appActivityWeekScreenChart": {},
+  "appActivityWeekScreenDay": "{date} : {eaten} kcal mangées, {burned} kcal dépensées",
+  "@appActivityWeekScreenDay": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "eaten": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "burned": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appActivityWeekScreenTodayStatus": "{status, select, deficit {Déficit aujourd'hui} surplus {Excédent aujourd'hui} other {Équilibre aujourd'hui}}",
+  "@appActivityWeekScreenTodayStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "appActivityWeekScreenInsights": "Analyses de la semaine",
+  "@appActivityWeekScreenInsights": {},
+  "appActivityWeekScreenInsightsHint": "Constats nutrition × activité",
+  "@appActivityWeekScreenInsightsHint": {},
+  "appActivityInsightsTitle": "Analyses de la semaine",
+  "@appActivityInsightsTitle": {},
+  "appActivityInsightsEyebrow": "Omeo Plus",
+  "@appActivityInsightsEyebrow": {},
+  "appActivityInsightsEmpty": "Pas encore d'analyse cette semaine. Reviens après quelques jours de suivi.",
+  "@appActivityInsightsEmpty": {},
+  "appActivityInsightsErrorTitle": "Les analyses n'ont pas pu être chargées",
+  "@appActivityInsightsErrorTitle": {}
 }

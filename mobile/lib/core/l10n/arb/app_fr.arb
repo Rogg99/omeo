@@ -2430,5 +2430,214 @@
   "appActivityInsightsEmpty": "Pas encore d'analyse cette semaine. Reviens après quelques jours de suivi.",
   "@appActivityInsightsEmpty": {},
   "appActivityInsightsErrorTitle": "Les analyses n'ont pas pu être chargées",
-  "@appActivityInsightsErrorTitle": {}
+  "@appActivityInsightsErrorTitle": {},
+  "appTrainingWorkouts": "Séances",
+  "@appTrainingWorkouts": {},
+  "appTrainingExercises": "Exercices",
+  "@appTrainingExercises": {},
+  "appTrainingFilterAll": "Toutes",
+  "@appTrainingFilterAll": {},
+  "appTrainingFilterAllEx": "Tous",
+  "@appTrainingFilterAllEx": {},
+  "appTrainingGoal": "{goal, select, cardio {Cardio} strength {Renforcement} mobility {Mobilité} other {Autre}}",
+  "@appTrainingGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "appTrainingShort": "≤ 15 min",
+  "@appTrainingShort": {},
+  "appTrainingLevel": "{level, select, beginner {Débutant} intermediate {Intermédiaire} advanced {Avancé} other {Tous niveaux}}",
+  "@appTrainingLevel": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "appTrainingWorkoutMeta": "{goal} · {minutes} min · {level} · {count, plural, one {{count} exercice} other {{count} exercices}}",
+  "@appTrainingWorkoutMeta": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "level": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appTrainingExerciseMeta": "{muscles} · {level}",
+  "@appTrainingExerciseMeta": {
+    "placeholders": {
+      "muscles": {
+        "type": "String"
+      },
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "appTrainingDownloaded": "Téléchargée",
+  "@appTrainingDownloaded": {},
+  "appTrainingLocked": "Réservé à Omeo Plus",
+  "@appTrainingLocked": {},
+  "appTrainingEmpty": "Aucun résultat avec ces filtres.",
+  "@appTrainingEmpty": {},
+  "appTrainingErrorTitle": "Les séances n'ont pas pu être chargées",
+  "@appTrainingErrorTitle": {},
+  "appTrainingBack": "Retour",
+  "@appTrainingBack": {},
+  "appTrainingPlayVideo": "Lire la vidéo",
+  "@appTrainingPlayVideo": {},
+  "appTrainingVideoUnavailable": "Vidéo indisponible pour le moment.",
+  "@appTrainingVideoUnavailable": {},
+  "appTrainingHowTo": "Comment faire",
+  "@appTrainingHowTo": {},
+  "appTrainingNoEquipment": "Sans matériel",
+  "@appTrainingNoEquipment": {},
+  "appTrainingExerciseError": "Cet exercice n'a pas pu être chargé",
+  "@appTrainingExerciseError": {},
+  "appTrainingSafety": "Une douleur ? Réduis l'amplitude ou passe à l'exercice suivant.",
+  "@appTrainingSafety": {},
+  "appTrainingDuration": "Durée",
+  "@appTrainingDuration": {},
+  "appTrainingKcalEstimated": "kcal estimées",
+  "@appTrainingKcalEstimated": {},
+  "appTrainingLevelLabel": "Niveau",
+  "@appTrainingLevelLabel": {},
+  "appTrainingMinutes": "{value} min",
+  "@appTrainingMinutes": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appTrainingStepsTitle": "{count, plural, one {{count} exercice} other {{count} exercices}}",
+  "@appTrainingStepsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appTrainingStepTime": "{seconds} s",
+  "@appTrainingStepTime": {
+    "placeholders": {
+      "seconds": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appTrainingStepReps": "{reps, plural, one {{reps} répétition} other {{reps} répétitions}}",
+  "@appTrainingStepReps": {
+    "placeholders": {
+      "reps": {
+        "type": "int"
+      }
+    }
+  },
+  "appTrainingRest": "Repos",
+  "@appTrainingRest": {},
+  "appTrainingStart": "Commencer",
+  "@appTrainingStart": {},
+  "appTrainingDownload": "Télécharger pour le hors connexion",
+  "@appTrainingDownload": {},
+  "appTrainingDownloading": "Téléchargement…",
+  "@appTrainingDownloading": {},
+  "appTrainingDownloadDone": "Séance téléchargée",
+  "@appTrainingDownloadDone": {},
+  "appTrainingDownloadError": "Le téléchargement a échoué. Réessaie plus tard.",
+  "@appTrainingDownloadError": {},
+  "appTrainingWorkoutError": "Cette séance n'a pas pu être chargée",
+  "@appTrainingWorkoutError": {},
+  "appTrainingQuit": "Quitter la séance",
+  "@appTrainingQuit": {},
+  "appTrainingSoundOn": "Activer le son",
+  "@appTrainingSoundOn": {},
+  "appTrainingSoundOff": "Couper le son",
+  "@appTrainingSoundOff": {},
+  "appTrainingProgress": "Exercice {current} / {total}",
+  "@appTrainingProgress": {
+    "placeholders": {
+      "current": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "total": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appTrainingPrevious": "Exercice précédent",
+  "@appTrainingPrevious": {},
+  "appTrainingNext": "Exercice suivant",
+  "@appTrainingNext": {},
+  "appTrainingPause": "Pause",
+  "@appTrainingPause": {},
+  "appTrainingResume": "Reprendre",
+  "@appTrainingResume": {},
+  "appTrainingDoneReps": "C'est fait",
+  "@appTrainingDoneReps": {},
+  "appTrainingThen": "Ensuite : {name}",
+  "@appTrainingThen": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appTrainingAddTen": "+10 s",
+  "@appTrainingAddTen": {},
+  "appTrainingSkip": "Passer",
+  "@appTrainingSkip": {},
+  "appTrainingUpNext": "À SUIVRE",
+  "@appTrainingUpNext": {},
+  "appTrainingTimer": "{minutes} min {seconds} s restantes",
+  "@appTrainingTimer": {
+    "placeholders": {
+      "minutes": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "seconds": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appTrainingFinishedTitle": "Séance terminée !",
+  "@appTrainingFinishedTitle": {},
+  "appTrainingFinishedDuration": "Durée",
+  "@appTrainingFinishedDuration": {},
+  "appTrainingFinishedKcal": "kcal",
+  "@appTrainingFinishedKcal": {},
+  "appTrainingFinishedPoints": "points",
+  "@appTrainingFinishedPoints": {},
+  "appTrainingFinishing": "Enregistrement de ta séance…",
+  "@appTrainingFinishing": {},
+  "appTrainingFinish": "Terminer",
+  "@appTrainingFinish": {},
+  "appTrainingFinishError": "Ta séance n'a pas pu être enregistrée.",
+  "@appTrainingFinishError": {},
+  "appTrainingQuitTitle": "Quitter la séance ?",
+  "@appTrainingQuitTitle": {},
+  "appTrainingQuitBody": "Ta progression dans cette séance ne sera pas enregistrée.",
+  "@appTrainingQuitBody": {},
+  "appTrainingQuitConfirm": "Quitter",
+  "@appTrainingQuitConfirm": {},
+  "appTrainingQuitCancel": "Continuer",
+  "@appTrainingQuitCancel": {}
 }

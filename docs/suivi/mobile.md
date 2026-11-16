@@ -107,7 +107,7 @@ Avancement : **77 écrans terminés sur 127 (61 %)**, tous dans `main`.
 | PLS-04 à PLS-06 | Mon abonnement, paiement en échec, historique | ✅ | `main` | `7daf424` |
 | REF-01 | Parrainage | ✅ | `main` | `1f5a057` (voir B-04) |
 | SPO-01 à SPO-05 | Sport : aujourd'hui, ajout, fusion, balance de la semaine, analyses croisées | ✅ | `main` | `9ef27af` (voir B-03) |
-| EXO-01 à EXO-07 | Bibliothèque, fiche, séances guidées, détail, lecteur exercice, repos, séance terminée | 🚧 | `mobile-b` | dépôts `eb926a6`, dépendances `00aa926`, moteur du lecteur `49ed165` |
+| EXO-01 à EXO-07 | Bibliothèque, fiche, séances guidées, détail, lecteur exercice, repos, séance terminée | 🚧 | `mobile-b` | dépôts `eb926a6`, moteur du lecteur `49ed165` (dans `main`) ; vidéo, téléchargement hors connexion et providers en cours |
 | PRG-01 à PRG-06 | Programmes | ⏳ | | |
 | CHA-01 à CHA-05 | Challenges | ⏳ | | |
 | REW-01 à REW-04 | Récompenses | ⏳ | | |

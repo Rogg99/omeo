@@ -1076,6 +1076,44 @@
   "@appPlusPaymentsEmpty": {},
   "appPlusPaymentsErrorTitle": "L'historique n'a pas pu être chargé",
   "@appPlusPaymentsErrorTitle": {},
+  "appPlusQuotaFreeTitle": "Plus d'analyses photo aujourd'hui",
+  "@appPlusQuotaFreeTitle": {},
+  "appPlusQuotaFreeBody": "Tu as utilisé tes analyses du jour. Elles reviennent {when}.",
+  "@appPlusQuotaFreeBody": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusQuotaFreeBodyNoDate": "Tu as utilisé tes analyses du jour. Elles reviennent demain.",
+  "@appPlusQuotaFreeBodyNoDate": {},
+  "appPlusQuotaPlusTitle": "Quota mensuel atteint",
+  "@appPlusQuotaPlusTitle": {},
+  "appPlusQuotaPlusBody": "Tu as utilisé tes analyses de ce mois. Elles se rechargent le {date}.",
+  "@appPlusQuotaPlusBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPlusQuotaPlusBodyNoDate": "Tu as utilisé tes analyses de ce mois. Elles se rechargent au début de ta prochaine période.",
+  "@appPlusQuotaPlusBodyNoDate": {},
+  "appPlusQuotaPlusCard": "Omeo Plus",
+  "@appPlusQuotaPlusCard": {},
+  "appPlusQuotaPlusCardBody": "Plus d'analyses chaque mois, et la saisie vocale.",
+  "@appPlusQuotaPlusCardBody": {},
+  "appPlusQuotaTryPlus": "Essayer Omeo Plus",
+  "@appPlusQuotaTryPlus": {},
+  "appPlusQuotaMeanwhile": "En attendant",
+  "@appPlusQuotaMeanwhile": {},
+  "appPlusQuotaCatalog": "Chercher le plat dans le catalogue",
+  "@appPlusQuotaCatalog": {},
+  "appPlusQuotaCatalogHint": "Gratuit et illimité",
+  "@appPlusQuotaCatalogHint": {},
+  "appPlusQuotaOk": "Compris",
+  "@appPlusQuotaOk": {},
   "appReferralTitle": "Parrainage",
   "@appReferralTitle": {},
   "appReferralHeroTitle": "Offre des jours de Plus, gagnes-en aussi",

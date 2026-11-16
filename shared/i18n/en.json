@@ -357,6 +357,21 @@
         "note": "Store receipts are sent by Google Play or the App Store.",
         "empty": "No payments yet",
         "error_title": "The history couldn't be loaded"
+      },
+      "quota": {
+        "free_title": "No more photo analyses today",
+        "free_body": "You've used today's analyses. They come back {when}.",
+        "free_body_no_date": "You've used today's analyses. They come back tomorrow.",
+        "plus_title": "Monthly quota reached",
+        "plus_body": "You've used this month's analyses. They reload on {date}.",
+        "plus_body_no_date": "You've used this month's analyses. They reload at the start of your next period.",
+        "plus_card": "Omeo Plus",
+        "plus_card_body": "More analyses every month, plus voice input.",
+        "try_plus": "Try Omeo Plus",
+        "meanwhile": "Meanwhile",
+        "catalog": "Search the dish in the catalog",
+        "catalog_hint": "Free and unlimited",
+        "ok": "Got it"
       }
     },
     "referral": {

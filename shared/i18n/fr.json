@@ -357,6 +357,21 @@
         "note": "Les reçus des stores sont envoyés par Google Play ou l'App Store.",
         "empty": "Aucun paiement pour l'instant",
         "error_title": "L'historique n'a pas pu être chargé"
+      },
+      "quota": {
+        "free_title": "Plus d'analyses photo aujourd'hui",
+        "free_body": "Tu as utilisé tes analyses du jour. Elles reviennent {when}.",
+        "free_body_no_date": "Tu as utilisé tes analyses du jour. Elles reviennent demain.",
+        "plus_title": "Quota mensuel atteint",
+        "plus_body": "Tu as utilisé tes analyses de ce mois. Elles se rechargent le {date}.",
+        "plus_body_no_date": "Tu as utilisé tes analyses de ce mois. Elles se rechargent au début de ta prochaine période.",
+        "plus_card": "Omeo Plus",
+        "plus_card_body": "Plus d'analyses chaque mois, et la saisie vocale.",
+        "try_plus": "Essayer Omeo Plus",
+        "meanwhile": "En attendant",
+        "catalog": "Chercher le plat dans le catalogue",
+        "catalog_hint": "Gratuit et illimité",
+        "ok": "Compris"
       }
     },
     "referral": {

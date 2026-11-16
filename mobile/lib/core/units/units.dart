@@ -58,4 +58,14 @@ abstract final class Units {
   /// Volume saisi dans le système choisi, renvoyé en cl pour l'API.
   static double volumeToApi(double value, UnitSystem system) =>
       system == UnitSystem.metric ? value : ozToCl(value);
+
+  /// Millilitres (valeurs d'eau de l'API) vers centilitres.
+  static double mlToCl(num ml) => ml / 10;
+
+  /// Centilitres vers millilitres (saisie d'eau envoyée à l'API).
+  static int clToMl(double cl) => (cl * 10).round();
+
+  /// Eau affichée dans le système choisi (valeur API en ml) : cl ou oz.
+  static double displayWater(num ml, UnitSystem system) =>
+      displayVolume(mlToCl(ml), system);
 }

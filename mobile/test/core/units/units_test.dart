@@ -64,4 +64,17 @@ void main() {
       );
     });
   });
+
+  group('eau', () {
+    test('ml vers cl et retour', () {
+      expect(Units.mlToCl(2600), 260);
+      expect(Units.clToMl(25), 250);
+      expect(Units.clToMl(Units.mlToCl(1250)), 1250);
+    });
+
+    test('affichage en oz', () {
+      expect(Units.displayWater(250, UnitSystem.metric), 25);
+      expect(Units.displayWater(250, UnitSystem.imperial), closeTo(8.45, 0.01));
+    });
+  });
 }

@@ -1633,5 +1633,374 @@
         "type": "String"
       }
     }
-  }
+  },
+  "appJournalLoadError": "Impossible de charger ce jour.",
+  "@appJournalLoadError": {},
+  "appJournalCalendar": "Calendrier",
+  "@appJournalCalendar": {},
+  "appJournalYesterday": "Hier",
+  "@appJournalYesterday": {},
+  "appJournalPreviousDay": "Jour précédent",
+  "@appJournalPreviousDay": {},
+  "appJournalNextDay": "Jour suivant",
+  "@appJournalNextDay": {},
+  "appJournalPreviousMonth": "Mois précédent",
+  "@appJournalPreviousMonth": {},
+  "appJournalNextMonth": "Mois suivant",
+  "@appJournalNextMonth": {},
+  "appJournalGoalTitle": "Objectif du jour",
+  "@appJournalGoalTitle": {},
+  "appJournalKcalConsumed": "kcal consommées",
+  "@appJournalKcalConsumed": {},
+  "appJournalPercent": "{value} %",
+  "@appJournalPercent": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appJournalProteinShort": "Prot.",
+  "@appJournalProteinShort": {},
+  "appJournalCarbsShort": "Gluc.",
+  "@appJournalCarbsShort": {},
+  "appJournalFatShort": "Lip.",
+  "@appJournalFatShort": {},
+  "appJournalFiber": "Fibres",
+  "@appJournalFiber": {},
+  "appJournalMealsTitle": "Repas",
+  "@appJournalMealsTitle": {},
+  "appJournalNoMeal": "Aucun repas enregistré",
+  "@appJournalNoMeal": {},
+  "appJournalAddTo": "Ajouter au {meal}",
+  "@appJournalAddTo": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterTitle": "Hydratation",
+  "@appJournalWaterTitle": {},
+  "appJournalWaterOf": "{value} / {target}",
+  "@appJournalWaterOf": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterTarget": "sur {target}",
+  "@appJournalWaterTarget": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterAdd": "Ajouter de l'eau",
+  "@appJournalWaterAdd": {},
+  "appJournalWaterQuick": "+ {amount}",
+  "@appJournalWaterQuick": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterOther": "Autre",
+  "@appJournalWaterOther": {},
+  "appJournalWaterFree": "libre",
+  "@appJournalWaterFree": {},
+  "appJournalWaterGlass": "Verre",
+  "@appJournalWaterGlass": {},
+  "appJournalWaterBottle": "Bouteille",
+  "@appJournalWaterBottle": {},
+  "appJournalWaterSaved": "Eau ajoutée.",
+  "@appJournalWaterSaved": {},
+  "appJournalWaterQueued": "Eau enregistrée. Elle sera comptée au retour du réseau.",
+  "@appJournalWaterQueued": {},
+  "appJournalUndo": "Annuler",
+  "@appJournalUndo": {},
+  "appJournalUnitCl": "cl",
+  "@appJournalUnitCl": {},
+  "appJournalUnitOz": "oz",
+  "@appJournalUnitOz": {},
+  "appJournalEmptyTitle": "Rien d'enregistré ce jour-là",
+  "@appJournalEmptyTitle": {},
+  "appJournalEmptyBody": "Tu peux encore ajouter tes repas de ce jour pour garder ta série.",
+  "@appJournalEmptyBody": {},
+  "appJournalLegendReached": "Objectif atteint",
+  "@appJournalLegendReached": {},
+  "appJournalLegendPartial": "Partiel",
+  "@appJournalLegendPartial": {},
+  "appJournalLegendToday": "Aujourd'hui",
+  "@appJournalLegendToday": {},
+  "appProgressLoadError": "Impossible de charger ta progression.",
+  "@appProgressLoadError": {},
+  "appProgressRefresh": "Actualiser",
+  "@appProgressRefresh": {},
+  "appProgressUnitKcal": "kcal",
+  "@appProgressUnitKcal": {},
+  "appProgressUnitGrams": "g",
+  "@appProgressUnitGrams": {},
+  "appProgressMetricKcal": "Calories",
+  "@appProgressMetricKcal": {},
+  "appProgressMetricCarbs": "Glucides",
+  "@appProgressMetricCarbs": {},
+  "appProgressMetricFat": "Lipides",
+  "@appProgressMetricFat": {},
+  "appProgressMetricProtein": "Protéines",
+  "@appProgressMetricProtein": {},
+  "appProgressMetricFiber": "Fibres",
+  "@appProgressMetricFiber": {},
+  "appProgressMetricSalt": "Sel",
+  "@appProgressMetricSalt": {},
+  "appProgressRange7": "7 j",
+  "@appProgressRange7": {},
+  "appProgressRange30": "30 j",
+  "@appProgressRange30": {},
+  "appProgressRange90": "90 j",
+  "@appProgressRange90": {},
+  "appProgressRange365": "1 an",
+  "@appProgressRange365": {},
+  "appProgressRangeLocked": "{label} · Plus",
+  "@appProgressRangeLocked": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressDeltaYesterday": "{delta} % vs hier",
+  "@appProgressDeltaYesterday": {
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressChartLabel": "Aujourd'hui {today} {unit}, moyenne {average} {unit}",
+  "@appProgressChartLabel": {
+    "placeholders": {
+      "today": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressTarget": "Objectif {value} {unit}",
+  "@appProgressTarget": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressAverage": "Moyenne {value} {unit}",
+  "@appProgressAverage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressNoData": "Pas encore de données sur cette période.",
+  "@appProgressNoData": {},
+  "appProgressLockedTitle": "Ta tendance sur la durée",
+  "@appProgressLockedTitle": {},
+  "appProgressLockedBody": "Vois ce qui change vraiment, semaine après semaine, avec Omeo Plus.",
+  "@appProgressLockedBody": {},
+  "appProgressEmptyTitle": "Tes courbes arrivent",
+  "@appProgressEmptyTitle": {},
+  "appProgressEmptyBody": "Elles se rempliront après tes premiers repas photographiés.",
+  "@appProgressEmptyBody": {},
+  "appProgressScanMeal": "Scanner un repas",
+  "@appProgressScanMeal": {},
+  "appProgressHealthConnect": "Health Connect",
+  "@appProgressHealthConnect": {},
+  "appProgressAppleHealth": "Apple Santé",
+  "@appProgressAppleHealth": {},
+  "appProgressHealthConnected": "Connecté",
+  "@appProgressHealthConnected": {},
+  "appProgressHealthNotConnected": "Non connecté",
+  "@appProgressHealthNotConnected": {},
+  "appProgressHealthReadOnly": "Lecture seule",
+  "@appProgressHealthReadOnly": {},
+  "appProgressHealthReads": "Données lues : pas, distance, calories dépensées, séances, poids",
+  "@appProgressHealthReads": {},
+  "appProgressHealthWrites": "Données écrites : aucune",
+  "@appProgressHealthWrites": {},
+  "appProgressHealthSynced": "Dernière synchronisation à {time}, {date}",
+  "@appProgressHealthSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressHealthPitch": "Compare tes repas à ton activité réelle et obtiens une balance quotidienne simple.",
+  "@appProgressHealthPitch": {},
+  "appProgressHealthConnectAction": "Connecter {source}",
+  "@appProgressHealthConnectAction": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressHealthSteps": "Pas et distance",
+  "@appProgressHealthSteps": {},
+  "appProgressHealthCalories": "Calories dépensées",
+  "@appProgressHealthCalories": {},
+  "appProgressHealthWorkouts": "Séances (type, durée, fréquence cardiaque)",
+  "@appProgressHealthWorkouts": {},
+  "appProgressHealthWeight": "Poids",
+  "@appProgressHealthWeight": {},
+  "appProgressHealthReadTag": "Lecture",
+  "@appProgressHealthReadTag": {},
+  "appProgressPermissionTitle": "Relier ton activité à tes repas",
+  "@appProgressPermissionTitle": {},
+  "appProgressPermissionBody": "Omeo lit tes données d'activité pour calculer ta balance et ajuster ton objectif les jours actifs.",
+  "@appProgressPermissionBody": {},
+  "appProgressPermissionPrivacy": "Omeo n'écrit jamais rien dans {source}. Seuls des totaux par jour sont envoyés à nos serveurs.",
+  "@appProgressPermissionPrivacy": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressPermissionContinue": "Continuer vers {source}",
+  "@appProgressPermissionContinue": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressPermissionLater": "Plus tard",
+  "@appProgressPermissionLater": {},
+  "appProgressPermissionDenied": "Pas de souci : tu pourras connecter ton activité plus tard.",
+  "@appProgressPermissionDenied": {},
+  "appProgressWeightTitle": "Mon poids",
+  "@appProgressWeightTitle": {},
+  "appProgressWeightReminder": "Rappel de pesée",
+  "@appProgressWeightReminder": {},
+  "appProgressWeightCurrent": "Actuel",
+  "@appProgressWeightCurrent": {},
+  "appProgressWeightCurrentOn": "Actuel · {date}",
+  "@appProgressWeightCurrentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightRange1m": "1 mois",
+  "@appProgressWeightRange1m": {},
+  "appProgressWeightRange3m": "3 mois",
+  "@appProgressWeightRange3m": {},
+  "appProgressWeightRange1y": "1 an",
+  "@appProgressWeightRange1y": {},
+  "appProgressWeightFewPoints": "Ajoute au moins deux pesées pour voir ta courbe.",
+  "@appProgressWeightFewPoints": {},
+  "appProgressWeightChart": "Poids actuel {current}, cible {target}",
+  "@appProgressWeightChart": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightTarget": "Cible {value}",
+  "@appProgressWeightTarget": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightTrend": "Tendance : {value} / sem.",
+  "@appProgressWeightTrend": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightRemaining": "Reste à atteindre",
+  "@appProgressWeightRemaining": {},
+  "appProgressWeightMeasures": "Mesures",
+  "@appProgressWeightMeasures": {},
+  "appProgressWeightEmpty": "Aucune pesée pour l'instant.",
+  "@appProgressWeightEmpty": {},
+  "appProgressWeightMeasure": "{date} · {source}",
+  "@appProgressWeightMeasure": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightManual": "Saisie manuelle",
+  "@appProgressWeightManual": {},
+  "appProgressWeightManualWins": "Même jour : la saisie manuelle l'emporte sur l'import.",
+  "@appProgressWeightManualWins": {},
+  "appProgressWeightDelete": "Supprimer cette pesée",
+  "@appProgressWeightDelete": {},
+  "appProgressWeightDeleted": "Pesée supprimée.",
+  "@appProgressWeightDeleted": {},
+  "appProgressWeightAdd": "Ajouter une pesée",
+  "@appProgressWeightAdd": {},
+  "appProgressWeighInTitle": "Nouvelle pesée",
+  "@appProgressWeighInTitle": {},
+  "appProgressWeighInStep": "{step}",
+  "@appProgressWeighInStep": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeighInEditDate": "Modifier",
+  "@appProgressWeighInEditDate": {},
+  "appProgressWeighInRecalc": "Tes objectifs quotidiens seront recalculés avec ce poids.",
+  "@appProgressWeighInRecalc": {},
+  "appProgressWeighInSaved": "Pesée enregistrée.",
+  "@appProgressWeighInSaved": {},
+  "appProgressWeighInSavedPoints": "{points, plural, one {Pesée enregistrée · +{points} point} other {Pesée enregistrée · +{points} points}}",
+  "@appProgressWeighInSavedPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "appProgressWeighInQueued": "Pesée enregistrée. Elle sera prise en compte au retour du réseau.",
+  "@appProgressWeighInQueued": {}
 }

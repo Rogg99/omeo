@@ -54,9 +54,6 @@
       "step": "{current} / {total}",
       "name": {
         "title": "お名前は？"
-      },
-      "target_weight": {
-        "warning_lose": "目標体重が現在の体重より重くなっていますが、減量を希望しています。"
       }
     },
     "home": {

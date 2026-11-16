@@ -26,26 +26,26 @@
 | Module | Session | Écrans | ✅ | 🔀 | 🚧 | ⏳ |
 |---|---|---|---|---|---|---|
 | Accueil | Socle | 5 | 5 | | | |
-| Onboarding | A | 16 | | 16 | | |
-| Compte | A | 6 | | 6 | | |
-| Journal | A | 4 | | | | 4 |
-| Progression | A | 7 | | | | 7 |
+| Onboarding | A | 16 | 16 | | | |
+| Compte | A | 6 | 6 | | | |
+| Journal | A | 4 | 4 | | | |
+| Progression | A | 7 | 7 | | | |
 | Profil | A | 13 | | | | 13 |
 | Notifications | A | 3 | | | | 3 |
 | Support | A | 4 | | | | 4 |
-| Repas | B | 17 | 13 | 4 | | |
+| Repas | B | 17 | 17 | | | |
 | Plus et Parrainage | B | 7 | 7 | | | |
-| Sport | B | 5 | | 5 | | |
+| Sport | B | 5 | 5 | | | |
 | Séances | B | 7 | | | 7 | |
 | Programmes | B | 6 | | | | 6 |
 | Challenges | B | 5 | | | | 5 |
 | Récompenses | B | 4 | | | | 4 |
 | Recettes | B | 4 | | | | 4 |
 | Plantes et Prévention | B | 4 | | | | 4 |
-| États système | Socle, A, B | 10 | 9 | 1 | | |
-| **Total** | | **127** | **34** | **32** | **7** | **54** |
+| États système | Socle, A, B | 10 | 10 | | | |
+| **Total** | | **127** | **77** | | **7** | **43** |
 
-Avancement : **66 écrans terminés sur 127 (52 %)**, dont 34 déjà dans `main`.
+Avancement : **77 écrans terminés sur 127 (61 %)**, tous dans `main`.
 
 ## Détail par écran
 
@@ -68,20 +68,20 @@ Avancement : **66 écrans terminés sur 127 (52 %)**, dont 34 déjà dans `main`
 
 | Écran | Titre | Statut | Branche | Commit |
 |---|---|---|---|---|
-| ONB-01 à ONB-16 | Démarrage, langue, bienvenue, étapes 1 à 9, code invalide, calcul et plan prêt | 🔀 | `mobile-a` | `752855d` |
-| ACC-01 à ACC-06 | Connexion, erreur, mot de passe oublié, lien envoyé, nouveau mot de passe, vérification de l'email | 🔀 | `mobile-a` | `752855d` |
-| SYS-05 | Nouvelles CGU à accepter | 🔀 | `mobile-a` | `752855d` |
-| HIS-01 | Journal du jour | ⏳ | | |
-| HIS-02 | Calendrier | ⏳ | | |
-| HIS-03 | Ajouter de l'eau | ⏳ | | |
-| HIS-04 | Journée vide | ⏳ | | |
-| PRO-01 | Progression · 7 jours | ⏳ | | |
-| PRO-02 | Progression · sel | ⏳ | | |
-| PRO-03 | Période réservée à Plus | ⏳ | | |
-| PRO-04 | Progression · vide | ⏳ | | |
-| PRO-05 | Autorisation santé | ⏳ | | |
-| PRO-06 | Suivi du poids | ⏳ | | |
-| PRO-07 | Nouvelle pesée | ⏳ | | |
+| ONB-01 à ONB-16 | Démarrage, langue, bienvenue, étapes 1 à 9, code invalide, calcul et plan prêt | ✅ | `main` | `752855d` |
+| ACC-01 à ACC-06 | Connexion, erreur, mot de passe oublié, lien envoyé, nouveau mot de passe, vérification de l'email | ✅ | `main` | `752855d` |
+| SYS-05 | Nouvelles CGU à accepter | ✅ | `main` | `752855d` |
+| HIS-01 | Journal du jour | ✅ | `main` | `a6e7b1e` |
+| HIS-02 | Calendrier | ✅ | `main` | `a6e7b1e` |
+| HIS-03 | Ajouter de l'eau | ✅ | `main` | `a6e7b1e` |
+| HIS-04 | Journée vide | ✅ | `main` | `a6e7b1e` |
+| PRO-01 | Progression · 7 jours | ✅ | `main` | `a6e7b1e` |
+| PRO-02 | Progression · sel | ✅ | `main` | `a6e7b1e` |
+| PRO-03 | Période réservée à Plus | ✅ | `main` | `a6e7b1e` |
+| PRO-04 | Progression · vide | ✅ | `main` | `a6e7b1e` |
+| PRO-05 | Autorisation santé | ✅ | `main` | `a6e7b1e` |
+| PRO-06 | Suivi du poids | ✅ | `main` | `a6e7b1e` |
+| PRO-07 | Nouvelle pesée | ✅ | `main` | `a6e7b1e` |
 | PRF-01 à PRF-13 | Profil, corps et objectif, compte, mot de passe, santé, paramètres, langue, unités, confidentialité, déconnexion, suppression (2), noter Omeo | ⏳ | | |
 | NOT-01 à NOT-03 | Centre de notifications, aucune notification, réglages | ⏳ | | |
 | SUP-01 à SUP-04 | Aide et contact, formulaire, message envoyé, réponse du support | ⏳ | | |
@@ -93,7 +93,7 @@ Avancement : **66 écrans terminés sur 127 (52 %)**, dont 34 déjà dans `main`
 | MEA-01 | Menu « + » | ✅ | `main` | `aec703b` |
 | MEA-02 | Viseur photo | ✅ | `main` | `f75dcee` |
 | MEA-03 | Analyse en cours | ✅ | `main` | `a7f31b2` |
-| MEA-04 à MEA-07 | Ingrédients présélectionnés, confiance faible, ajout d'ingrédient, quantité, « Pas satisfait ? » | 🔀 | `mobile-b` | `64a831e` |
+| MEA-04 à MEA-07 | Ingrédients présélectionnés, confiance faible, ajout d'ingrédient, quantité, « Pas satisfait ? » | ✅ | `main` | `64a831e` |
 | MEA-08 | Photo inexploitable | ✅ | `main` | `a7f31b2` |
 | MEA-09, MEA-10 | Repas enregistré, avis négatif | ✅ | `main` | `2a89e49` |
 | MEA-11, MEA-12 | Saisie vocale, saisie en texte | ✅ | `main` | `146ec3c` |
@@ -106,7 +106,7 @@ Avancement : **66 écrans terminés sur 127 (52 %)**, dont 34 déjà dans `main`
 | PLS-02, PLS-03 | Quota épuisé en Free, en Plus | ✅ | `main` | `a89d73e` |
 | PLS-04 à PLS-06 | Mon abonnement, paiement en échec, historique | ✅ | `main` | `7daf424` |
 | REF-01 | Parrainage | ✅ | `main` | `1f5a057` (voir B-04) |
-| SPO-01 à SPO-05 | Sport : aujourd'hui, ajout, fusion, balance de la semaine, analyses croisées | 🔀 | `mobile-b` | `9ef27af` (voir B-03) |
+| SPO-01 à SPO-05 | Sport : aujourd'hui, ajout, fusion, balance de la semaine, analyses croisées | ✅ | `main` | `9ef27af` (voir B-03) |
 | EXO-01 à EXO-07 | Bibliothèque, fiche, séances guidées, détail, lecteur exercice, repos, séance terminée | 🚧 | `mobile-b` | dépôts `eb926a6`, dépendances `00aa926`, moteur du lecteur `49ed165` |
 | PRG-01 à PRG-06 | Programmes | ⏳ | | |
 | CHA-01 à CHA-05 | Challenges | ⏳ | | |
@@ -125,6 +125,7 @@ Les décisions marquées « toi » attendent une réponse de l'utilisateur.
 | B-03 | Contrat `ActivityOverview.week_summary` | Proposition non validée (sur `mobile-b`) | Résumé de la semaine de SPO-04 | toi, puis B |
 | B-04 | Contrat `ReferralOverview.days_per_referral` et `referee_trial_days` | Proposition non validée (sur `mobile-b`) | Textes de REF-01 sur les jours gagnés | toi, puis B |
 | B-05 | Doublon dans CHANGES.md | Une ligne « servers / staging » est encore « Proposé » alors que le changement est appliqué (contrat 1.1.5) | Aucun ; ligne à clore | toi (validation) |
+| A-01 | Intégrations natives Google / Apple et Health Connect / HealthKit | Identifiants OAuth par flavor et paquet `health` à configurer | Boutons sociaux et connexion santé masqués hors mock | toi |
 | B-06 | `Gauge.over_by` côté API | Champ dans le contrat 1.1.5, pas encore renvoyé par l'API | HOM-04 vide hors mock | agent API |
 
 ## Avant la mise en production
@@ -144,5 +145,6 @@ Ces valeurs à renseigner ne bloquent pas le développement.
 | Date | Branche → `main` | Contenu |
 |---|---|---|
 | 2026-11-16 | `mobile-b` | Repas (sauf MEA-04 à 07), file hors connexion, Plus, Parrainage |
-| à faire | `mobile-a` | Onboarding, Compte, SYS-05 |
-| à faire | `mobile-b` | MEA-04 à 07, Sport, Séances en cours |
+| 2026-11-16 | `mobile-a` | Onboarding, Compte, SYS-05, Journal, Progression |
+| 2026-11-16 | `mobile-b` | MEA-04 à 07, Sport, dépôts et moteur des Séances |
+| à faire | `mobile-b` | Séances (écrans), Programmes, Challenges, Récompenses, Contenus |

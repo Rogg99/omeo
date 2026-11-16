@@ -5,6 +5,7 @@ library;
 export 'buttons.dart';
 export 'charts.dart';
 export 'feedback.dart';
+export 'inputs.dart';
 export 'lists.dart';
 export 'navigation.dart';
 export 'omeo_icon.dart';

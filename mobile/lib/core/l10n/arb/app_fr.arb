@@ -116,19 +116,269 @@
   "@errorsApprovalPending": {},
   "errorsInvalidMfaCode": "Code incorrect. Réessaie.",
   "@errorsInvalidMfaCode": {},
-  "appOnboardingStep": "{current} / {total}",
+  "appOnboardingStep": "{current}/{total}",
   "@appOnboardingStep": {
     "placeholders": {
       "current": {
-        "type": "String"
+        "type": "num",
+        "format": "decimalPattern"
       },
       "total": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appOnboardingNameTitle": "Comment t'appelles-tu ?",
+  "@appOnboardingNameTitle": {},
+  "appOnboardingPrevious": "Étape précédente",
+  "@appOnboardingPrevious": {},
+  "appOnboardingNameSubtitle": "Pour personnaliser ton suivi.",
+  "@appOnboardingNameSubtitle": {},
+  "appOnboardingFirstName": "Prénom",
+  "@appOnboardingFirstName": {},
+  "appOnboardingLastName": "Nom",
+  "@appOnboardingLastName": {},
+  "appOnboardingBirthTitle": "Quelle est ta date de naissance ?",
+  "@appOnboardingBirthTitle": {},
+  "appOnboardingBirthSubtitle": "Elle sert à calculer tes besoins caloriques.",
+  "@appOnboardingBirthSubtitle": {},
+  "appOnboardingSexTitle": "Quel est ton genre ?",
+  "@appOnboardingSexTitle": {},
+  "appOnboardingSexSubtitle": "Il intervient dans le calcul de ton métabolisme de base.",
+  "@appOnboardingSexSubtitle": {},
+  "appOnboardingSexMale": "Homme",
+  "@appOnboardingSexMale": {},
+  "appOnboardingSexFemale": "Femme",
+  "@appOnboardingSexFemale": {},
+  "appOnboardingCityTitle": "Dans quelle ville vis-tu ?",
+  "@appOnboardingCityTitle": {},
+  "appOnboardingCitySubtitle": "Pour te proposer des plats et des recettes de ta région.",
+  "@appOnboardingCitySubtitle": {},
+  "appOnboardingCitySearch": "Rechercher une ville",
+  "@appOnboardingCitySearch": {},
+  "appOnboardingCityPopular": "Populaires",
+  "@appOnboardingCityPopular": {},
+  "appOnboardingHeightTitle": "Quelle est ta taille ?",
+  "@appOnboardingHeightTitle": {},
+  "appOnboardingHeightSubtitle": "Entre 100 et 250 cm.",
+  "@appOnboardingHeightSubtitle": {},
+  "appOnboardingHeightTapHint": "Touche le nombre pour le saisir au clavier.",
+  "@appOnboardingHeightTapHint": {},
+  "appOnboardingTypeValue": "Saisir la valeur au clavier",
+  "@appOnboardingTypeValue": {},
+  "appOnboardingCm": "{value} cm",
+  "@appOnboardingCm": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appOnboardingFeetInches": "{feet} ft {inches} in",
+  "@appOnboardingFeetInches": {
+    "placeholders": {
+      "feet": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "inches": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appOnboardingUnitCm": "cm",
+  "@appOnboardingUnitCm": {},
+  "appOnboardingUnitFt": "ft",
+  "@appOnboardingUnitFt": {},
+  "appOnboardingUnitKg": "kg",
+  "@appOnboardingUnitKg": {},
+  "appOnboardingUnitLb": "lb",
+  "@appOnboardingUnitLb": {},
+  "appOnboardingWeightTitle": "Quel est ton poids ?",
+  "@appOnboardingWeightTitle": {},
+  "appOnboardingWeightSubtitle": "Ton poids actuel, même approximatif.",
+  "@appOnboardingWeightSubtitle": {},
+  "appOnboardingWeightPrivacy": "Tes données de santé restent privées et ne sont jamais partagées.",
+  "@appOnboardingWeightPrivacy": {},
+  "appOnboardingWeightRange": "Entre {min} et {max} {unit}.",
+  "@appOnboardingWeightRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "unit": {
         "type": "String"
       }
     }
   },
-  "appOnboardingNameTitle": "Comment tu t'appelles ?",
-  "@appOnboardingNameTitle": {},
+  "appOnboardingTargetTitle": "Quel poids veux-tu atteindre ?",
+  "@appOnboardingTargetTitle": {},
+  "appOnboardingTargetSubtitle": "On t'aidera à y arriver de façon saine et durable.",
+  "@appOnboardingTargetSubtitle": {},
+  "appOnboardingTargetBelow": "{difference} {unit} par rapport à aujourd'hui.",
+  "@appOnboardingTargetBelow": {
+    "placeholders": {
+      "difference": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingTargetAbove": "{difference} {unit} par rapport à aujourd'hui. Si ton objectif est de perdre du poids, vérifie ce chiffre. Tu pourras préciser ton objectif à l'étape suivante.",
+  "@appOnboardingTargetAbove": {
+    "placeholders": {
+      "difference": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingGoalsTitle": "Quels sont tes objectifs ?",
+  "@appOnboardingGoalsTitle": {},
+  "appOnboardingGoalsSubtitle": "Choisis-en un ou plusieurs. Omeo adapte ses conseils.",
+  "@appOnboardingGoalsSubtitle": {},
+  "appOnboardingGoalsContinue": "{count, plural, one {Continuer · {count} choisi} other {Continuer · {count} choisis}}",
+  "@appOnboardingGoalsContinue": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appOnboardingGoalLose": "Perdre du poids",
+  "@appOnboardingGoalLose": {},
+  "appOnboardingGoalLoseSub": "Atteindre et garder un poids santé.",
+  "@appOnboardingGoalLoseSub": {},
+  "appOnboardingGoalGain": "Prendre de la masse",
+  "@appOnboardingGoalGain": {},
+  "appOnboardingGoalGainSub": "Gagner du muscle avec une alimentation adaptée.",
+  "@appOnboardingGoalGainSub": {},
+  "appOnboardingGoalBalanced": "Manger équilibré",
+  "@appOnboardingGoalBalanced": {},
+  "appOnboardingGoalBalancedSub": "De meilleures habitudes au quotidien.",
+  "@appOnboardingGoalBalancedSub": {},
+  "appOnboardingGoalDiabetes": "Prévenir le diabète",
+  "@appOnboardingGoalDiabetes": {},
+  "appOnboardingGoalDiabetesSub": "Mieux gérer sa glycémie.",
+  "@appOnboardingGoalDiabetesSub": {},
+  "appOnboardingGoalHypertension": "Prévenir l'hypertension",
+  "@appOnboardingGoalHypertension": {},
+  "appOnboardingGoalHypertensionSub": "Surveiller le sel et la tension.",
+  "@appOnboardingGoalHypertensionSub": {},
+  "appOnboardingGoalIncompatible": "Incompatible avec « {goal} »",
+  "@appOnboardingGoalIncompatible": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingAccountTitle": "Ton profil est prêt. Crée ton compte.",
+  "@appOnboardingAccountTitle": {},
+  "appOnboardingAccountSubtitle": "Pour sauvegarder tes réponses et calculer ton plan.",
+  "@appOnboardingAccountSubtitle": {},
+  "appOnboardingInviteHint": "Code d'invitation (facultatif)",
+  "@appOnboardingInviteHint": {},
+  "appOnboardingInviteHelp": "À saisir avant de choisir un mode de connexion.",
+  "@appOnboardingInviteHelp": {},
+  "appOnboardingInviteDays": "{count, plural, one {{count} jour offert} other {{count} jours offerts}}",
+  "@appOnboardingInviteDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appOnboardingInviteFrom": "{name} t'invite : ton essai est prolongé.",
+  "@appOnboardingInviteFrom": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingInviteInvalid": "{days, plural, one {Ce code n'existe pas ou a expiré. Tu peux continuer sans : ton essai sera de {days} jour.} other {Ce code n'existe pas ou a expiré. Tu peux continuer sans : ton essai sera de {days} jours.}}",
+  "@appOnboardingInviteInvalid": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "appOnboardingOrEmail": "ou avec ton email",
+  "@appOnboardingOrEmail": {},
+  "appOnboardingConsentTermsBefore": "J'accepte les ",
+  "@appOnboardingConsentTermsBefore": {},
+  "appOnboardingConsentTermsLink": "CGU",
+  "@appOnboardingConsentTermsLink": {},
+  "appOnboardingConsentTermsBetween": " et la ",
+  "@appOnboardingConsentTermsBetween": {},
+  "appOnboardingConsentPrivacyLink": "politique de confidentialité",
+  "@appOnboardingConsentPrivacyLink": {},
+  "appOnboardingConsentHealth": "J'accepte que Omeo traite mes données de santé (poids, repas, activité) pour calculer mon suivi",
+  "@appOnboardingConsentHealth": {},
+  "appOnboardingConsentMarketing": "Je veux recevoir les nouveautés et offres d'Omeo",
+  "@appOnboardingConsentMarketing": {},
+  "appOnboardingConsentRequired": "Obligatoire",
+  "@appOnboardingConsentRequired": {},
+  "appOnboardingConsentOptional": "Facultatif",
+  "@appOnboardingConsentOptional": {},
+  "appOnboardingConsentFirst": "Accepte d'abord les conditions obligatoires.",
+  "@appOnboardingConsentFirst": {},
+  "appOnboardingCreateAccount": "Créer mon compte",
+  "@appOnboardingCreateAccount": {},
+  "appOnboardingEmailTaken": "Un compte existe déjà avec cet email. Connecte-toi ou utilise une autre adresse.",
+  "@appOnboardingEmailTaken": {},
+  "appOnboardingPasswordRejected": "Ce mot de passe ne respecte pas les règles. Choisis-en un autre.",
+  "@appOnboardingPasswordRejected": {},
+  "appOnboardingComputingTitle": "On prépare ton plan…",
+  "@appOnboardingComputingTitle": {},
+  "appOnboardingComputingBmr": "Métabolisme de base calculé",
+  "@appOnboardingComputingBmr": {},
+  "appOnboardingComputingKcal": "Objectif calorique ajusté",
+  "@appOnboardingComputingKcal": {},
+  "appOnboardingComputingMacros": "Répartition des macros",
+  "@appOnboardingComputingMacros": {},
+  "appOnboardingComputingDishes": "Plats de ta région",
+  "@appOnboardingComputingDishes": {},
+  "appOnboardingTrialUntil": "Essai Omeo Plus jusqu'au {date}",
+  "@appOnboardingTrialUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingReadyTitle": "{name}, voici ton plan quotidien",
+  "@appOnboardingReadyTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appOnboardingReadyKcalLabel": "Objectif calorique",
+  "@appOnboardingReadyKcalLabel": {},
+  "appOnboardingReadyWater": "Eau",
+  "@appOnboardingReadyWater": {},
+  "appOnboardingReadyTarget": "Poids cible",
+  "@appOnboardingReadyTarget": {},
+  "appOnboardingReadyDisclaimer": "Repères indicatifs, pas un avis médical. Ils s'ajustent à chaque pesée.",
+  "@appOnboardingReadyDisclaimer": {},
+  "appOnboardingReadyAction": "C'est parti",
+  "@appOnboardingReadyAction": {},
+  "appOnboardingReadyError": "Impossible de charger ton plan.",
+  "@appOnboardingReadyError": {},
   "appOnboardingTargetWeightWarningLose": "Ton poids cible est plus élevé que ton poids actuel alors que tu veux perdre du poids.",
   "@appOnboardingTargetWeightWarningLose": {},
   "appHomeGreeting": "Bonjour, {firstName}",
@@ -1336,6 +1586,594 @@
   "@appReferralEmpty": {},
   "appReferralErrorTitle": "Le parrainage n'a pas pu être chargé",
   "@appReferralErrorTitle": {},
+  "appAuthBrandName": "Omeo",
+  "@appAuthBrandName": {},
+  "appAuthTagline": "Scanne. Comprends. Mange mieux.",
+  "@appAuthTagline": {},
+  "appAuthLanguageTitle": "Dans quelle langue veux-tu utiliser Omeo ?",
+  "@appAuthLanguageTitle": {},
+  "appAuthLanguageSubtitle": "Tu pourras la changer à tout moment dans les paramètres.",
+  "@appAuthLanguageSubtitle": {},
+  "appAuthLanguageDetected": "Détectée sur ton téléphone",
+  "@appAuthLanguageDetected": {},
+  "appAuthLanguageRtl": "De droite à gauche",
+  "@appAuthLanguageRtl": {},
+  "appAuthWelcomeTitle": "Mange mieux.",
+  "@appAuthWelcomeTitle": {},
+  "appAuthWelcomeAccent": "À ton rythme.",
+  "@appAuthWelcomeAccent": {},
+  "appAuthWelcomeBody": "Photographie ton assiette : Omeo reconnaît le plat, estime les portions et te dit où tu en es.",
+  "@appAuthWelcomeBody": {},
+  "appAuthWelcomeStart": "Commencer · 2 min",
+  "@appAuthWelcomeStart": {},
+  "appAuthWelcomeLogin": "J'ai déjà un compte",
+  "@appAuthWelcomeLogin": {},
+  "appAuthWelcomeKcalTag": "640 kcal",
+  "@appAuthWelcomeKcalTag": {},
+  "appAuthWelcomeProteinTag": "32 g protéines",
+  "@appAuthWelcomeProteinTag": {},
+  "appAuthWelcomeDishTag": "Thiéboudienne reconnu",
+  "@appAuthWelcomeDishTag": {},
+  "appAuthContinueGoogle": "Continuer avec Google",
+  "@appAuthContinueGoogle": {},
+  "appAuthContinueApple": "Continuer avec Apple",
+  "@appAuthContinueApple": {},
+  "appAuthOr": "ou",
+  "@appAuthOr": {},
+  "appAuthEmail": "Adresse email",
+  "@appAuthEmail": {},
+  "appAuthPassword": "Mot de passe",
+  "@appAuthPassword": {},
+  "appAuthShowPassword": "Afficher le mot de passe",
+  "@appAuthShowPassword": {},
+  "appAuthHidePassword": "Masquer le mot de passe",
+  "@appAuthHidePassword": {},
+  "appAuthLoginTitle": "Content de te revoir",
+  "@appAuthLoginTitle": {},
+  "appAuthLoginSubtitle": "Connecte-toi pour retrouver ton suivi.",
+  "@appAuthLoginSubtitle": {},
+  "appAuthLoginAction": "Se connecter",
+  "@appAuthLoginAction": {},
+  "appAuthLoginInvalid": "Email ou mot de passe incorrect. Vérifie ta saisie ou réinitialise ton mot de passe.",
+  "@appAuthLoginInvalid": {},
+  "appAuthSocialNoAccount": "Aucun compte n'est lié à cette adresse. Commence par créer ton profil.",
+  "@appAuthSocialNoAccount": {},
+  "appAuthForgotLink": "Mot de passe oublié ?",
+  "@appAuthForgotLink": {},
+  "appAuthNoAccount": "Pas encore de compte ?",
+  "@appAuthNoAccount": {},
+  "appAuthStartLink": "Commencer",
+  "@appAuthStartLink": {},
+  "appAuthForgotTitle": "Mot de passe oublié ?",
+  "@appAuthForgotTitle": {},
+  "appAuthForgotBody": "Indique ton email : on t'envoie un lien pour en choisir un nouveau.",
+  "@appAuthForgotBody": {},
+  "appAuthForgotAction": "Envoyer le lien",
+  "@appAuthForgotAction": {},
+  "appAuthSentTitle": "Vérifie ta boîte mail",
+  "@appAuthSentTitle": {},
+  "appAuthSentBody": "Si un compte existe pour {email}, tu vas recevoir un lien valable 1 heure.",
+  "@appAuthSentBody": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "appAuthOpenMail": "Ouvrir ma messagerie",
+  "@appAuthOpenMail": {},
+  "appAuthResend": "Renvoyer le lien",
+  "@appAuthResend": {},
+  "appAuthResendIn": "Renvoyer dans {countdown}",
+  "@appAuthResendIn": {
+    "placeholders": {
+      "countdown": {
+        "type": "String"
+      }
+    }
+  },
+  "appAuthResetTitle": "Nouveau mot de passe",
+  "@appAuthResetTitle": {},
+  "appAuthNewPassword": "Nouveau mot de passe",
+  "@appAuthNewPassword": {},
+  "appAuthConfirmPassword": "Confirmer",
+  "@appAuthConfirmPassword": {},
+  "appAuthPasswordMismatch": "Les deux mots de passe ne correspondent pas.",
+  "@appAuthPasswordMismatch": {},
+  "appAuthResetSignsOutEverywhere": "Pour ta sécurité, tous tes appareils seront déconnectés.",
+  "@appAuthResetSignsOutEverywhere": {},
+  "appAuthResetDone": "Mot de passe changé. Tu peux te reconnecter.",
+  "@appAuthResetDone": {},
+  "appAuthResetLinkExpired": "Ce lien a expiré ou a déjà servi. Demande un nouveau lien.",
+  "@appAuthResetLinkExpired": {},
+  "appAuthRuleLength": "{count} caractères minimum",
+  "@appAuthRuleLength": {
+    "placeholders": {
+      "count": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appAuthRuleCase": "Une minuscule et une majuscule",
+  "@appAuthRuleCase": {},
+  "appAuthRuleDigit": "Un chiffre",
+  "@appAuthRuleDigit": {},
+  "appAuthRuleSpecial": "Un caractère spécial",
+  "@appAuthRuleSpecial": {},
+  "appAuthConsentTitle": "Nos conditions évoluent",
+  "@appAuthConsentTitle": {},
+  "appAuthConsentBody": "Un document a changé. Lis-le puis accepte-le pour continuer à utiliser Omeo.",
+  "@appAuthConsentBody": {},
+  "appAuthConsentDocument": "{title} · version {version}, en vigueur le {date}",
+  "@appAuthConsentDocument": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "version": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appAuthConsentRead": "Lire « {title} »",
+  "@appAuthConsentRead": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "appAuthConsentAccept": "J'accepte",
+  "@appAuthConsentAccept": {},
+  "appAuthConsentRequired": "Obligatoire pour continuer.",
+  "@appAuthConsentRequired": {},
+  "appAuthConsentLoadError": "Impossible de charger le document.",
+  "@appAuthConsentLoadError": {},
+  "appAuthLegalVersion": "Version {version} · {date}",
+  "@appAuthLegalVersion": {
+    "placeholders": {
+      "version": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appAuthVerifyEmailBody": "Confirme ton email pour sécuriser ton compte et valider ton parrainage.",
+  "@appAuthVerifyEmailBody": {},
+  "appAuthVerifyEmailResend": "Renvoyer l'email",
+  "@appAuthVerifyEmailResend": {},
+  "appAuthVerifyEmailSent": "Email envoyé. Pense à vérifier tes spams.",
+  "@appAuthVerifyEmailSent": {},
+  "appProfileUnitKg": "{value} kg",
+  "@appProfileUnitKg": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProfileUnitLb": "{value} lb",
+  "@appProfileUnitLb": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProfileUnitCm": "{value} cm",
+  "@appProfileUnitCm": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProfileUnitFeetInches": "{feet} ft {inches} in",
+  "@appProfileUnitFeetInches": {
+    "placeholders": {
+      "feet": {
+        "type": "num",
+        "format": "decimalPattern"
+      },
+      "inches": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appProfileUnitCl": "{value} cl",
+  "@appProfileUnitCl": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProfileUnitOz": "{value} oz",
+  "@appProfileUnitOz": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalLoadError": "Impossible de charger ce jour.",
+  "@appJournalLoadError": {},
+  "appJournalCalendar": "Calendrier",
+  "@appJournalCalendar": {},
+  "appJournalYesterday": "Hier",
+  "@appJournalYesterday": {},
+  "appJournalPreviousDay": "Jour précédent",
+  "@appJournalPreviousDay": {},
+  "appJournalNextDay": "Jour suivant",
+  "@appJournalNextDay": {},
+  "appJournalPreviousMonth": "Mois précédent",
+  "@appJournalPreviousMonth": {},
+  "appJournalNextMonth": "Mois suivant",
+  "@appJournalNextMonth": {},
+  "appJournalGoalTitle": "Objectif du jour",
+  "@appJournalGoalTitle": {},
+  "appJournalKcalConsumed": "kcal consommées",
+  "@appJournalKcalConsumed": {},
+  "appJournalPercent": "{value} %",
+  "@appJournalPercent": {
+    "placeholders": {
+      "value": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "appJournalProteinShort": "Prot.",
+  "@appJournalProteinShort": {},
+  "appJournalCarbsShort": "Gluc.",
+  "@appJournalCarbsShort": {},
+  "appJournalFatShort": "Lip.",
+  "@appJournalFatShort": {},
+  "appJournalFiber": "Fibres",
+  "@appJournalFiber": {},
+  "appJournalMealsTitle": "Repas",
+  "@appJournalMealsTitle": {},
+  "appJournalNoMeal": "Aucun repas enregistré",
+  "@appJournalNoMeal": {},
+  "appJournalAddTo": "Ajouter au {meal}",
+  "@appJournalAddTo": {
+    "placeholders": {
+      "meal": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterTitle": "Hydratation",
+  "@appJournalWaterTitle": {},
+  "appJournalWaterOf": "{value} / {target}",
+  "@appJournalWaterOf": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterTarget": "sur {target}",
+  "@appJournalWaterTarget": {
+    "placeholders": {
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterAdd": "Ajouter de l'eau",
+  "@appJournalWaterAdd": {},
+  "appJournalWaterQuick": "+ {amount}",
+  "@appJournalWaterQuick": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "appJournalWaterOther": "Autre",
+  "@appJournalWaterOther": {},
+  "appJournalWaterFree": "libre",
+  "@appJournalWaterFree": {},
+  "appJournalWaterGlass": "Verre",
+  "@appJournalWaterGlass": {},
+  "appJournalWaterBottle": "Bouteille",
+  "@appJournalWaterBottle": {},
+  "appJournalWaterSaved": "Eau ajoutée.",
+  "@appJournalWaterSaved": {},
+  "appJournalWaterQueued": "Eau enregistrée. Elle sera comptée au retour du réseau.",
+  "@appJournalWaterQueued": {},
+  "appJournalUndo": "Annuler",
+  "@appJournalUndo": {},
+  "appJournalUnitCl": "cl",
+  "@appJournalUnitCl": {},
+  "appJournalUnitOz": "oz",
+  "@appJournalUnitOz": {},
+  "appJournalEmptyTitle": "Rien d'enregistré ce jour-là",
+  "@appJournalEmptyTitle": {},
+  "appJournalEmptyBody": "Tu peux encore ajouter tes repas de ce jour pour garder ta série.",
+  "@appJournalEmptyBody": {},
+  "appJournalLegendReached": "Objectif atteint",
+  "@appJournalLegendReached": {},
+  "appJournalLegendPartial": "Partiel",
+  "@appJournalLegendPartial": {},
+  "appJournalLegendToday": "Aujourd'hui",
+  "@appJournalLegendToday": {},
+  "appProgressLoadError": "Impossible de charger ta progression.",
+  "@appProgressLoadError": {},
+  "appProgressRefresh": "Actualiser",
+  "@appProgressRefresh": {},
+  "appProgressUnitKcal": "kcal",
+  "@appProgressUnitKcal": {},
+  "appProgressUnitGrams": "g",
+  "@appProgressUnitGrams": {},
+  "appProgressMetricKcal": "Calories",
+  "@appProgressMetricKcal": {},
+  "appProgressMetricCarbs": "Glucides",
+  "@appProgressMetricCarbs": {},
+  "appProgressMetricFat": "Lipides",
+  "@appProgressMetricFat": {},
+  "appProgressMetricProtein": "Protéines",
+  "@appProgressMetricProtein": {},
+  "appProgressMetricFiber": "Fibres",
+  "@appProgressMetricFiber": {},
+  "appProgressMetricSalt": "Sel",
+  "@appProgressMetricSalt": {},
+  "appProgressRange7": "7 j",
+  "@appProgressRange7": {},
+  "appProgressRange30": "30 j",
+  "@appProgressRange30": {},
+  "appProgressRange90": "90 j",
+  "@appProgressRange90": {},
+  "appProgressRange365": "1 an",
+  "@appProgressRange365": {},
+  "appProgressRangeLocked": "{label} · Plus",
+  "@appProgressRangeLocked": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressDeltaYesterday": "{delta} % vs hier",
+  "@appProgressDeltaYesterday": {
+    "placeholders": {
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressChartLabel": "Aujourd'hui {today} {unit}, moyenne {average} {unit}",
+  "@appProgressChartLabel": {
+    "placeholders": {
+      "today": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      },
+      "average": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressTarget": "Objectif {value} {unit}",
+  "@appProgressTarget": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressAverage": "Moyenne {value} {unit}",
+  "@appProgressAverage": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressNoData": "Pas encore de données sur cette période.",
+  "@appProgressNoData": {},
+  "appProgressLockedTitle": "Ta tendance sur la durée",
+  "@appProgressLockedTitle": {},
+  "appProgressLockedBody": "Vois ce qui change vraiment, semaine après semaine, avec Omeo Plus.",
+  "@appProgressLockedBody": {},
+  "appProgressEmptyTitle": "Tes courbes arrivent",
+  "@appProgressEmptyTitle": {},
+  "appProgressEmptyBody": "Elles se rempliront après tes premiers repas photographiés.",
+  "@appProgressEmptyBody": {},
+  "appProgressScanMeal": "Scanner un repas",
+  "@appProgressScanMeal": {},
+  "appProgressHealthConnect": "Health Connect",
+  "@appProgressHealthConnect": {},
+  "appProgressAppleHealth": "Apple Santé",
+  "@appProgressAppleHealth": {},
+  "appProgressHealthConnected": "Connecté",
+  "@appProgressHealthConnected": {},
+  "appProgressHealthNotConnected": "Non connecté",
+  "@appProgressHealthNotConnected": {},
+  "appProgressHealthReadOnly": "Lecture seule",
+  "@appProgressHealthReadOnly": {},
+  "appProgressHealthReads": "Données lues : pas, distance, calories dépensées, séances, poids",
+  "@appProgressHealthReads": {},
+  "appProgressHealthWrites": "Données écrites : aucune",
+  "@appProgressHealthWrites": {},
+  "appProgressHealthSynced": "Dernière synchronisation à {time}, {date}",
+  "@appProgressHealthSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressHealthPitch": "Compare tes repas à ton activité réelle et obtiens une balance quotidienne simple.",
+  "@appProgressHealthPitch": {},
+  "appProgressHealthConnectAction": "Connecter {source}",
+  "@appProgressHealthConnectAction": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressHealthSteps": "Pas et distance",
+  "@appProgressHealthSteps": {},
+  "appProgressHealthCalories": "Calories dépensées",
+  "@appProgressHealthCalories": {},
+  "appProgressHealthWorkouts": "Séances (type, durée, fréquence cardiaque)",
+  "@appProgressHealthWorkouts": {},
+  "appProgressHealthWeight": "Poids",
+  "@appProgressHealthWeight": {},
+  "appProgressHealthReadTag": "Lecture",
+  "@appProgressHealthReadTag": {},
+  "appProgressPermissionTitle": "Relier ton activité à tes repas",
+  "@appProgressPermissionTitle": {},
+  "appProgressPermissionBody": "Omeo lit tes données d'activité pour calculer ta balance et ajuster ton objectif les jours actifs.",
+  "@appProgressPermissionBody": {},
+  "appProgressPermissionPrivacy": "Omeo n'écrit jamais rien dans {source}. Seuls des totaux par jour sont envoyés à nos serveurs.",
+  "@appProgressPermissionPrivacy": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressPermissionContinue": "Continuer vers {source}",
+  "@appProgressPermissionContinue": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressPermissionLater": "Plus tard",
+  "@appProgressPermissionLater": {},
+  "appProgressPermissionDenied": "Pas de souci : tu pourras connecter ton activité plus tard.",
+  "@appProgressPermissionDenied": {},
+  "appProgressWeightTitle": "Mon poids",
+  "@appProgressWeightTitle": {},
+  "appProgressWeightReminder": "Rappel de pesée",
+  "@appProgressWeightReminder": {},
+  "appProgressWeightCurrent": "Actuel",
+  "@appProgressWeightCurrent": {},
+  "appProgressWeightCurrentOn": "Actuel · {date}",
+  "@appProgressWeightCurrentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightRange1m": "1 mois",
+  "@appProgressWeightRange1m": {},
+  "appProgressWeightRange3m": "3 mois",
+  "@appProgressWeightRange3m": {},
+  "appProgressWeightRange1y": "1 an",
+  "@appProgressWeightRange1y": {},
+  "appProgressWeightFewPoints": "Ajoute au moins deux pesées pour voir ta courbe.",
+  "@appProgressWeightFewPoints": {},
+  "appProgressWeightChart": "Poids actuel {current}, cible {target}",
+  "@appProgressWeightChart": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightTarget": "Cible {value}",
+  "@appProgressWeightTarget": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightTrend": "Tendance : {value} / sem.",
+  "@appProgressWeightTrend": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightRemaining": "Reste à atteindre",
+  "@appProgressWeightRemaining": {},
+  "appProgressWeightMeasures": "Mesures",
+  "@appProgressWeightMeasures": {},
+  "appProgressWeightEmpty": "Aucune pesée pour l'instant.",
+  "@appProgressWeightEmpty": {},
+  "appProgressWeightMeasure": "{date} · {source}",
+  "@appProgressWeightMeasure": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeightManual": "Saisie manuelle",
+  "@appProgressWeightManual": {},
+  "appProgressWeightManualWins": "Même jour : la saisie manuelle l'emporte sur l'import.",
+  "@appProgressWeightManualWins": {},
+  "appProgressWeightDelete": "Supprimer cette pesée",
+  "@appProgressWeightDelete": {},
+  "appProgressWeightDeleted": "Pesée supprimée.",
+  "@appProgressWeightDeleted": {},
+  "appProgressWeightAdd": "Ajouter une pesée",
+  "@appProgressWeightAdd": {},
+  "appProgressWeighInTitle": "Nouvelle pesée",
+  "@appProgressWeighInTitle": {},
+  "appProgressWeighInStep": "{step}",
+  "@appProgressWeighInStep": {
+    "placeholders": {
+      "step": {
+        "type": "String"
+      }
+    }
+  },
+  "appProgressWeighInEditDate": "Modifier",
+  "@appProgressWeighInEditDate": {},
+  "appProgressWeighInRecalc": "Tes objectifs quotidiens seront recalculés avec ce poids.",
+  "@appProgressWeighInRecalc": {},
+  "appProgressWeighInSaved": "Pesée enregistrée.",
+  "@appProgressWeighInSaved": {},
+  "appProgressWeighInSavedPoints": "{points, plural, one {Pesée enregistrée · +{points} point} other {Pesée enregistrée · +{points} points}}",
+  "@appProgressWeighInSavedPoints": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "appProgressWeighInQueued": "Pesée enregistrée. Elle sera prise en compte au retour du réseau.",
+  "@appProgressWeighInQueued": {},
   "appActivityTitle": "Sport",
   "@appActivityTitle": {},
   "appActivityAdd": "Ajouter une activité",

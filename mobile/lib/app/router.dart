@@ -1,9 +1,12 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omeo/app/navigation/app_shell.dart';
 import 'package:omeo/app/navigation/feature_routes.dart';
 import 'package:omeo/features/activity/activity_routes.dart';
+import 'package:omeo/features/auth/auth_routes.dart';
 import 'package:omeo/features/meals/meals_routes.dart';
+import 'package:omeo/features/onboarding/onboarding_routes.dart';
 import 'package:omeo/features/subscription/subscription_routes.dart';
 import 'package:omeo/features/support/support_routes.dart';
 import 'package:omeo/features/tracking/tracking_paths.dart';
@@ -11,6 +14,8 @@ import 'package:omeo/features/tracking/tracking_routes.dart';
 
 /// Modules qui contribuent à la navigation : une ligne par module.
 final List<FeatureRoutesBuilder> _modules = [
+  authRoutes,
+  onboardingRoutes,
   trackingRoutes,
   supportRoutes,
   mealsRoutes,
@@ -30,6 +35,16 @@ final routerProvider = Provider<GoRouter>((ref) {
 
   final router = GoRouter(
     initialLocation: TrackingPaths.home,
+    refreshListenable: Listenable.merge([
+      for (final m in modules) ?m.refresh,
+    ]),
+    redirect: (context, state) {
+      for (final m in modules) {
+        final target = m.redirect?.call(context, state);
+        if (target != null) return target;
+      }
+      return null;
+    },
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(

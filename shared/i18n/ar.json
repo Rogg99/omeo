@@ -54,9 +54,6 @@
       "step": "{current} / {total}",
       "name": {
         "title": "ما اسمك؟"
-      },
-      "target_weight": {
-        "warning_lose": "وزنك المستهدف أعلى من وزنك الحالي، لكنك تريد إنقاص الوزن."
       }
     },
     "home": {

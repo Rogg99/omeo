@@ -54,9 +54,6 @@
       "step": "{current} / {total}",
       "name": {
         "title": "¿Cómo te llamas?"
-      },
-      "target_weight": {
-        "warning_lose": "Tu peso objetivo es mayor que tu peso actual, pero quieres adelgazar."
       }
     },
     "home": {
